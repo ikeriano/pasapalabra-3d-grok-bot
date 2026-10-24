@@ -33,7 +33,7 @@ function music(n,loop=false){stopMusic();if(!n||OPT.mus<=0)return;const a=snd(n)
 function stopMusic(){if(musA){musA.pause();musA=null;}}
 // ---------- textures ----------
 function cv(w,h,draw){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');draw(g,w,h);const t=new T.CanvasTexture(c);t.colorSpace=T.SRGBColorSpace;t._c=c;return t;}
-function ftxt(g,s,x,y,size,col='#fff',al='center',maxw=1e9,stroke=0,w=900){let z=size;g.font=`${w} ${z}px N,Arial`;while(g.measureText(s).width>maxw&&z>8){z-=1;g.font=`${w} ${z}px N,Arial`;}g.textAlign=al;g.textBaseline='middle';if(stroke){g.lineJoin='round';g.lineWidth=stroke;g.strokeStyle='rgba(10,15,40,.85)';g.strokeText(s,x,y);}g.fillStyle=col;g.fillText(s,x,y);}
+function ftxt(g,s,x,y,size,col='#fff',al='center',maxw=1e9,stroke=0,w=900){const F=s==='Pasapalabra'?'K,N,Arial':'N,Arial';if(s==='Pasapalabra')w=400;let z=size;g.font=`${w} ${z}px ${F}`;while(g.measureText(s).width>maxw&&z>8){z-=1;g.font=`${w} ${z}px ${F}`;}g.textAlign=al;g.textBaseline='middle';if(stroke){g.lineJoin='round';g.lineWidth=stroke;g.strokeStyle='rgba(10,15,40,.85)';g.strokeText(s,x,y);}g.fillStyle=col;g.fillText(s,x,y);}
 const AL='ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';let ATLAS;
 function makeAtlas(){ATLAS=cv(512,512,g=>{for(let i=0;i<AL.length;i++){const x=i%6,y=Math.floor(i/6);ftxt(g,AL[i],x*85.33+42.7,y*85.33+46,72);}});}
 // merged quads of letters (1 draw call)
@@ -67,32 +67,33 @@ function floorTex(){return cv(1024,1024,(g,w)=>{const c=w/2;let gr=g.createRadia
  g.strokeStyle='rgba(255,255,255,.35)';g.lineWidth=3;for(let r of [.33,.42]){g.beginPath();g.arc(c,c,c*r,0,PI*2);g.stroke();}});}
 function screenTex(){return cv(1024,512,(g,w,h)=>{let gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#3d8dfa');gr.addColorStop(.5,'#2f7ef5');gr.addColorStop(1,'#1f5fd8');g.fillStyle=gr;g.fillRect(0,0,w,h);
  for(let i=0;i<260;i++){g.globalAlpha=rnd(.25,.75);ftxt(g,pick([...AL]),rnd(0,w),rnd(0,h),rnd(16,46),'#bfe0ff');}g.globalAlpha=1;
- g.save();g.shadowColor='rgba(0,40,120,.6)';g.shadowBlur=10;ftxt(g,'Pasapalabra',w/2,62,150,'#ffffff');g.restore();});}
+ g.save();g.shadowColor='rgba(0,40,120,.6)';g.shadowBlur=10;g.restore();scrBall(g,w,h,0);});}
+function scrBall(g,w,h,bl){const cx=w/2,cy=h/2,r=h*.38;for(let i=0;i<300;i++){const y=1-2*(i+.5)/300,rr=Math.sqrt(1-y*y),th=i*2.39996,z=(Math.sin(th)*rr+1)/2;g.globalAlpha=.3+z*.6;ftxt(g,pick([...AL]),cx+Math.cos(th)*rr*r,cy-y*r,8+z*14,bl?`hsl(210,90%,${60+z*25}%)`:`hsl(${345-(1-y)*40},85%,${50+z*25}%)`);}g.globalAlpha=1;g.save();g.shadowColor='rgba(0,30,90,.7)';g.shadowBlur=10;ftxt(g,'Pasapalabra',cx,cy,h*.5,'#ffffff','center',r*3.44,0,700);g.restore();}
 function wallTex(){const L='BPKDNGRSZCFW';return cv(512,256,(g,w,h)=>{for(let i=0;i<4;i++){const x=i*128;let gr=g.createLinearGradient(x,0,x+128,h);gr.addColorStop(0,'#f4f6fa');gr.addColorStop(1,'#c9d0dc');g.fillStyle=gr;g.fillRect(x+4,4,120,h-8);
  ftxt(g,pick([...L]),x+64,h*.55,150,'#1b1d24');ftxt(g,pick([...L]),x+30,40,40,pick(['#1b1d24','#d12a2a','#2a56d1']));g.fillStyle='#8890a0';g.fillRect(x,0,4,h);}});}
 function buildPlato(){const root=new T.Group();S.add(root);P.root=root;
  S.add(new T.HemisphereLight(0xe8f0ff,0x2a3a66,1.6));const d=new T.DirectionalLight(0xffffff,1.6);d.position.set(4,12,10);S.add(d);
- const fl=new T.Mesh(new T.CircleGeometry(30,48),new T.MeshBasicMaterial({map:floorTex()}));fl.rotation.x=-PI/2;fl.position.y=-.22;root.add(fl);
+ const fl=new T.Mesh(new T.CircleGeometry(30,48),new T.MeshBasicMaterial({map:floorTex()}));fl.rotation.x=-PI/2;fl.position.y=-.22;root.add(fl);P.fl=fl;
  const plat=new T.Mesh(new T.CylinderGeometry(5.6,5.6,.22,64),[MP(0xdfe6f0,60),MP(0xf3f6fb,80),MP(0xf3f6fb)]);plat.position.y=-.11;root.add(plat);
- const led=new T.Mesh(new T.TorusGeometry(5.62,.05,6,80),MB(0x5aa0ff));led.rotation.x=PI/2;led.position.y=-.2;root.add(led);
+ const led=new T.Mesh(new T.TorusGeometry(5.62,.05,6,80),MB(0x5aa0ff));P.led=led;led.rotation.x=PI/2;led.position.y=-.2;root.add(led);
  // mesa central circular (anillo blanco, frontal plateado, aro de luz azul)
  const top=new T.Mesh(new T.RingGeometry(2.45,3.65,56),MP(0xf6f8fc,90));top.rotation.x=-PI/2;top.position.y=1.06;root.add(top);
  const front=new T.Mesh(new T.CylinderGeometry(3.6,3.45,1.0,56,1,true),MP(0xc9d2de,40));front.position.y=.55;root.add(front);
  const inner=new T.Mesh(new T.CylinderGeometry(2.48,2.48,1.0,40,1,true),new T.MeshLambertMaterial({color:0x8fa0b8,side:T.BackSide}));inner.position.y=.55;root.add(inner);
- const band=new T.Mesh(new T.CylinderGeometry(3.66,3.66,.12,56,1,true),MB(0x5aa0ff));band.position.y=.9;root.add(band);
- const glow=new T.Mesh(new T.TorusGeometry(3.5,.07,6,64),MB(0x3a7bff));glow.rotation.x=PI/2;glow.position.y=.06;root.add(glow);
+ const band=new T.Mesh(new T.CylinderGeometry(3.66,3.66,.12,56,1,true),MB(0x5aa0ff));band.position.y=.9;P.band=band;root.add(band);
+ const glow=new T.Mesh(new T.TorusGeometry(3.5,.07,6,64),MB(0x3a7bff));P.glow=glow;glow.rotation.x=PI/2;glow.position.y=.06;root.add(glow);
  const lip=new T.Mesh(new T.TorusGeometry(3.64,.04,4,64),MP(0xffffff,100));lip.rotation.x=PI/2;lip.position.y=1.06;root.add(lip);
  const glass=new T.Mesh(new T.CircleGeometry(2.45,40),new T.MeshBasicMaterial({color:0x6ea0e0,transparent:true,opacity:.55}));glass.rotation.x=-PI/2;glass.position.y=.7;root.add(glass);
  // taburetes negros con pie cromado
  const stoolG=new T.CylinderGeometry(.26,.26,.08,14),poleG=new T.CylinderGeometry(.035,.035,.8,6),baseG=new T.CylinderGeometry(.28,.3,.04,14),bk=ML(0x15161a),cr=MP(0xd8dde6,120);
  P.stool=(x,z)=>{const g=new T.Group();const s=new T.Mesh(stoolG,bk);s.position.y=.82;const p=new T.Mesh(poleG,cr);p.position.y=.4;const b=new T.Mesh(baseG,cr);b.position.y=.02;g.add(s,p,b);g.position.set(x,0,z);root.add(g);return g;};
  // pantalla azul grande + esfera de letras girando
- const scr=new T.Mesh(new T.PlaneGeometry(13,6.5),new T.MeshBasicMaterial({map:screenTex()}));scr.position.set(0,3.6,-11);root.add(scr);
- const frame=new T.Mesh(new T.BoxGeometry(13.4,6.9,.3),MP(0xd0d6e2));frame.position.set(0,3.6,-11.2);root.add(frame);
+ const scr=new T.Mesh(new T.PlaneGeometry(13,6.5),new T.MeshBasicMaterial({map:screenTex()}));scr.position.set(0,3.6,-11);root.add(scr);P.scr=scr;
+ const frame=new T.Mesh(new T.BoxGeometry(13.4,6.9,.3),MP(0xd0d6e2));frame.position.set(0,3.6,-11.2);P.frame=frame;root.add(frame);
  P.sphere=letterCloud(sphereItems(150,2.3,n=>new T.Color().setHSL(.58,.8,.82+n.y*.1)),{op:.9});P.sphere.material.opacity=.85;P.sphere.position.set(0,3.2,-10.2);root.add(P.sphere);
  // paredes con letras en relieve
  const wt=wallTex();wt.wrapS=T.RepeatWrapping;wt.repeat.set(-6,1);
- for(const [a0,a1] of [[PI*.62,PI*1.18],[-PI*.18,PI*.38]]){const wall=new T.Mesh(new T.CylinderGeometry(17,17,5,24,1,true,a0+PI/2,a1-a0),new T.MeshBasicMaterial({map:wt,side:T.BackSide}));wall.position.y=7.2;wall.rotation.y=PI;root.add(wall);}
+ for(const [a0,a1] of [[PI*.62,PI*1.18],[-PI*.18,PI*.38]]){const wall=new T.Mesh(new T.CylinderGeometry(17,17,5,24,1,true,a0+PI/2,a1-a0),new T.MeshBasicMaterial({map:wt,side:T.BackSide}));wall.position.y=7.2;(P.walls=P.walls||[]).push(wall);wall.rotation.y=PI;root.add(wall);}
  for(let i=0;i<14;i++){const a=PI*.62+i*(PI*.56)/13,b=new T.Mesh(new T.BoxGeometry(.5,9.7,.5),MP(0xe8ecf3));b.position.set(Math.cos(a)*16.6,4.85,-Math.sin(a)*16.6);root.add(b);const a2=-PI*.18+i*(PI*.56)/13,b2=b.clone();b2.position.set(Math.cos(a2)*16.6,4.85,-Math.sin(a2)*16.6);root.add(b2);}
  // gradas con público
  const tiers=[[PI*.58,PI*1.22],[-PI*.22,PI*.42]];const steps=new T.Group();root.add(steps);
@@ -108,10 +109,10 @@ function buildPlato(){const root=new T.Group();S.add(root);P.root=root;
  root.add(bodyM,headM,hairM);P.audM=[bodyM,headM,hairM];
  // techo: focos y barras de luz azul
  const fx=new T.BoxGeometry(.35,.3,.35),fm=MB(0xfff6d8);for(let i=0;i<22;i++){const a=i/22*PI*2,f=new T.Mesh(fx,fm);f.position.set(Math.cos(a)*11,10,Math.sin(a)*11);root.add(f);}
- const ring=new T.Mesh(new T.TorusGeometry(11,.08,4,64),MB(0x3f8cff));ring.rotation.x=PI/2;ring.position.y=10.3;root.add(ring);
+ const ring=new T.Mesh(new T.TorusGeometry(11,.08,4,64),MB(0x3f8cff));ring.rotation.x=PI/2;ring.position.y=10.3;P.cring=ring;root.add(ring);
  const beamM=new T.MeshBasicMaterial({color:0x7fb0ff,transparent:true,opacity:.07,depthWrite:false,side:T.DoubleSide});for(let i=0;i<6;i++){const b=new T.Mesh(new T.ConeGeometry(1.6,10,10,1,true),beamM);const a=PI*.2+i*PI*.12;b.position.set(Math.cos(a)*7,5,-Math.sin(a)*7-2);b.rotation.z=rnd(-.3,.3);root.add(b);}
  // pantallitas laterales con letras
- for(const sx of [-1,1]){const p=new T.Mesh(new T.PlaneGeometry(3.2,1.8),new T.MeshBasicMaterial({map:screenTex()}));p.position.set(sx*9.2,5.2,-8.6);p.rotation.y=-sx*.55;root.add(p);}
+ for(const sx of [-1,1]){const p=new T.Mesh(new T.PlaneGeometry(3.2,1.8),new T.MeshBasicMaterial({map:screenTex()}));p.position.set(sx*9.2,5.2,-8.6);(P.sideS=P.sideS||[]).push(p);p.rotation.y=-sx*.55;root.add(p);}
  // personajes: presentador + equipos (azul = tú, naranja = rival CPU)
  P.host=person({shirt:0x26262c,pants:0x1a1d26,hair:0x9a7a4a});P.host.position.set(0,0,-4.3);root.add(P.host);
  P.seats={b:[[3.95,.5],[3.75,1.6]],o:[[-3.95,.5],[-3.75,1.6]]};
@@ -121,7 +122,7 @@ function buildPlato(){const root=new T.Group();S.add(root);P.root=root;
  P.cpu=mk('o',0,{shirt:0x8a5a3a,hair:0xa8331a,long:true,skin:0xf0c8a0});P.cpu2=mk('o',1,{shirt:0xffffff,hair:0x1a1a1a});
  // silla del rosco (delante de la pantalla)
  P.rStool=P.stool(0,-4.9);P.rStool.visible=false;
- P.rosc=person({sit:true,shirt:0xf2f2f6,hair:0x2a1c12,badge:0x2a6af0});P.rosc.position.set(0,0,-4.9);P.rosc.visible=false;root.add(P.rosc);P.heads=[P.host,P.ply,P.ply2,P.cpu,P.cpu2,P.rosc];
+ P.rosc=person({shirt:0xf2f2f6,hair:0x2a1c12,badge:0x2a6af0});P.rosc.position.set(0,0,-4.9);P.rosc.visible=false;root.add(P.rosc);P.heads=[P.host,P.ply,P.ply2,P.cpu,P.cpu2,P.rosc];
 }
 // ---------- cámaras de TV ----------
 const V3=(x,y,z)=>new T.Vector3(x,y,z);
@@ -135,7 +136,7 @@ const SHOTS={
  orange:{p:V3(-1.5,1.66,.1),l:V3(-3.95,1.5,.5),f:30,dr:.03},
  team_b:{p:V3(.2,1.8,-1.2),l:V3(3.9,1.4,1),f:40,dr:.05},
  team_o:{p:V3(-.2,1.8,-1.2),l:V3(-3.9,1.4,1),f:40,dr:.05},
- rosco:{p:V3(0,1.62,-2.4),l:V3(0,1.58,-4.9),f:30,dr:.03},
+ rosco:{p:V3(0,1.86,-2.3),l:V3(0,1.82,-4.9),f:30,dr:.03},
  aud:{p:V3(2,2.4,1),l:V3(-7,1.6,-6),f:40,dr:.2},
  menu:{p:V3(10,5.5,9),l:V3(-1,1,-3),f:44,dr:1},
 };
@@ -187,12 +188,12 @@ function roscoGraf(){const g=new T.Group();G.add(g);const discG=new T.CylinderGe
  g.team=c=>{g.tm.setC(c);g.ac.setC(c);};
  return g;}
 // ===== FONDO ROJO BURDEOS con iris (entrada: disco que crece; salida: agujero que se abre) =====
-function redBg(){const m=new T.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{inR:{value:0},outR:{value:0},asp:{value:1.7},t:{value:0}},
+function redBg(blue){const m=new T.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{inR:{value:0},outR:{value:0},asp:{value:1.7},t:{value:0},bl:{value:blue?1:0}},
  vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
- fragmentShader:'varying vec2 v;uniform float inR,outR,asp,t;void main(){vec2 p=(v-.5)*vec2(asp,1.);float d=length(p);if(d<inR||d>outR)discard;float k=smoothstep(0.,.75,length(p-vec2(-.1,.15)));vec3 c=mix(vec3(.86,.05,.11),vec3(.36,0.,.04),k);c+=.03*sin(p.x*40.+t)*sin(p.y*30.-t);gl_FragColor=vec4(c,1.);}'});
+ fragmentShader:'varying vec2 v;uniform float inR,outR,asp,t,bl;void main(){vec2 p=(v-.5)*vec2(asp,1.);float d=length(p);if(d<inR||d>outR)discard;float k=smoothstep(0.,.75,length(p-vec2(-.1,.15)));vec3 c=mix(mix(vec3(.86,.05,.11),vec3(.36,0.,.04),k),mix(vec3(.42,.72,1.),vec3(.08,.3,.85),k),bl);c+=.03*sin(p.x*40.+t)*sin(p.y*30.-t);gl_FragColor=vec4(c,1.);}'});
  const pl=new T.Mesh(new T.PlaneGeometry(1,1),m);pl.renderOrder=-1;
  const ring=new T.Mesh(new T.TorusGeometry(1,.05,10,72),MP(0xffffff,150));ring.renderOrder=0;
- const ring2=new T.Mesh(new T.TorusGeometry(1,.028,8,72),MP(0xc0101c,60));
+ const ring2=new T.Mesh(new T.TorusGeometry(1,.028,8,72),MP(blue?0x1040c0:0xc0101c,60));
  const g=new T.Group();g.add(pl,ring,ring2);g.pl=pl;g.ring=ring;g.ring2=ring2;
  g.fit=()=>{pl.scale.set(GW+40,760,1);m.uniforms.asp.value=(GW+40)/760;};g.fit();
  g.set=(inR,outR,mode)=>{m.uniforms.inR.value=inR;m.uniforms.outR.value=outR;const r=(mode=='in'?outR:inR)*760;const tube=mode=='in'?Math.max(6,r*.08):Math.max(6,r*.07);ring.visible=ring2.visible=r>1&&r<GW*1.2;ring.scale.setScalar(r);ring2.scale.setScalar(r*.9);ring.position.z=40;ring2.position.z=38;};
@@ -207,10 +208,10 @@ const CORT={
  imposible:{title:['La Palabra','imposible'],tx:0,ty:.02,fs:72},
  rosco:{title:["El","Rosco"],tx:0,ty:0,fs:100},
 };
-function letterRain(n,w,h,zr){const it=[];for(let i=0;i<n;i++)it.push({ch:AL[Math.floor(Math.random()*AL.length)],p:new T.Vector3(rnd(-w/2,w/2),rnd(-h/2,h/2),rnd(zr[0],zr[1])),s:rnd(14,34),r:rnd(-.4,.4),c:new T.Color(1,rnd(.55,.85),rnd(.6,.85)),vy:rnd(6,20),vx:rnd(-8,8)});return letterCloud(it,{op:.55});}
+function letterRain(n,w,h,zr,blue){const it=[];for(let i=0;i<n;i++)it.push({ch:AL[Math.floor(Math.random()*AL.length)],p:new T.Vector3(rnd(-w/2,w/2),rnd(-h/2,h/2),rnd(zr[0],zr[1])),s:rnd(14,34),r:rnd(-.4,.4),c:blue?new T.Color(rnd(.6,.8),rnd(.78,.9),1):new T.Color(1,rnd(.55,.85),rnd(.6,.85)),vy:rnd(6,20),vx:rnd(-8,8)});return letterCloud(it,{op:.55});}
 // construye la cortinilla de una prueba; devuelve objeto con setT(t) (t en segundos, total ≈5.5 s)
-function makeCort(id){const c=CORT[id],g=new T.Group();G.add(g);const bg=redBg();g.add(bg);const inner=new T.Group();g.add(inner);
- const rain=letterRain(70,GW+200,800,[-300,100]);inner.add(rain);
+function makeCort(id,blue){const c=CORT[id],g=new T.Group();G.add(g);const bg=redBg(blue);g.add(bg);const inner=new T.Group();g.add(inner);
+ const rain=letterRain(70,GW+200,800,[-300,100],blue);inner.add(rain);
  let art;const AW=GW;
  if(id=='escalera'){const it=[];for(let r=0;r<9;r++){const len=8+r;for(let i=0;i<len;i++)it.push({ch:AL[(r*7+i*3)%27],base:new T.Vector3(-AW*.5+r*52+i*34,-340+r*62,0),p:new T.Vector3(),s:36,r:0,c:0xffffff,row:r});}art=letterCloud(it,{op:.95});art.items.forEach(x=>x.p.copy(x.base));
   art.anim=t=>{art.items.forEach(x=>{const k=Math.min(1,Math.max(0,t*1.6-x.row*.12));x.p.set(x.base.x,x.base.y-(1-eout(k))*500,0);});art.upd();};}
@@ -221,11 +222,12 @@ function makeCort(id){const c=CORT[id],g=new T.Group();G.add(g);const bg=redBg()
  if(id=='imposible'){const it=[];const s='PIMPOSIBLE';for(let i=0;i<10;i++)it.push({ch:s[i],base:new T.Vector3(-AW*.38+i*AW*.085,rnd(-40,140),rnd(-100,60)),p:new T.Vector3(),s:i==0?240:rnd(80,150),r:rnd(-.5,.5),r0:0,c:0xffffff,d:i*.12});it.forEach(x=>x.r0=x.r);art=letterCloud(it,{op:.85});
   art.anim=t=>{art.items.forEach(x=>{const k=Math.min(1,Math.max(0,(t-x.d)*1.3));x.p.set(x.base.x,x.base.y+(1-eout(k))*700-(k>=1?Math.min(1,(t-x.d-.77)*.6)*60:0),x.base.z);x.r=x.r0*(1-k)*3;});art.upd();};
   art.material.opacity=.55;}
- if(id=='rosco'){const it=[];'ROSCO'.split('').forEach((ch,i)=>it.push({ch,a:i/5*PI*2,big:1,p:new T.Vector3(),s:90,s0:90,r:0,c:0xffffff}));for(let i=0;i<25;i++){const a=PI/2-i/25*PI*2;it.push({ch:AL[i%AL.length],a,small:1,p:new T.Vector3(),s:0,r:0,c:0x9a0c22});}art=letterCloud(it,{op:.95});
-  {const dg=new T.CircleGeometry(21,20),dm=new T.MeshBasicMaterial({color:0xf2a8b4,transparent:true,opacity:.92});art.items.forEach(x=>{if(x.small){x.disc=new T.Mesh(dg,dm);x.c=0xb0102a;}});art.discs=art.items.filter(x=>x.disc).map(x=>x.disc);}
+ if(id=='rosco'){const it=[];'ROSCO'.split('').forEach((ch,i)=>it.push({ch,a:i/5*PI*2,big:1,p:new T.Vector3(),s:90,s0:90,r:0,c:0xffffff}));for(let i=0;i<25;i++){const a=PI/2-i/25*PI*2;it.push({ch:AL[i%AL.length],a,small:1,p:new T.Vector3(),s:0,r:0,c:blue?0xffffff:0x9a0c22});}art=letterCloud(it,{op:.95});
+  {const dg=new T.CircleGeometry(21,20),dm=new T.MeshBasicMaterial({color:blue?0x2a6af0:0xf2a8b4,transparent:true,opacity:.92});art.items.forEach(x=>{if(x.small){x.disc=new T.Mesh(dg,dm);x.c=blue?0xffffff:0xb0102a;}});art.discs=art.items.filter(x=>x.disc).map(x=>x.disc);}
   art.anim=t=>{const cx=0;art.items.forEach(x=>{if(x.big){const k=Math.min(1,t/1.3),a=x.a+t*2.2,R=40+130*eout(k);x.p.set(cx+Math.cos(a)*R,Math.sin(a)*R,0);x.r=a-PI/2;x.s=x.s0*Math.max(0,1-Math.max(0,t-.9)*1.6);}else{const k=Math.min(1,Math.max(0,(t-.9)*1.5)),a=x.a-t*.12;x.s=28*eout(k);x.p.set(cx+Math.cos(a)*300,Math.sin(a)*228,6);if(x.disc){x.disc.position.set(x.p.x,x.p.y,-4);x.disc.scale.setScalar(Math.max(.001,eout(k)));};x.r=a-PI/2;}});art.upd();};}
+ if(c.mk)art=c.mk(AW,blue);
  inner.add(art);if(art.discs)inner.add(...art.discs);
- const tl=typeLabel(c.title.length>1?620:640,c.title.length*c.fs*1.15+20,c.title,c.fs,id=='escalera'||id=='pulsador'?'left':'center');tl.position.set(c.tx*GW+(id=='escalera'||id=='pulsador'?120:0),c.ty*720,120);inner.add(tl);
+ const tl=typeLabel(blue?Math.min(GW*.9,900):c.title.length>1?620:640,c.title.length*c.fs*1.15+20,c.title,c.fs,c.al||(id=='escalera'||id=='pulsador'?'left':'center'));tl.position.set(c.tx*GW+((c.al=='left'||id=='escalera'||id=='pulsador')?120:0),c.ty*720,120);inner.add(tl);
  const o={g,dur:5.5,setT(t){bg.pl.material.uniforms.t.value=t;const H=RHYP();
    if(t<1){const k=eio(t/1);bg.set(0,k*H,'in');inner.visible=t>.6;}else if(t<4.4){bg.set(0,9,'none');inner.visible=true;}else{const k=eio(Math.min(1,(t-4.4)/1.1));bg.set(k*H,9,'out');inner.visible=k<.25;}
    rain.items.forEach(x=>{x.p.y=((x.p.y+x.vy*.016+400)%800)-400;x.p.x+=x.vx*.016;});rain.upd();
@@ -233,12 +235,12 @@ function makeCort(id){const c=CORT[id],g=new T.Group();G.add(g);const bg=redBg()
    inner.scale.setScalar(1+Math.max(0,t-1)*.015);},
   free(){G.remove(g);g.traverse(m=>{if(m.geometry)m.geometry.dispose();});}};
  o.setT(0);return o;}
-async function playCort(id,rid){sfx('cortinilla');const c=makeCort(id);await tween(c.dur,(e,k)=>c.setT(k*c.dur),x=>x);c.free();chk(rid);}
+async function playCort(id,rid){const E=ETAPAS[OPT.etapa]||{};say();sfx(OPT.etapa==2007?'cortinilla':'cort'+OPT.etapa);const bl=!!E.blue;const c=makeCort(bl&&CORT[id+'B']?id+'B':id,bl);await tween(c.dur,(e,k)=>c.setT(k*c.dur),x=>x);c.free();chk(rid);}
 // ===== CABECERA: rojo, letras que vuelan y forman la esfera, logo «Pasapalabra» =====
-function makeCab(){const g=new T.Group();G.add(g);const bg=redBg();g.add(bg);const inner=new T.Group();g.add(inner);
- const sp=sphereItems(240,210,n=>new T.Color().setHSL(.97-(1-n.y)*.1,.9,.55+n.y*.08));sp.forEach(x=>{x.home=x.p.clone();x.hn=x.n.clone();x.from=new T.Vector3(rnd(-1500,1500),rnd(-900,900),rnd(-1200,900));x.s=34;});
- const cl=letterCloud(sp,{op:.95});inner.add(cl);const rain=letterRain(60,GW+200,800,[-400,0]);inner.add(rain);
- const logo=bigTxt(620,150,'Pasapalabra',{col:'#ffffff',side:'#9aa3b5',layers:6});logo.position.z=260;logo.scale.setScalar(.01);inner.add(logo);
+function makeCab(blue){const g=new T.Group();G.add(g);const bg=redBg(blue);g.add(bg);const inner=new T.Group();g.add(inner);
+ const sp=sphereItems(240,210,n=>new T.Color().setHSL(blue?.6-(1-n.y)*.05:.97-(1-n.y)*.1,.9,.55+n.y*.08));sp.forEach(x=>{x.home=x.p.clone();x.hn=x.n.clone();x.from=new T.Vector3(rnd(-1500,1500),rnd(-900,900),rnd(-1200,900));x.s=34;});
+ const cl=letterCloud(sp,{op:.95});inner.add(cl);const rain=letterRain(60,GW+200,800,[-400,0],blue);inner.add(rain);
+ const logo=bigTxt(722,150,'Pasapalabra',{col:'#ffffff',side:'#9aa3b5',layers:6});logo.position.z=260;logo.scale.setScalar(.01);inner.add(logo);
  const rot=new T.Matrix4(),e=new T.Euler();
  const o={g,dur:9,setT(t){const H=RHYP();bg.pl.material.uniforms.t.value=t;
   if(t<7.6)bg.set(0,9,'none');else{const k=eio(Math.min(1,(t-7.6)/1.2));bg.set(k*H,9,'out');inner.visible=k<.4;}
@@ -268,15 +270,16 @@ $('#c').addEventListener('pointerdown',e=>{if(MODE.menu)return;mv.set(e.clientX/
 // ---------- estado de juego ----------
 const MODE={menu:true,split:false};
 const GAME={sec:[0,0],names:['Tú','Rival'],ac:[0,0]};
-function setPeople(rosco){P.host.visible=!rosco;P.rStool.visible=P.rosc.visible=!!rosco;}
+function setPeople(rosco){P.host.visible=!rosco;P.rStool.visible=false;P.rosc.visible=!!rosco;}
 function hostSay(t){say('<b>Presentador:</b> '+t);}
+let vozA=null;async function voz(k,rid){const V=(typeof VOZ!=='undefined'&&VOZ[OPT.etapa])||{};const c=V[k];if(!c)return false;cut('host');stopMusic();hostSay(c.t);if(OPT.mus>0||OPT.sfx>0){try{vozA=new Audio('snd/voz/'+c.f);vozA.volume=Math.max(OPT.mus,OPT.sfx,.6);vozA.play().catch(()=>{});}catch(e){}}try{await wait(c.d+.3,rid);}finally{if(vozA){vozA.pause();vozA=null;}}say();return true;}
 async function rotulo(text,col,rid,secs=2.2){const b=bar(Math.min(GW*.6,560),56,col,text,{fs:30});b.position.set(0,-250,0);b.scale.set(.01,1,1);G.add(b);await tween(.35,e=>b.scale.x=e,eout);await wait(secs,rid);await tween(.25,e=>b.scale.x=1-e*.99);G.remove(b);}
 async function cpuTurn(name,col,n,rid){// turno rápido del rival en las pruebas individuales
  cut('orange');const b=bar(420,50,col,'',{fs:28});b.position.set(-GW/2+280,-200,0);G.add(b);let a=0;for(let i=0;i<5;i++){const ok=Math.random()<n;if(ok)a++;b.setT(`ACIERTOS: ${a}`);sfx(ok?'ok':'error');await wait(.9,rid);}
  G.remove(b);return a;}
 // ===== 1. LA ESCALERA =====
 async function escalera(rid){clearG();MODE.split=false;P.ply.pul.visible=P.cpu.pul.visible=false;const sets=shuffle(ORIG.ESC);let si=0,t=65,ac=0;
- cut('host');hostSay('Primera prueba: <b>La Escalera</b>. Cada palabra tiene una letra más que la anterior. ¡Sube todo lo que puedas!');await wait(3.2,rid);
+ cut('host');hostSay('<b>La Escalera</b>: cada palabra tiene una letra más que la anterior. ¡Sube todo lo que puedas!');await wait(3.2,rid);
  cut('blue');const tm=timer(COL.bl);tm.position.set(-GW/2+250,-235,20);G.add(tm);tm.set(t);
  const stack=new T.Group();G.add(stack);
  let run=true;anim(dt=>{if(!run||rid!==RUN)return false;if(!ASK)return true;t-=dt;tm.set(Math.max(0,Math.ceil(t)));return true;});
@@ -381,30 +384,30 @@ async function bote(rid,won){const b=bigTxt(560,130,boteTxt(),{grad:['#fff6b0','
  await tween(.6,e=>{b.scale.setScalar(.01+e);b.rotation.y=(1-e)*1.4;},eback);let t=0;anim(dt=>{t+=dt;b.rotation.y=Math.sin(t*1.6)*.12;return !!b.parent;});
  if(won)say('<b>¡¡HAS GANADO EL BOTE!!</b> 🎉');await wait(2.8,rid);G.remove(b);}
 // ===== PROGRAMA COMPLETO 2007 =====
-async function cabecera(rid){music('cabecera');cut('wide');const c=makeCab();
+async function cabecera(rid){music(OPT.etapa==2007?'cabecera':'cab'+OPT.etapa);cut('wide');const c=makeCab(!!(ETAPAS[OPT.etapa]||{}).blue);
  let t=0;await tween(c.dur,(e,k)=>{t=k*c.dur;c.setT(t);if(t>7.6){SHOT=SHOTS.wide;}},x=>x);c.free();chk(rid);
  // grúa sobre el plató
  const p0=V3(-12,9,13),p1=SHOTS.wide.p.clone();SHOT={p:p0.clone(),l:V3(0,.6,-2),f:44,dr:0};await tween(2.6,e=>{SHOT.p.lerpVectors(p0,p1,e);});chk(rid);}
 async function programa(){const rid=++RUN;GAME.sec=[0,0];GAME.ac=[0,0];MOSCA.visible=true;setPeople(false);
  try{await cabecera(rid);
-  cut('host');hostSay('¡Hola, hola! Bienvenidos a <b>Pasapalabra</b>. ¡Hoy jugamos el equipo <b>azul</b> contra el equipo <b>naranja</b>!');await wait(3.6,rid);
+  if(!await voz('intro',rid)){cut('host');hostSay('¡Hola, hola! Bienvenidos a <b>Pasapalabra</b>. ¡Hoy jugamos el equipo <b>azul</b> contra el equipo <b>naranja</b>!');await wait(3.6,rid);}
   cut('wide');hostSay('Y en el bote hoy hay…');await bote(rid,false);
   cut('team_b');hostSay('Equipo <b>azul</b>: ¡tú y tu invitada!');await wait(2.2,rid);cut('team_o');hostSay('Equipo <b>naranja</b>: ¡nuestro rival!');await wait(2.2,rid);say();
-  const L=[['escalera',escalera],['pulsador',pulsador],['depar',depar],['imposible',imposible],['rosco',rosco]];
-  for(const [id,fn] of L){cut('host');stopMusic();await wait(.6,rid);await playCort(id,rid);await fn(rid);}
+  const E=ETAPAS[OPT.etapa]||ETAPAS[2007];
+  for(const [id,fn] of E.pr){cut('host');stopMusic();if(!await voz(id+'_pre',rid)){if(E.lines&&E.lines[id]){hostSay(E.lines[id]);await wait(2.4,rid);say();}else await wait(.6,rid);}await playCort(id,rid);await voz(id+'_exp',rid);await fn(rid);}
   await despedida(rid);}catch(e){if(!(e instanceof Stop))console.error(e);}}
-async function despedida(rid){clearG();stopMusic();music('despedida');setPeople(false);cut('front');const a=GAME.res||[0,0];
+async function despedida(rid){clearG();stopMusic();music(OPT.etapa==2007?'despedida':'desp'+OPT.etapa);setPeople(false);cut('front');const a=GAME.res||[0,0];
  hostSay(a[0]==25?'¡Rosco completo! ¡Enhorabuena, campeón!':a[0]>=a[1]?`¡Ganas el programa con <b>${a[0]}</b> aciertos! ¡Mañana vuelves a por el bote!`:`¡Gran rosco, con <b>${a[0]}</b> aciertos! ¡Mañana más y mejor!`);
  if(a[0]<25){OPT.bote=(OPT.bote||60000)+6000;saveOpt();}
  await wait(3,rid);const p0=SHOTS.front.p.clone();SHOT={p:p0.clone(),l:V3(0,1,-3),f:38,dr:0};const p1=V3(0,9,16);await tween(6,e=>SHOT.p.lerpVectors(p0,p1,e));
- hostSay('¡Hasta mañana! ¡Pasapalabra!');await wait(3,rid);say();stopMusic();MOSCA.visible=false;showMenu();}
+ if(!await voz('desp',rid)){hostSay('¡Hasta mañana! ¡Pasapalabra!');await wait(3,rid);}say();stopMusic();MOSCA.visible=false;showMenu();}
 // ---------- LOGO 2007 (recreado: esfera de letras roja/morada + «Pasapalabra») ----------
-function logoURL(w=900,h=560){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');const cx=w/2,cy=h*.47,r=h*.4;
- let gr=g.createRadialGradient(cx-r*.3,cy-r*.3,r*.1,cx,cy,r*1.1);gr.addColorStop(0,'rgba(255,90,120,.55)');gr.addColorStop(.7,'rgba(150,20,90,.35)');gr.addColorStop(1,'rgba(60,0,60,0)');g.fillStyle=gr;g.beginPath();g.arc(cx,cy,r*1.1,0,PI*2);g.fill();
+function logoURL(w=900,h=560,y=OPT.plato){const BL=y>=2014;const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');const cx=w/2,cy=h*.5,r=h*.36;
+ let gr=g.createRadialGradient(cx-r*.3,cy-r*.3,r*.1,cx,cy,r*1.1);gr.addColorStop(0,BL?'rgba(90,170,255,.55)':'rgba(255,90,120,.55)');gr.addColorStop(.7,BL?'rgba(20,70,190,.35)':'rgba(150,20,90,.35)');gr.addColorStop(1,'rgba(0,10,60,0)');g.fillStyle=gr;g.beginPath();g.arc(cx,cy,r*1.1,0,PI*2);g.fill();
  const pts=[];for(let i=0;i<520;i++){const y=1-2*(i+.5)/520,rr=Math.sqrt(1-y*y),th=i*2.39996;pts.push([Math.cos(th)*rr,y,Math.sin(th)*rr]);}pts.sort((a,b)=>a[2]-b[2]);
- pts.forEach(p=>{const z=(p[2]+1)/2,col=`hsl(${345-(1-p[1])*45},90%,${38+z*30}%)`;g.globalAlpha=.35+z*.65;ftxt(g,pick([...AL]),cx+p[0]*r,cy-p[1]*r,10+z*20,col);});g.globalAlpha=1;
- g.save();g.translate(cx,cy+r*.08);g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=14;g.shadowOffsetY=6;for(let i=6;i>0;i--)ftxt(g,'Pasapalabra',i*.8,i*1.2,h*.2,'#8f97aa','center',w*.96);g.shadowColor='transparent';
- const tg=g.createLinearGradient(0,-h*.1,0,h*.1);tg.addColorStop(0,'#ffffff');tg.addColorStop(1,'#dfe4ee');ftxt(g,'Pasapalabra',0,0,h*.2,tg,'center',w*.96);g.restore();return c.toDataURL();}
+ pts.forEach(p=>{const z=(p[2]+1)/2,col=BL?`hsl(${208+(1-p[1])*10},85%,${62+z*30}%)`:`hsl(${345-(1-p[1])*45},90%,${38+z*30}%)`;g.globalAlpha=.35+z*.65;ftxt(g,pick([...AL]),cx+p[0]*r,cy-p[1]*r,10+z*20,col);});g.globalAlpha=1;
+ g.save();g.translate(cx,cy);g.shadowColor='rgba(0,0,0,.6)';g.shadowBlur=8;g.shadowOffsetY=3;for(let i=3;i>0;i--)ftxt(g,'Pasapalabra',i*.8,i*1.2,h*.5,'#8f97aa','center',Math.min(w*.96,r*3.44),0,700);g.shadowColor='transparent';
+ const tg=g.createLinearGradient(0,-h*.1,0,h*.1);tg.addColorStop(0,'#ffffff');tg.addColorStop(1,'#dfe4ee');ftxt(g,'Pasapalabra',0,0,h*.5,tg,'center',Math.min(w*.96,r*3.44),0,700);g.restore();return c.toDataURL();}
 // ---------- MENÚ (mismo diseño que ¡Ahora Caigo! 3D) ----------
 const menu=$('#menu');let LOGO='';
 const YEARS=[2007,2011,2014,2017,2019];
@@ -412,12 +415,12 @@ function showMenu(screen='main'){RUN++;MODE.menu=true;MODE.split=false;clearG();
  if(screen=='title'){menu.innerHTML=`<div class="title"><img class="tlogo" src="${LOGO}"><div class="tsub">EL JUEGO</div><div class="ttap">Toca para empezar</div></div>`;menu.firstChild.onpointerdown=()=>{music('splash');showMenu();};menu.classList.remove('hidden');return;}
  const side=`<div class="logo"><img class="mlogo" src="${LOGO}"><div class="mtag">EL JUEGO · 3D</div></div>`;
  if(screen=='main'){menu.innerHTML=`<div class="mbox">${side}<div class="col">
-  ${btn('y','▶','Jugar','Programa completo de 2007: cabecera, 5 pruebas, El Rosco y despedida','play')}
+  ${btn('y','▶','Jugar',`Programa completo · plató ${OPT.plato} · etapa ${OPT.etapa}: ${(ETAPAS[OPT.etapa]||ETAPAS[2007]).names}`,'play')}
   ${btn('','⚙','Opciones','Música, efectos, plató y etapa','opt')}
   ${btn('','📜','La historia de Pasapalabra','Del año 2000 a hoy','hist')}
-  ${btn('','❓','Cómo se juega','Las pruebas del programa de 2007','how')}
+  ${btn('','❓','Cómo se juega','Todas las pruebas, de 2007 a 2019','how')}
   ${btn('','⭐','Créditos','Quién ha hecho este juego','cred')}</div></div>`;}
- if(screen=='opt'){const sel=(k)=>YEARS.map(y=>`<button class="tbtn ${OPT[k]==y?'on':''} ${y!=2007?'soon':''}" data-k="${k}" data-y="${y}">${y}${y!=2007?'<small>Próximamente</small>':''}</button>`).join('');
+ if(screen=='opt'){const sel=(k)=>YEARS.map(y=>`<button class="tbtn ${OPT[k]==y?'on':''}" data-k="${k}" data-y="${y}">${y}</button>`).join('');
   menu.innerHTML=`<div class="mbox">${side}<div class="col"><h2>Opciones</h2>
   <div class="orow"><label>🎵 Música</label><input type="range" min="0" max="1" step=".1" value="${OPT.mus}" data-o="mus"></div>
   <div class="orow"><label>🔊 Efectos</label><input type="range" min="0" max="1" step=".1" value="${OPT.sfx}" data-o="sfx"></div>
@@ -426,7 +429,7 @@ function showMenu(screen='main'){RUN++;MODE.menu=true;MODE.split=false;clearG();
   <div class="mtext">Al elegir un plató se elige también su etapa. La etapa se puede cambiar por separado: por ejemplo, pruebas de 2019 en el plató de 2007.</div>
   ${btn('y','⟵','Volver','','main')}</div></div>`;
   menu.querySelectorAll('input[type=range]').forEach(i=>i.oninput=()=>{OPT[i.dataset.o]=+i.value;saveOpt();if(musA)musA.volume=OPT.mus;});
-  menu.querySelectorAll('.tbtn').forEach(b=>b.onpointerdown=()=>{const y=+b.dataset.y,k=b.dataset.k;if(y!=2007){toast(`¡${k=='plato'?'El plató':'La etapa'} de ${y} llega próximamente! ✨`);return;}OPT[k]=y;if(k=='plato')OPT.etapa=y;saveOpt();sfx('ok');showMenu('opt');});}
+  menu.querySelectorAll('.tbtn').forEach(b=>b.onpointerdown=()=>{const y=+b.dataset.y,k=b.dataset.k;OPT[k]=y;if(k=='plato')OPT.etapa=y;saveOpt();if(k=='plato'){applyPlato(y);LOGO=logoURL();}sfx('ok');showMenu('opt');});}
  if(screen=='hist'||screen=='how'||screen=='cred'){menu.innerHTML=`<div class="mbox">${side}<div class="col text"><h2>${{hist:'La historia de Pasapalabra',how:'Cómo se juega',cred:'Créditos'}[screen]}</h2><div class="mtext">${TEXTS[screen]}</div>${btn('y','⟵','Volver','','main')}</div></div>`;}
  menu.classList.remove('hidden');
  menu.querySelectorAll('[data-go]').forEach(b=>b.onpointerdown=e=>{e.preventDefault();sfx('ok');const g=b.dataset.go;if(g=='play')startGame();else showMenu(g);});}
@@ -459,10 +462,10 @@ function loop(now){requestAnimationFrame(loop);const dt=Math.min(.1,(now-last)/1
  else R.render(S,cam);
  R.clearDepth();placeMosca();R.render(GS,gcam);}
 // ---------- arranque ----------
-async function boot(){try{await document.fonts.load('900 40px N');await document.fonts.load('800 40px N');}catch(e){}
- makeAtlas();geos();buildPlato();mosca();resize();window.onGW=()=>{};LOGO=logoURL();requestAnimationFrame(loop);
+async function boot(){try{await document.fonts.load('900 40px N');await document.fonts.load('800 40px N');await document.fonts.load('400 40px K');}catch(e){}
+ makeAtlas();geos();buildPlato();applyPlato(OPT.plato);mosca();resize();window.onGW=()=>{};LOGO=logoURL();requestAnimationFrame(loop);
  if(location.hash.startsWith('#dbg'))return;showMenu('title');}
-boot();
+window.addEventListener('load',boot);
 // ---------- ganchos para capturas ----------
-window.DBG={get TAP(){return !!TAP;},get ASK(){return !!ASK;},showMenu,cut,clearG,G,P,GAME,MODE,makeCort,makeCab,roscoGraf,escalera,pulsador,depar,imposible,rosco,bote,programa,startGame,setPeople,roscoPerson,run:()=>++RUN,get RUN(){return RUN;},say,SHOTS,COL,bar,timer,
+window.DBG={get TAP(){return !!TAP;},get ASK(){return !!ASK;},showMenu,cut,clearG,G,P,GAME,MODE,makeCort,makeCab,roscoGraf,escalera,pulsador,depar,imposible,rosco,bote,programa,startGame,OPT,get ETAPAS(){return ETAPAS;},playCort,setPeople,roscoPerson,run:()=>++RUN,get RUN(){return RUN;},say,SHOTS,COL,bar,timer,
  ask:v=>{KB.value=v;KB.oninput&&KB.oninput();},enter:()=>askEnd(KB.value)};
