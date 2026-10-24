@@ -72,3 +72,20 @@ despedida=async function(rid){clearG();stopMusic();setPeople(false);cut('front')
 (()=>{let src=especial.toString();const a="await wait(2.6,rid);FX5.off();MOSCA.visible=false;showMenu('esp');";
  if(!src.includes(a))console.warn('v06 especial');src=src.replace(a,"await wait(2.6,rid);say();FX5.off();await creditos6(rid);MOSCA.visible=false;showMenu('esp');");(0,eval)('especial='+src);})();
 Object.assign(DBG,{creditos6,C6});
+// ---------- v0.6: cortinillas 3D y voz real de Christian también en los especiales ----------
+// Antes: especial() y playDuel() anunciaban la prueba con hostSay() y llamaban a la prueba
+// directamente (sin playCort ni voz('_pre')), y la Silla azul no tenía cortinilla (CORT.silla
+// no existía, así que el parche de v0.5 sobre playCort la saltaba).
+CORT.silla=CORT.silla||{title:['La Silla','Azul'],tx:0,ty:0,fs:88};
+async function pre6(id,html,rid){cut('host');stopMusic();say();
+ if(!await voz(id+'_pre',rid)){hostSay(html);await wait(2.2,rid);say();}
+ await playCort(id,rid);await voz(id+'_exp',rid);}
+const id6=fn=>fn===pistaMusical?'pista':fn===letraALetra?'letra':fn===palabrasCruzadas?'cruzadas':fn===dondeEstan?'donde':fn===rosco?'rosco':'x';
+(()=>{let s=especial.toString();const R=[
+ ["hostSay(l);await wait(2,rid);await fn(rid);","await pre6(id6(fn),l,rid);await fn(rid);"],
+ ["hostSay('Y ahora, ¡<b>El Rosco</b>!');await wait(1.6,rid);await rosco(rid);","await pre6('rosco','Y ahora, ¡<b>El Rosco</b>!',rid);await rosco(rid);"]];
+ for(const [a,b] of R){if(!s.includes(a))console.warn('v06 esp',a.slice(0,30));s=s.split(a).join(b);}
+ s=s.replace(/await rosco\(rid\);win=GAME\.res\[0\]==25/,"await pre6('rosco','Y ahora, ¡<b>El Rosco</b>!',rid);$&");(0,eval)('especial='+s);
+ let d=playDuel.toString();const a="await wait(2.2,rid);await rosco(rid);";if(!d.includes(a))console.warn('v06 duel');
+ d=d.replace(a,"await wait(2.2,rid);say();await pre6('rosco','Vamos al <b>Rosco</b> final de Pasapalabra.',rid);await rosco(rid);");(0,eval)('playDuel='+d);})();
+Object.assign(DBG,{pre6});

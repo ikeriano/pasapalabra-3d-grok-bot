@@ -1,0 +1,7 @@
+const p=require('/workspace/pp_ac/node_modules/puppeteer-core');
+(async()=>{const b=await p.launch({executablePath:'/usr/bin/google-chrome',args:['--no-sandbox','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
+const pg=await b.newPage();await pg.goto('http://localhost:8766/index.html');await new Promise(r=>setTimeout(r,4000));
+console.log(await pg.evaluate(()=>{const o={};o.aud=Object.entries(V4.aud.M||{}).map(([k,m])=>k+':'+m.type+':'+(m.material.color&&m.material.color.getHexString())+':'+!!m.instanceColor+':'+m.count);
+const w=new THREE.Vector3();const f=x=>{if(!x)return null;if(Array.isArray(x))return "arr"+x.length+" "+(x[0]&&x[0].type);if(!x.getWorldPosition)return typeof x;x.getWorldPosition(w);return x.type+' '+w.toArray().map(v=>v.toFixed(1))+' ch'+x.children.length};o.scr=f(P.scr);o.host=f(P.host);o.frame=f(P.frame);o.cring=f(P.cring);o.walls=f(P.walls);o.fl=f(P.fl);
+o.hostm=[];P.host.traverse(m=>{if(m.material)o.hostm.push(m.name+':'+m.material.color.getHexString()+':'+m.material.emissive.getHexString())});o.box=(()=>{const bb=new THREE.Box3().setFromObject(P.host);return bb.min.toArray().concat(bb.max.toArray()).map(v=>v.toFixed(2))})();
+o.scrBox=(()=>{const bb=new THREE.Box3().setFromObject(Array.isArray(P.scr)?P.scr[0]:P.scr);return bb.min.toArray().concat(bb.max.toArray()).map(v=>v.toFixed(2))})();o.T=typeof THREE;return JSON.stringify(o)}));await b.close();})();

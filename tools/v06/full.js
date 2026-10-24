@@ -1,0 +1,20 @@
+const p=require('/workspace/pp_ac/node_modules/puppeteer-core');
+const [mode,year,esp]=process.argv.slice(2);
+(async()=>{const b=await p.launch({executablePath:'/usr/bin/google-chrome',args:['--no-sandbox','--use-gl=swiftshader','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required']});
+const pg=await b.newPage();await pg.setViewport({width:1024,height:480});
+pg.on('console',m=>{const t=m.text();if(/^(AUD|STEP|ERR)|v06|v05/.test(t))console.log(t)});pg.on('pageerror',e=>console.log('PE',e.message));
+let done;const fin=new Promise(r=>done=r);
+await pg.exposeFunction('snap',async n=>{await pg.screenshot({path:'/workspace/envio/pp3d/'+n,quality:80});console.log('SNAP',n);});
+await pg.exposeFunction('fin',()=>done());
+await pg.evaluateOnNewDocument((y)=>{localStorage.setItem('pp3d_opt',JSON.stringify({mus:.8,sfx:.9,plato:+y,etapa:+y}));const pl=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=function(){const s=document.getElementById('sub');console.log('AUD',decodeURIComponent(this.src.replace(/^.*\/www\//,'')),'| sub:',s&&!s.classList.contains('hidden')?s.textContent.slice(0,90):'');return pl.call(this);};},year);
+await pg.goto('http://localhost:8766/index.html');await new Promise(r=>setTimeout(r,4000));
+await pg.evaluate((mode,year,esp)=>{
+ const stub=n=>async rid=>{console.log('STEP prueba',n);await wait(.5,rid);GAME.res=[20,18];};
+ Object.values(ETAPAS).forEach(E=>E.pr&&E.pr.forEach(p=>p[1]=stub(p[0])));
+ pistaMusical=stub('pista');letraALetra=stub('letra');palabrasCruzadas=stub('cruzadas');dondeEstan=stub('donde');rosco=stub('rosco');
+ const oc=cabecera;cabecera=async rid=>{console.log('STEP cabecera');setTimeout(()=>snap('v06_cabecera_'+year+(esp?'_'+esp:'')+'.jpg'),5000);return oc(rid);};
+ const op=playCort;playCort=async(id,rid)=>{console.log('STEP cortinilla',id);setTimeout(()=>snap('v06_cortinilla_'+year+(esp?'_'+esp:'')+'_'+id+'.jpg'),1700);return op(id,rid);};
+ creditos6=async()=>{console.log('STEP creditos');setTimeout(fin,300);};
+ const sm=showMenu;showMenu=s=>{sm(s);if(!MODE.menu||1)setTimeout(fin,200);};
+ if(mode=='esp')especial(esp);else startGame();},mode,year,esp);
+await Promise.race([fin,new Promise(r=>setTimeout(r,240000))]);await b.close();})();
