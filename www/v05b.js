@@ -143,7 +143,7 @@ function bind5(){menu.querySelectorAll('[data-go],[data-e5],[data-t5]').forEach(
  if(g&&g.startsWith('promo:')){const k=g.slice(6),ps=k=='all'?L5.PROMOS:[L5.PROMOS[+k]];return hostScene(ps.map(p=>p[1]),{banner:'📺 PRÓXIMAMENTE',tint:'rgba(255,200,40,.12)',conf:['#ffd23a','#2a6af0','#fff'],music:'splash',mosca:1,w:2.6,back:'promos'});}
  if(g=='tomas:all')return hostScene(L5.TOMAS.map(t=>[t[0],'cut']),{banner:'🎬 TOMAS FALSAS',back:'tomas'});
  showMenu(g);});}
-$('#ver').textContent='v0.5';
+$('#ver').textContent='v0.6';
 Object.assign(DBG,{FX5,especial,hostScene,L5,torneo});
 // ---------- LA PISTA MUSICAL (Wikipedia): 3 turnos, 5 pistas de 5-4-3-2-1 s; 5, 3 y 1 = trozos de la sintonía ----------
 V5.pmAudio=null;
