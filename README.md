@@ -6,6 +6,13 @@ Personajes estilizados, controles táctiles y teclado del móvil. Optimizado par
 Descarga el APK en Releases. Capturas y comparativas con la TV en `screenshots/`.
 
 
+## v0.3 – Cortinillas reales, cabeceras plano a plano y realización TV
+- Cortinillas recreadas fotograma a fotograma para cada etapa: iris 3D descentrado, título Keedy con bisel que llega letra a letra (2007 en orden aleatorio, 2011–2017 en orden con giro y zoom), barrido de luz, salida con disco junto al título; 2019 con estallido de símbolos, título grande y letras que salen despedidas hacia la cámara.
+- Cabeceras recreadas plano a plano con su música original sincronizada: campo de letras, túnel de anillos, esfera, letras gigantes en órbita, logotipo en espejo, iris y grúa sobre el plató (2019 con sus cortes, cintas y anillos de luz).
+- Realización automática: grúas, dolly, travelling, órbita en el Rosco, planos de público y de reacción en cada respuesta.
+- Plató vivo: presentador que gesticula al hablar, concursantes que celebran, público que aplaude con aplausos originales, focos en movimiento y LEDs que laten.
+- Hojas comparativas TV/app en `screenshots/v0.3/` y análisis en `analisis_v03.md`.
+
 ## v0.2 – Etapas 2007, 2011, 2014, 2017 y 2019
 - Selector de plató y etapa activo para todos los años, cada uno con su plató, logo, cabecera, cortinillas, pruebas reales y despedida.
 - Voz real del presentador (recortes de los programas originales) antes de cada cortinilla y en las explicaciones de las pruebas, con subtítulos de sus palabras.

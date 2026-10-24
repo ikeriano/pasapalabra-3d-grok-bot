@@ -27,8 +27,8 @@ function textPts(str,n,w,h,fs){const c=document.createElement('canvas');c.width=
 function tubeArt(pts,rad,col){const cur=new T.CatmullRomCurve3(pts.map(p=>new T.Vector3(p[0],p[1],0)),false,'catmullrom',.1);const g=new T.TubeGeometry(cur,Math.max(40,pts.length*6),rad,5,false);const m=new T.Mesh(g,MB(col));m.total=g.index.count;m.prog=k=>g.setDrawRange(0,Math.floor(m.total*Math.max(0,Math.min(1,k))/6)*6);m.prog(0);return m;}
 
 // ---------- ARTE DE CORTINILLAS (rojas 2011-2017, azules 2019) ----------
-function artLetra(AW){const it=[{ch:'A',p:new T.Vector3(),s:430,r:0,c:0xb9bec9},{ch:'L',p:new T.Vector3(),s:280,r:0,c:0xe6e9ef}];const m=letterCloud(it,{op:.92});
- m.anim=t=>{const k=eout(Math.min(1,t/1.1));it[0].p.set(-AW*.27,-20-(1-k)*700,-80);const k2=eout(Math.min(1,Math.max(0,(t-.7)/1.3)));it[1].p.set(-AW*.27+150+AW*.8*(1-k2),-90,-40);it[1].r=(1-k2)*7;m.upd();};return m;}
+function artLetra(AW){const it=[];for(let i=0;i<9;i++)it.push({ch:AL[(i*7+3)%AL.length],b:new T.Vector3(rnd(-AW*.5,AW*.5),rnd(-300,300),-150),p:new T.Vector3(),s:rnd(160,300),r:rnd(-.3,.3),c:0x9a1424});const m=letterCloud(it,{op:.55});
+ m.anim=t=>{it.forEach((x,i)=>{x.p.set(x.b.x+t*(i%2?30:-30),x.b.y+t*12,x.b.z);});m.upd();};return m;}
 function artPista(AW){const g=new T.Group(),cx=-AW*.27,cy=50,R=120,pts=[[cx+44,cy-R-40]];
  for(let i=0;i<=36;i++){const a=-PI/3+i/36*(PI*5/3);pts.push([cx+Math.cos(a)*R,cy+Math.sin(a)*R]);}pts.push([cx-44,cy-R-40]);
  const bulb=tubeArt(pts,6,0xffffff);g.add(bulb);const fil=tubeArt([[cx-30,cy-30],[cx-15,cy+10],[cx,cy-30],[cx+15,cy+10],[cx+30,cy-30]],4,0xffffff);g.add(fil);
@@ -67,12 +67,12 @@ function artSopa(AW){const g=new T.Group(),rows=[];for(let r=0;r<5;r++){const L=
 function artDonde(AW){const g=new T.Group(),ov=[];for(let i=0;i<9;i++){const o=new T.Group();o.add(ovalMesh(110,52,COL.or));const L=label(110,52,(c,cw,ch)=>ftxt(c,String(i+1),cw/2,ch/2+3,ch*.75,'#fff'));L.position.z=12;o.add(L);o.position.set(-AW*.27+(i%3-1)*130,(1-Math.floor(i/3))*72,0);g.add(o);ov.push(o);}
  g.anim=t=>{ov.forEach((o,i)=>{const k=Math.min(1,Math.max(0,(t-i*.1)/.5));o.scale.setScalar(Math.max(.01,eback(k)));o.rotation.y=(1-k)*PI;});};return g;}
 Object.assign(CORT,{
- letra:{title:['Letra','a letra'],tx:.1,ty:0,fs:76,al:'left',mk:artLetra},
+ letra:{title:['Letra a letra'],tx:0,ty:0,fs:66,mk:artLetra},
  pista:{title:['La Pista'],tx:.1,ty:-.02,fs:80,al:'left',mk:artPista},
  pistaB:{title:['La Pista','musical'],tx:.1,ty:0,fs:76,al:'left',mk:artNotes},
- cruzadas:{title:['Palabras','Cruzadas'],tx:0,ty:0,fs:76},
- quees:{title:['¿Qué es','Qué?'],tx:0,ty:0,fs:84,mk:artQuees},
- coco:{title:['Coco Loco'],tx:.08,ty:0,fs:80,al:'left',mk:artCoco},
+ cruzadas:{title:['Palabras','Cruzadas'],tx:0,ty:0,fs:62},
+ quees:{title:['¿Qué','es','Qué?'],tx:0,ty:0,fs:62,mk:artQuees},
+ coco:{title:['Coco Loco'],tx:0,ty:0,fs:108,mk:artCoco},
  u4:{title:['Una de','Cuatro'],tx:.1,ty:0,fs:80,al:'left',mk:artU4},
  sopa:{title:['Sopa de','Letras'],tx:.1,ty:0,fs:80,al:'left',mk:artSopa},
  donde:{title:['¿Dónde','Están?'],tx:.1,ty:0,fs:80,al:'left',mk:artDonde},

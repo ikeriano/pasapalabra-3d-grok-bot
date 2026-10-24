@@ -188,15 +188,15 @@ function roscoGraf(){const g=new T.Group();G.add(g);const discG=new T.CylinderGe
  g.team=c=>{g.tm.setC(c);g.ac.setC(c);};
  return g;}
 // ===== FONDO ROJO BURDEOS con iris (entrada: disco que crece; salida: agujero que se abre) =====
-function redBg(blue){const m=new T.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{inR:{value:0},outR:{value:0},asp:{value:1.7},t:{value:0},bl:{value:blue?1:0}},
+function redBg(blue){const m=new T.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{inR:{value:0},outR:{value:0},asp:{value:1.7},t:{value:0},bl:{value:blue?1:0},cen:{value:new T.Vector2(0,0)}},
  vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
- fragmentShader:'varying vec2 v;uniform float inR,outR,asp,t,bl;void main(){vec2 p=(v-.5)*vec2(asp,1.);float d=length(p);if(d<inR||d>outR)discard;float k=smoothstep(0.,.75,length(p-vec2(-.1,.15)));vec3 c=mix(mix(vec3(.86,.05,.11),vec3(.36,0.,.04),k),mix(vec3(.42,.72,1.),vec3(.08,.3,.85),k),bl);c+=.03*sin(p.x*40.+t)*sin(p.y*30.-t);gl_FragColor=vec4(c,1.);}'});
+ fragmentShader:'varying vec2 v;uniform float inR,outR,asp,t,bl;uniform vec2 cen;void main(){vec2 p=(v-.5)*vec2(asp,1.);float d=length(p-cen);if(d<inR||d>outR)discard;float k=smoothstep(0.,.75,length(p-vec2(-.1,.15)));vec3 c=mix(mix(vec3(.86,.05,.11),vec3(.36,0.,.04),k),mix(vec3(.42,.72,1.),vec3(.08,.3,.85),k),bl);c+=.03*sin(p.x*40.+t)*sin(p.y*30.-t);gl_FragColor=vec4(c,1.);}'});
  const pl=new T.Mesh(new T.PlaneGeometry(1,1),m);pl.renderOrder=-1;
  const ring=new T.Mesh(new T.TorusGeometry(1,.05,10,72),MP(0xffffff,150));ring.renderOrder=0;
  const ring2=new T.Mesh(new T.TorusGeometry(1,.028,8,72),MP(blue?0x1040c0:0xc0101c,60));
  const g=new T.Group();g.add(pl,ring,ring2);g.pl=pl;g.ring=ring;g.ring2=ring2;
  g.fit=()=>{pl.scale.set(GW+40,760,1);m.uniforms.asp.value=(GW+40)/760;};g.fit();
- g.set=(inR,outR,mode)=>{m.uniforms.inR.value=inR;m.uniforms.outR.value=outR;const r=(mode=='in'?outR:inR)*760;const tube=mode=='in'?Math.max(6,r*.08):Math.max(6,r*.07);ring.visible=ring2.visible=r>1&&r<GW*1.2;ring.scale.setScalar(r);ring2.scale.setScalar(r*.9);ring.position.z=40;ring2.position.z=38;};
+ g.set=(inR,outR,mode)=>{m.uniforms.inR.value=inR;m.uniforms.outR.value=outR;const r=(mode=='in'?outR:inR)*760;const tube=mode=='in'?Math.max(6,r*.08):Math.max(6,r*.07);ring.visible=ring2.visible=r>1&&r<GW*1.2;ring.scale.setScalar(r);ring2.scale.setScalar(r*.9);ring.position.z=40;ring2.position.z=38;const c=m.uniforms.cen.value;ring.position.x=ring2.position.x=c.x*760;ring.position.y=ring2.position.y=c.y*760;};
  return g;}
 const RHYP=()=>Math.hypot(GW/760/2+.05,.55);
 // texto que se escribe letra a letra
@@ -213,9 +213,9 @@ function letterRain(n,w,h,zr,blue){const it=[];for(let i=0;i<n;i++)it.push({ch:A
 function makeCort(id,blue){const c=CORT[id],g=new T.Group();G.add(g);const bg=redBg(blue);g.add(bg);const inner=new T.Group();g.add(inner);
  const rain=letterRain(70,GW+200,800,[-300,100],blue);inner.add(rain);
  let art;const AW=GW;
- if(id=='escalera'){const it=[];for(let r=0;r<9;r++){const len=8+r;for(let i=0;i<len;i++)it.push({ch:AL[(r*7+i*3)%27],base:new T.Vector3(-AW*.5+r*52+i*34,-340+r*62,0),p:new T.Vector3(),s:36,r:0,c:0xffffff,row:r});}art=letterCloud(it,{op:.95});art.items.forEach(x=>x.p.copy(x.base));
-  art.anim=t=>{art.items.forEach(x=>{const k=Math.min(1,Math.max(0,t*1.6-x.row*.12));x.p.set(x.base.x,x.base.y-(1-eout(k))*500,0);});art.upd();};}
- if(id=='pulsador'){const it=[];for(const s of [-1,1]){sphereItems(110,120,()=>new T.Color(1,1,1)).forEach(x=>{x.base=x.p.clone();x.lobe=s;x.s=17;it.push(x);});}art=letterCloud(it,{op:.9});
+ if(id=='escalera'){const it=[];for(let r=0;r<9;r++){const len=8+r;for(let i=0;i<len;i++)it.push({ch:AL[(r*7+i*3)%27],base:new T.Vector3(-AW*.45+r*40+i*46,-300+r*70,0),p:new T.Vector3(),s:36,r:0,c:0xffffff,row:r});}art=letterCloud(it,{op:.95});art.items.forEach(x=>x.p.copy(x.base));
+  art.anim=t=>{art.items.forEach(x=>{const k=Math.min(1,Math.max(0,t*1.6-x.row*.12));x.p.set(x.base.x,x.base.y-(1-eout(k))*500,0);});art.upd();};art.rotation.set(-.85,.45,.2);art.position.set(-AW*.12,-60,0);}
+ if(id=='pulsador'){const it=[];for(const s of [-1,1]){sphereItems(150,190,()=>new T.Color(1,1,1)).forEach(x=>{x.base=x.p.clone();x.lobe=s;x.s=17;it.push(x);});}art=letterCloud(it,{op:.9});
   art.anim=t=>{const q=new T.Quaternion();art.items.forEach(x=>{const a=t*1.1*x.lobe;const c=Math.cos(a),sn=Math.sin(a);const bx=x.base.x*c+x.base.z*sn,bz=-x.base.x*sn+x.base.z*c;const k=eout(Math.min(1,t*.8));x.p.set(-AW*.2+x.lobe*120*k+bx*1.0,bz*.15+x.base.y*.95+x.lobe*30,bz);x.n=null;x.r=0;});art.upd();};}
  if(id=='depar'){const it=[];const s='DEPARENPAR';for(let r=0;r<16;r++)for(let i=0;i<34;i++)it.push({ch:s[(i+r)%s.length],base:new T.Vector3(-AW*.7+i*44+r*36,-420+r*58,-60),p:new T.Vector3(),s:13,r:.42,c:0xffc8cc,row:r});art=letterCloud(it,{op:.7});
   art.anim=t=>{art.items.forEach(x=>{x.p.set(x.base.x+((t*90*(x.row%2?1:-1))%44),x.base.y+((t*40)%58),x.base.z);});art.upd();};}
@@ -227,12 +227,13 @@ function makeCort(id,blue){const c=CORT[id],g=new T.Group();G.add(g);const bg=re
   art.anim=t=>{const cx=0;art.items.forEach(x=>{if(x.big){const k=Math.min(1,t/1.3),a=x.a+t*2.2,R=40+130*eout(k);x.p.set(cx+Math.cos(a)*R,Math.sin(a)*R,0);x.r=a-PI/2;x.s=x.s0*Math.max(0,1-Math.max(0,t-.9)*1.6);}else{const k=Math.min(1,Math.max(0,(t-.9)*1.5)),a=x.a-t*.12;x.s=28*eout(k);x.p.set(cx+Math.cos(a)*300,Math.sin(a)*228,6);if(x.disc){x.disc.position.set(x.p.x,x.p.y,-4);x.disc.scale.setScalar(Math.max(.001,eout(k)));};x.r=a-PI/2;}});art.upd();};}
  if(c.mk)art=c.mk(AW,blue);
  inner.add(art);if(art.discs)inner.add(...art.discs);
- const tl=typeLabel(blue?Math.min(GW*.9,900):c.title.length>1?620:640,c.title.length*c.fs*1.15+20,c.title,c.fs,c.al||(id=='escalera'||id=='pulsador'?'left':'center'));tl.position.set(c.tx*GW+((c.al=='left'||id=='escalera'||id=='pulsador')?120:0),c.ty*720,120);inner.add(tl);
- const o={g,dur:5.5,setT(t){bg.pl.material.uniforms.t.value=t;const H=RHYP();
-   if(t<1){const k=eio(t/1);bg.set(0,k*H,'in');inner.visible=t>.6;}else if(t<4.4){bg.set(0,9,'none');inner.visible=true;}else{const k=eio(Math.min(1,(t-4.4)/1.1));bg.set(k*H,9,'out');inner.visible=k<.25;}
+ const tl=flyTitle(c.title,c.fs*(blue?1.45:1.05),c.al||(id=='escalera'||id=='pulsador'?'left':'center'),blue?'burst':OPT.etapa==2007?'drop':'zoom');tl.position.set(c.tx*GW+((c.al=='left'||id=='escalera'||id=='pulsador')?-190:0),c.ty*720,120);inner.add(tl);const fx=cortFx(id,blue,inner);
+ const TM=blue?{inE:.5,ex:4.2,exD:.8,ts:1.45,dur:5}:OPT.etapa==2007?{inE:.9,ex:3.8,exD:2.0,ts:1.5,dur:5.9}:{inE:1.4,ex:3.8,exD:1.7,ts:1.2,dur:5.6};const CEN=bg.pl.material.uniforms.cen.value;
+ const o={g,dur:TM.dur,setT(t){bg.pl.material.uniforms.t.value=t;const H=RHYP();
+   if(t<TM.inE){const k=eio(t/TM.inE),kc=1-eio(Math.min(1,t/(TM.inE*.8)));CEN.set(blue?0:.13*kc,blue?0:.08*kc);bg.set(0,(.06+k*.94)*H*(1+.08*Math.sin(k*PI)),'in');if(blue)inner.visible=true;else bg.ring.scale.y*=1-.3*kc;bg.ring2.scale.y*=1-.3*kc;bg.ring.rotation.z=bg.ring2.rotation.z=kc*.6;inner.visible=blue||t>TM.inE*.5;}else if(t<TM.ex){CEN.set(0,0);bg.set(0,9,'none');inner.visible=true;}else{const k=eio(Math.min(1,(t-TM.ex)/TM.exD)),kc=1-eio(Math.min(1,(t-TM.ex)/TM.exD*1.3));CEN.set(blue?0:tl.position.x/760*kc*.8,blue?0:tl.position.y/760*kc*.8);bg.set(k*H*1.1,9,'out');inner.visible=blue?k<.15:k<.7;if(!blue){rain.visible=art.visible=k<.2;}}
    rain.items.forEach(x=>{x.p.y=((x.p.y+x.vy*.016+400)%800)-400;x.p.x+=x.vx*.016;});rain.upd();
-   if(art.anim)art.anim(Math.max(0,t-.8));tl.draw(Math.floor(Math.max(0,(t-1.6)/1.5)*tl.total*1.0));
-   inner.scale.setScalar(1+Math.max(0,t-1)*.015);},
+   if(art.anim)art.anim(Math.max(0,t-.8));tl.anim(t-TM.ts);fx(t);
+   inner.scale.setScalar(1+Math.max(0,t-.6)*.035);inner.rotation.y=Math.sin(t*.7)*.06;inner.rotation.x=-.04+t*.01;inner.position.y=-Math.max(0,t-1)*4;},
   free(){G.remove(g);g.traverse(m=>{if(m.geometry)m.geometry.dispose();});}};
  o.setT(0);return o;}
 async function playCort(id,rid){const E=ETAPAS[OPT.etapa]||{};say();sfx(OPT.etapa==2007?'cortinilla':'cort'+OPT.etapa);const bl=!!E.blue;const c=makeCort(bl&&CORT[id+'B']?id+'B':id,bl);await tween(c.dur,(e,k)=>c.setT(k*c.dur),x=>x);c.free();chk(rid);}
