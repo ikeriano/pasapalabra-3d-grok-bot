@@ -1,0 +1,36 @@
+STEP cabecera
+AUD snd/cabv3_2019.ogg | sub: 
+AUD snd/aplauso.ogg | sub: 
+AUD snd/p5/4ac25c749b.ogg | sub: Presentador: ¡Hola, hola! Bienvenidos a Pasapalabra. ¡Hoy jugamos el equipo azul contra el
+AUD snd/p5/12483b046b.ogg | sub: Presentador: Y en el bote hoy hay…
+AUD snd/p5/0c2d715480.ogg | sub: Presentador: Equipo azul: ¡tú y tu invitada!
+AUD snd/p5/01f95958c2.ogg | sub: Presentador: Equipo naranja: ¡nuestro rival!
+AUD snd/p5/f53e55eaff.ogg | sub: Presentador: Empezamos con la Silla Azul
+STEP cortinilla silla
+AUD snd/cort2019.ogg | sub: 
+STEP prueba silla
+AUD snd/voz/2019_u4_pre.ogg | sub: Presentador: Comenzamos, primera prueba: Una de Cuatro.
+STEP cortinilla u4
+AUD snd/cort2019.ogg | sub: 
+STEP prueba u4
+AUD snd/voz/2019_pista_pre.ogg | sub: Presentador: Seguimos jugando: Pista musical.
+STEP cortinilla pista
+AUD snd/cort2019.ogg | sub: 
+AUD snd/voz/2019_pista_exp.ogg | sub: Presentador: Vamos con este último duelo, duelo musical. Y vamos a por ello: año de la can
+STEP prueba pista
+AUD snd/voz/2019_sopa_pre.ogg | sub: Presentador: Nos vamos a la Sopa de Letras.
+STEP cortinilla sopa
+AUD snd/cort2019.ogg | sub: 
+AUD snd/voz/2019_sopa_exp.ogg | sub: Presentador: Vamos jugando, vamos con la Sopa de Letras. Así que colocamos la primera, vam
+STEP prueba sopa
+AUD snd/voz/2019_donde_pre.ogg | sub: Presentador: Última prueba, últimos segundos en juego: vamos a ¿Dónde Están?
+STEP cortinilla donde
+AUD snd/cort2019.ogg | sub: 
+AUD snd/voz/2019_donde_exp.ogg | sub: Presentador: Última prueba en esta final, en este duelo de maestros. Vamos a ver la pantal
+STEP prueba donde
+AUD snd/voz/2019_rosco_pre.ogg | sub: Presentador: Vamos al Rosco final de Pasapalabra.
+STEP cortinilla rosco
+AUD snd/cort2019.ogg | sub: 
+STEP prueba rosco
+AUD snd/p5/561d8af0b8.ogg | sub: Presentador: ¡Ganas el programa con 20 aciertos! ¡Mañana vuelves a por el bote!
+STEP creditos

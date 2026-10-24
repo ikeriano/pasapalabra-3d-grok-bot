@@ -1,0 +1,5 @@
+src=open('/workspace/pp3d/app/www/etapas.js').read().split('\n')
+sopa='\n'.join(src[208:220]).replace('async function sopaDeLetras(','async function sopaTV(').replace("bar(58,58,COL.bl,ch,{fs:36,r:8})","bar(58,58,COL.bl,ch,{fs:36,r:29})")
+assert sopa.rstrip().endswith('await soloEnd(ac,rid);}')
+js=open('/workspace/pp3d/v07/v07_tpl.js').read().replace('/*SOPA*/',sopa)
+open('/workspace/pp3d/app/www/v07.js','w').write(js)

@@ -1,0 +1,15 @@
+const p=require('/workspace/pp_ac/node_modules/puppeteer-core');
+(async()=>{const b=await p.launch({executablePath:'/usr/bin/google-chrome',args:['--no-sandbox','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
+const pg=await b.newPage();await pg.setViewport({width:1280,height:720});pg.on('pageerror',e=>console.log('ERR',e.message));pg.on('console',m=>{if(/warn|E /.test(m.text()))console.log('C',m.text())});
+await pg.evaluateOnNewDocument(()=>{localStorage.setItem('pp3d_opt',JSON.stringify({etapa:2019,plato:2019,mus:0,sfx:0,final:'alaz'}));});
+await pg.goto('http://localhost:8766/index.html');const sl=ms=>new Promise(r=>setTimeout(r,ms));await sl(3500);
+const tag=Date.now()%100000;
+await pg.evaluate(()=>showMenu('opt'));await sl(600);await pg.screenshot({path:`/workspace/envio/pp3d/v07/v07_selector_${tag}.jpg`,type:'jpeg',quality:85});
+await pg.evaluate(()=>showMenu('main'));await sl(600);await pg.screenshot({path:`/tmp/sel_main_${tag}.jpg`,type:'jpeg',quality:85});
+console.log(await pg.evaluate(()=>JSON.stringify({esp:Object.keys(L5.ESP).length,temas:L5.TEMAS.length})));
+await pg.evaluate(()=>{menu.classList.add('hidden');MODE.menu=false;GAME.sec=[30,25];V6.choiceWait2=4;const rid=DBG.run();DBG.alaZ(rid).catch(e=>console.log('E '+e));});
+await pg.waitForFunction(()=>[...document.querySelectorAll('#acts button')].some(x=>/A → Z/.test(x.textContent)),{timeout:60000});await sl(700);await pg.screenshot({path:`/workspace/envio/pp3d/v07/v07_alaz_orden.jpg`,type:'jpeg',quality:85});
+await pg.evaluate(()=>{const b=document.querySelector('#acts button');b&&b.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}))});await sl(1200);
+await pg.screenshot({path:`/tmp/az_choice2_${tag}.jpg`,type:'jpeg',quality:85});await sl(4500);
+await pg.evaluate(()=>{const b=[...document.querySelectorAll('#acts button')].find(x=>/Pista/.test(x.textContent));console.log('E pista '+!!b);b&&b.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true}))});await sl(500);
+await pg.screenshot({path:`/workspace/envio/pp3d/v07/v07_alaz_pista.jpg`,type:'jpeg',quality:85});console.log(tag);await b.close();})();

@@ -1,0 +1,30 @@
+STEP cabecera
+AUD snd/cabv3_2014.ogg | sub: 
+AUD snd/aplauso.ogg | sub: 
+AUD snd/p5/4ac25c749b.ogg | sub: Presentador: ¡Hola, hola! Bienvenidos a Pasapalabra. ¡Hoy jugamos el equipo azul contra el
+AUD snd/p5/12483b046b.ogg | sub: Presentador: Y en el bote hoy hay…
+AUD snd/p5/0c2d715480.ogg | sub: Presentador: Equipo azul: ¡tú y tu invitada!
+AUD snd/p5/01f95958c2.ogg | sub: Presentador: Equipo naranja: ¡nuestro rival!
+AUD snd/p5/19323d0f08.ogg | sub: Presentador: Vamos con la siguiente prueba: Letra a letra.
+STEP cortinilla letra
+AUD snd/cort2014.ogg | sub: 
+STEP prueba letra
+AUD snd/p5/d945248527.ogg | sub: Presentador: Vamos con la siguiente prueba: La Pista.
+STEP cortinilla pista
+AUD snd/cort2014.ogg | sub: 
+AUD snd/voz/2014_pista_exp.ogg | sub: Presentador: Vamos a ello. Tengo una canción para vosotras. La ponemos en pantalla, porque
+STEP prueba pista
+AUD snd/voz/2014_coco_pre.ogg | sub: Presentador: Bueno, nos vamos al Coco Loco.
+STEP cortinilla coco
+AUD snd/cort2014.ogg | sub: 
+STEP prueba coco
+AUD snd/voz/2014_quees_pre.ogg | sub: Presentador: Venga, nosotros, mientras todos cogen regalos, nos vamos a la siguiente prueb
+STEP cortinilla quees
+AUD snd/cort2014.ogg | sub: 
+STEP prueba quees
+AUD snd/voz/2014_rosco_pre.ogg | sub: Presentador: Y ahora, dicho esto, nos vamos… ¿a dónde va a ser? ¡Al Rosco final!
+STEP cortinilla rosco
+AUD snd/cort2014.ogg | sub: 
+STEP prueba rosco
+AUD snd/p5/561d8af0b8.ogg | sub: Presentador: ¡Ganas el programa con 20 aciertos! ¡Mañana vuelves a por el bote!
+STEP creditos

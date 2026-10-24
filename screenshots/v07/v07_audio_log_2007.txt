@@ -1,0 +1,31 @@
+STEP cabecera
+AUD snd/cabv3_2007.ogg | sub: 
+AUD snd/aplauso.ogg | sub: 
+AUD snd/p5/4ac25c749b.ogg | sub: Presentador: ¡Hola, hola! Bienvenidos a Pasapalabra. ¡Hoy jugamos el equipo azul contra el
+AUD snd/p5/12483b046b.ogg | sub: Presentador: Y en el bote hoy hay…
+AUD snd/p5/0c2d715480.ogg | sub: Presentador: Equipo azul: ¡tú y tu invitada!
+AUD snd/p5/01f95958c2.ogg | sub: Presentador: Equipo naranja: ¡nuestro rival!
+AUD snd/voz/2007_escalera_pre.ogg | sub: Presentador: Pues vamos a jugar: primera prueba, La Escalera.
+STEP cortinilla escalera
+AUD snd/cortinilla.ogg | sub: 
+STEP prueba escalera
+AUD snd/p5/b0661ca9b4.ogg | sub: Presentador: Vamos con la siguiente prueba: El Pulsador.
+STEP cortinilla pulsador
+AUD snd/cortinilla.ogg | sub: 
+STEP prueba pulsador
+AUD snd/voz/2007_depar_pre.ogg | sub: Presentador: ¡Seguimos jugando ahora con De Par en Par!
+STEP cortinilla depar
+AUD snd/cortinilla.ogg | sub: 
+AUD snd/voz/2007_depar_exp.ogg | sub: Presentador: Y toca jugar a De Par en Par, compañeros. Os explico rápidamente la prueba: a
+STEP prueba depar
+AUD snd/p5/94e79ee55c.ogg | sub: Presentador: Vamos con la siguiente prueba: La Palabra imposible.
+STEP cortinilla imposible
+AUD snd/cortinilla.ogg | sub: 
+AUD snd/voz/2007_imposible_exp.ogg | sub: Presentador: ¡Y vamos a jugar con La Palabra Imposible! Las ocho palabras más raritas que 
+STEP prueba imposible
+AUD snd/voz/2007_rosco_pre.ogg | sub: Presentador: Bueno, vamos a jugar la última prueba del programa: Rosco final de Pasapalabr
+STEP cortinilla rosco
+AUD snd/cortinilla.ogg | sub: 
+STEP prueba rosco
+AUD snd/p5/561d8af0b8.ogg | sub: Presentador: ¡Ganas el programa con 20 aciertos! ¡Mañana vuelves a por el bote!
+STEP creditos
