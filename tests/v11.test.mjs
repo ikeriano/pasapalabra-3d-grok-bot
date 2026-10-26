@@ -1,7 +1,7 @@
 // v0.11: datos, voces, opciones apagadas, escenas nuevas (fuera de cámaras, cámaras ocultas, pruebas previas, lo mejor 3D, tomas), normas, copresentador
 import {open,check,sleep} from './lib.mjs';
 const OUT=process.env.SHOTS||'/workspace/pasa3d_11/shots';
-const T=await open({w:800,h:360,dpr:2});const p=T.p;const ev=(f,...a)=>p.evaluate(f,...a);
+const T=await open({w:800,h:360,dpr:2});T.p.on('pageerror',e=>console.log('PE',String(e).slice(0,200)));const p=T.p;const ev=(f,...a)=>p.evaluate(f,...a);
 const cons=[];p.on('console',m=>{if(m.type()=='error')cons.push(m.text().slice(0,200));});
 const shot=n=>p.screenshot({path:`${OUT}/${n}.jpg`,type:'jpeg',quality:84});
 await ev(()=>{OPT.vozp=0;OPT.mute5=1;OPT.sfx=0;OPT.mus=0;OPT.etapa=OPT.plato=2019;window.SPEED=12;});
@@ -24,25 +24,18 @@ check('Extras: fuera de cámaras, cámaras ocultas y normas',/Más fuera de cám
 await ev(()=>showMenu('normas11s'));await sleep(300);check('pantalla de las 30 normas inventadas',(await ev(()=>document.querySelector('#menu').innerText.match(/INVENTAD/g)||[])).length>=1);await shot('v11_normas_lista');
 await ev(()=>showMenu('opt'));await sleep(400);await ev(()=>document.querySelector('[data-o11]').scrollIntoView({block:'center'}));await sleep(200);
 check('Opciones: 3 interruptores nuevos en «No»',await ev(()=>[...document.querySelectorAll('[data-o11]')].length==3&&[...document.querySelectorAll('[data-o11]')].every(i=>i.value=='0')));await shot('v11_opciones');
-// --- escenas
-async function escena(nombre,fn,{max=240,mid=[6],cls}={}){await ev(f=>{window.__e=null;window.__r=Promise.resolve().then(f).then(()=>'ok',e=>String(e));},fn);let k=0,fin=false;
- for(let i=0;i<max&&!fin;i++){await sleep(250);if(mid.includes(i))await shot('v11_'+nombre+'_'+i);fin=await ev(()=>MODE.menu||document.querySelector('#menu:not(.hidden)')!=null&&MODE.menu);}
- return fin;}
-for(const [k,nm] of [[0,'fuera0'],[2,'fuera2']]){await ev(i=>window.x9go('x9:f11:'+i),k);await sleep(2500);await shot('v11_'+nm+'_a');await sleep(1500);await shot('v11_'+nm+'_b');
- let ok=false;for(let i=0;i<160&&!ok;i++){await sleep(300);ok=await ev(()=>MODE.menu);}check('escena fuera de cámaras '+k+' termina y vuelve al menú',ok);}
-for(const k of [0,3]){await ev(i=>window.x9go('x9:c11:'+i),k);await sleep(3000);await shot('v11_cam'+k+'_a');await sleep(3000);await shot('v11_cam'+k+'_b');
- let ok=false;for(let i=0;i<160&&!ok;i++){await sleep(300);ok=await ev(()=>MODE.menu);}check('cámara oculta '+k+' termina y vuelve al menú',ok);
- check('sin restos de REC/tinte tras la cámara oculta',await ev(()=>!document.querySelector('.rec11')));}
-// todas las cámaras/fuera
-await ev(()=>window.x9go('x9:c11:all'));let ok=false;for(let i=0;i<500&&!ok;i++){await sleep(300);ok=await ev(()=>MODE.menu);}check('«Ver todas» cámaras ocultas',ok);
-await ev(()=>window.x9go('x9:f11:all'));ok=false;for(let i=0;i<500&&!ok;i++){await sleep(300);ok=await ev(()=>MODE.menu);}check('«Ver todas» fuera de cámaras',ok);
-// pruebas previas nuevas: CPU toca al azar
-for(const k of ['sinon','calc','orden','cuenta','rima']){
- await ev(kk=>{window.__pv=scene9(async rid=>{await PV11.fn[kk](rid);},{back:'extras9'}).then(()=>1,e=>String(e));},k);
- let seen=0,fin=false,fails=0;for(let i=0;i<400&&!fin;i++){await sleep(250);
-  await ev(()=>{if(typeof TAP==='function')TAP(Math.floor(Math.random()*3));});
-  if(i==22||i==40)await shot('v11_prev_'+k+'_'+i);
-  fin=await ev(()=>MODE.menu);}
- check('prueba previa inventada «'+k+'» se juega completa',fin);}
+// --- escenas (se comprueba que EMPIEZAN: MODE.menu pasa a false, y que terminan: vuelve a true)
+async function corre(nombre,lanza,arg,shots=[],max=900){await ev(()=>{window.SPEED=5;});await p.evaluate(`void ((${lanza.toString()})(${JSON.stringify(arg)}))`);let ini=false,fin=false,n=0;
+ for(let i=0;i<max&&!fin;i++){await sleep(250);const m=await ev(()=>MODE.menu);if(!ini){if(!m)ini=true;continue;}
+  if(shots.includes(n)){await shot('v11_'+nombre+'_'+n);}n++;await ev(()=>{if(typeof TAP==='function')TAP(Math.floor(Math.random()*3));});fin=m;}
+ check(nombre+': empieza y termina',ini&&fin,'ini='+ini+' fin='+fin);return ini&&fin;}
+await corre('fuera0',a=>DBG.x9go('x9:f11:'+a),0,[8,30]);
+await corre('fuera2',a=>DBG.x9go('x9:f11:'+a),2,[10]);
+await corre('cam0',a=>DBG.x9go('x9:c11:'+a),0,[10,30,60]);
+check('sin restos de REC tras la cámara oculta',await ev(()=>!document.querySelector('.rec11')));
+await corre('cam3',a=>DBG.x9go('x9:c11:'+a),3,[12,40]);
+await corre('camTodas',()=>DBG.x9go('x9:c11:all'),0,[]);
+await corre('fueraTodas',()=>DBG.x9go('x9:f11:all'),0,[]);
+for(const k of ['sinon','calc','orden','cuenta','rima'])await corre('prev_'+k,kk=>{scene9(async rid=>{await PV11.fn[kk](rid);},{back:'extras9'});},k,[10,25]);
 check('sin errores de página/consola',T.errs.length==0&&cons.length==0,(T.errs.concat(cons)).slice(0,3).join('|'));
 await T.close();process.exit(check.fail?1:0);
