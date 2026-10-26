@@ -51,7 +51,7 @@ const CO11={on:false,c:null,p:null,first:true,n:0,last:null,
  begin(){CO11.on=false;CO11.first=true;CO11.n=0;if(!OPT.copro11)return;CO11.c=pick(D11.copro);CO11.on=true;},
  end(){CO11.on=false;if(CO11.p)CO11.p.visible=false;const t=document.querySelector('.inv11');if(t)t.remove();},
  make(){const c=CO11.c;if(CO11.p){CO11.root.remove(CO11.p);P.heads=(P.heads||[]).filter(h=>h!==CO11.p);}
-  const f=['gema','lidia','pepa'].includes(c.id);const p=person({shirt:c.shirt,hair:f?0x3a2418:0x2a2218,long:f,pants:0x20232c,skin:f?0xe8b898:0xd9a47e,badge:0xc0262d});p.position.set(1.05,0,-4.3);p.rotation.y=-.18;root.add(p);P.heads.push(p);CO11.p=p;CO11.root=root;return p;},
+  const f=['gema','lidia','pepa'].includes(c.id);const p=person({shirt:c.shirt,hair:f?0x3a2418:0x2a2218,long:f,pants:0x20232c,skin:f?0xe8b898:0xd9a47e,badge:0xc0262d});p.position.set(1.05,0,-4.3);p.rotation.y=-.18;P.root.add(p);P.heads.push(p);CO11.p=p;CO11.root=P.root;return p;},
  async say(who,text,rid){const c=CO11.c;let t=document.querySelector('.inv11');if(!t){t=document.createElement('div');t.className='inv11';document.body.appendChild(t);}
   t.textContent=`🎭 ${c.nombre} · copresentador/a sorpresa INVENTADO/A`;if(who=='H')await v9say('H',text,rid,'Presentador');else await v9say(c.v,text,rid,c.nombre+' (inventado/a)');},
  async quita(){const t=document.querySelector('.inv11');if(t)t.remove();},
