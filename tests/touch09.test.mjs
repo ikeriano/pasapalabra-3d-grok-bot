@@ -4,7 +4,7 @@ const OUT=process.env.SHOTS||'/workspace/pasa3d_09/shots';
 const T=await open({w:800,h:360,dpr:2});const {p}=T;const ev=(f,...a)=>p.evaluate(f,...a);
 await T.tap(400,180);await p.waitForFunction('NAV.items.length>0',{timeout:4000});
 const info=()=>ev(()=>{const c=document.querySelector('#menu .col');return c?{st:c.scrollTop,sh:c.scrollHeight,ch:c.clientHeight,h2:(document.querySelector('#menu h2')||{}).textContent||'main',ta:getComputedStyle(c).touchAction,ov:getComputedStyle(c).overflowY}:null;});
-const SCR=process.env.SCR?process.env.SCR.split(','):['main','opt','esp','mejor','mejor_botes','mejor_roscos','mejor_momentos','extras9','tomas9','publi9','dvd9','hist','cred','how','museo','mono','normas10','promos'];
+const SCR=process.env.SCR?process.env.SCR.split(','):['main','opt','esp','mejor','mejor_botes','mejor_roscos','mejor_momentos','extras9','tomas9','publi9','hist','cred','how','museo','mono','normas10','promos'];
 let n=0;
 for(const s of SCR){await ev(s=>showMenu(s),s);await sleep(350);const i0=await info();if(!i0){check('pantalla '+s+' existe',false);continue;}
  const sc=i0.h2;

@@ -1,0 +1,46 @@
+/* Juego clásico del DVD — módulo 2D reutilizable (todo cuelga de #cls) */
+#cls{position:absolute;inset:0;z-index:30;background:#0a6fc0 url(../clasico/img/azul.jpg) center/cover;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:"Gill Sans","Trebuchet MS",Roboto,Arial,sans-serif;color:#fff;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#cls .hide{display:none!important}
+#cst{position:relative;background:#0b8ee0 center/100% 100% no-repeat;overflow:hidden;box-shadow:0 0 0 1px #0004}
+#cvw{position:absolute;inset:0;z-index:2}
+#cvid{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;background:#000;display:none;z-index:1}
+#cls button{font-family:inherit;font-size:inherit;color:#fff;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#cls .hs{position:absolute;background:transparent;border-radius:.4em}
+#cls .hs:active{background:#fff5}
+#cls .cbar{display:block;position:relative;width:100%;padding:.55em 0;margin:.5em 0;font-size:2.1em;font-weight:700;letter-spacing:.02em;text-transform:none;background:linear-gradient(#f59a2c,#e0710a);box-shadow:0 .08em .25em #0006;border-top:.07em solid #fff8;border-bottom:.07em solid #0003}
+.cbar:before,.cbar:after{content:"";position:absolute;left:-.7em;right:-.7em;height:.07em;background:#fffc}
+.cbar:before{top:-.18em}.cbar:after{bottom:-.18em}
+.cbar.az{background:linear-gradient(#2c8cf5,#0a52c4)}.cbar.vd{background:linear-gradient(#37b43c,#14781a)}.cbar.rj{background:linear-gradient(#e63535,#a50c0c)}
+.cbar:active{filter:brightness(1.25)}.cbar[disabled]{opacity:.45}.cbar.done{opacity:.55}.cbar.ok{background:linear-gradient(#37b43c,#14781a);opacity:1}.cbar.ko{background:linear-gradient(#e63535,#a50c0c);opacity:1}
+.clist{position:absolute;left:23%;right:23%;top:6%;bottom:6%;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.clist.ap{left:20%;right:20%}
+.ctit{position:absolute;left:5%;right:5%;top:3%;text-align:center;font-size:2.4em;font-weight:700;text-shadow:0 .06em .2em #0008}
+.cbox{position:absolute;left:8%;right:8%;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;border:.18em solid #fff;border-radius:.6em;padding:.4em .8em;text-transform:uppercase;line-height:1.15;box-shadow:0 .15em .5em #0005}
+#cls .cbox.mag{top:9%;height:30%;font-size:2.7em;background:linear-gradient(#c43dc8,#8d1f93)}
+.cbox.gre{top:44%;height:26%;font-size:3em;background:linear-gradient(#35b13a,#1a7d20)}
+.cbox.blu{left:30%;right:30%;top:6%;bottom:14%;display:block;background:linear-gradient(#1b5fd4,#0b3fa8);font-size:2.2em;padding:.5em;border:.12em solid #fff}
+#cls .cbox.blu .cbar{font-size:.62em;padding:.2em 0;margin:.2em 0;background:none;box-shadow:none;border:0;text-transform:uppercase}
+#cls .cbox.blu .cbar.ok{color:#8dff8d;opacity:1}
+.cbox.blu .cbar:before,.cbox.blu .cbar:after{display:none}
+#cls .cbx{position:absolute;bottom:4%;width:30%;padding:.35em 0;font-size:1.9em;font-weight:700;text-align:center;border-top:.07em solid #fffb;border-bottom:.07em solid #fffb}
+.cbx.l{left:9%}.cbx.r{right:9%}.cbx.c{left:35%;width:30%}
+.cbx.vd{background:linear-gradient(#2f9a2f,#0e640e)}.cbx.rj{background:linear-gradient(#df2020,#a30a0a)}.cbx.nar{background:linear-gradient(#f59a2c,#e0710a)}.cbx:active{filter:brightness(1.3)}
+.cbx:before,.cbx:after{content:"";position:absolute;top:-.2em;bottom:-.2em;width:.07em;background:#fffb}.cbx:before{left:-.25em}.cbx:after{right:-.25em}
+.ctm{position:absolute;right:7%;top:42%;width:3.2em;height:3.2em;border-radius:50%;background:radial-gradient(#a64cb0,#5e1d66);border:.14em solid #fff;display:flex;align-items:center;justify-content:center;font-size:2.6em;font-weight:700}
+.cpb{position:absolute;top:.3em;right:.3em}
+#cturno{position:absolute;left:2%;top:2%;font-size:1.25em;font-weight:700;padding:.2em .7em;border-radius:1em;background:#0007;border:.1em solid #fff;z-index:3}
+#cturno.n{border-color:#ff9a2c}#cturno.a{border-color:#3a8cff}
+.rg{position:absolute;left:50%;top:46%;height:86%;aspect-ratio:1;transform:translate(-50%,-50%)}
+.rg i{position:absolute;width:11%;height:11%;margin:-5.5% 0 0 -5.5%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:1.65em;background:radial-gradient(circle at 35% 30%,#9fc1f5,#3b62b7 55%,#1b2f78);box-shadow:0 .1em .2em #0006;text-shadow:0 0 .1em #000}
+.rg i.ok{background:radial-gradient(circle at 35% 30%,#d6f7a2,#59b52a 55%,#27701a)}.rg i.ko{background:radial-gradient(circle at 35% 30%,#ffb0a8,#d6352b 55%,#7a130d)}
+.rg i.cur{background:radial-gradient(circle at 35% 30%,#fff,#ffe36b 55%,#e0a500);color:#222;text-shadow:none;transform:scale(1.28);z-index:2}.rg i.fu{opacity:.5}
+.rtx{position:absolute;left:50%;top:42%;width:40%;transform:translate(-50%,-50%);text-align:center;font-size:1.3em;line-height:1.2;text-transform:uppercase;font-weight:600;text-shadow:0 .06em .15em #0009}
+.rtx small{display:block;font-size:.8em;opacity:.85;margin-bottom:.35em;text-transform:none}
+.rtm{position:absolute;left:50%;top:66%;transform:translateX(-50%);font-size:2.4em;font-weight:700;text-shadow:0 .06em .15em #000a}
+.cres{position:absolute;left:50%;top:50%;width:70%;transform:translate(-50%,-50%);text-align:center}
+.cres h2{font-size:2.6em;margin:.2em 0}.cres p{font-size:1.9em;margin:.3em 0}
+.cbead{position:absolute;left:19%;top:36%;width:7%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9fc1f5,#3b62b7 55%,#1b2f78);border:.1em solid #fff;display:flex;align-items:center;justify-content:center;font-size:2em;font-weight:700;z-index:2}
+.cxo{position:absolute;top:39%;height:20%;width:18%;background:#74091a}
+#cpa{position:absolute;inset:0;background:#000b;z-index:50;display:flex;align-items:center;justify-content:center}
+#cpa .p{width:40%;text-align:center;font-size:2.4vmin}
+#cbar{position:absolute;left:8%;right:8%;bottom:1.6%;height:.55em;background:#0004;border-radius:1em;overflow:hidden}#cbar i{display:block;height:100%;background:#ffd23a;transform-origin:left;width:100%}

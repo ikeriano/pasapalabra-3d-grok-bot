@@ -8,7 +8,7 @@ const menuShot=async(scr,n)=>{await ev(s=>{showMenu(s);},scr);await sleep(500);a
 await ev(()=>{OPT.etapa=OPT.plato=2019;});
 // --- menús
 let t=await menuShot('main','x9_menu_principal');check('menú principal: Lo mejor, Extras y Juegos DVD',/Lo mejor de Pasapalabra/.test(t)&&/Extras/.test(t)&&/Juegos DVD/.test(t));
-check('«Juegos DVD» = próximamente',/Próximamente/.test(await (async()=>{await menuShot('dvd9','x9_dvd');await sleep(800);return ev(()=>menu.querySelector('.col').innerText);})()));
+check('«Juegos DVD» abre el juego clásico del DVD (módulo integrado)',await ev(()=>{showMenu('main');const b=menu.querySelector('[data-go=dvd9]');return !!b&&/Juegos DVD/.test(b.textContent)&&typeof montarClasico=='function'&&!!window.DVD_DATA;}));
 t=await menuShot('mejor','x9_mejor');check('Lo mejor: 3 apartados',/Mejores botes/.test(t)&&/Mejores roscos/.test(t)&&/Momentos/.test(t));
 t=await menuShot('mejor_botes','x9_mejor_botes');check('Mejores botes con fuente y dudosos marcados',/Fuente:/.test(t)&&/Dudoso/.test(t)&&/318\.000/.test(t));
 t=await menuShot('mejor_roscos','x9_mejor_roscos');check('Roscos con fuente',/Fuente:/.test(t));

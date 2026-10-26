@@ -162,22 +162,28 @@ const SCR9={
  mejor_momentos:()=>`<h2>📺 Momentos</h2>${D9.momentos.map((x,i)=>lmItem9('momento',i,x)).join('')}${back9('mejor')}`,
  extras9:()=>`<h2>🎁 Extras</h2>${mb9('tomas9','🎬','Tomas falsas','Lapsus, bromas y «¡Corten!» con animaciones 3D')}${mb9('x9:fuera','🎥','Fuera de cámaras','Diálogos de plató con voces')}${mb9('publi9','📺','Publicidad','Anuncios ficticios del programa')}${mb9('promos','📣','Promos','')}${mb9('x9:cam','🎥','Cámara libre','Elige el plano de cámara')}${back9()}`,
  tomas9:()=>`<h2>🎬 Tomas falsas</h2>${mb9('x9:toma:all','▶','Ver todas','')}${D9.tomas.map((x,i)=>mb9('x9:toma:'+i,{lapsus:'😅',broma:'🎉',corten:'🎬'}[x.k],x.k=='lapsus'?'Lapsus':x.k=='broma'?'Broma':'¡Corten!',esc9(x.t))).join('')}${back9('extras9')}`,
- publi9:()=>`<h2>📺 Publicidad</h2><div class="mtext">Anuncios ficticios, creados para este juego.</div>${D9.publi.map((x,i)=>mb9('x9:publi:'+i,'📺',esc9(x.n),'')).join('')}${back9('extras9')}`,
- dvd9:()=>`<h2>🎲 Juegos DVD</h2><div class="mtext" id="dvdmsg9">Comprobando si el juego del DVD está listo…</div><div id="dvdbtn9"></div>${back9()}`};
-const NEWMAIN9=[['mejor','⭐','Lo mejor de Pasapalabra','Mejores botes, roscos y momentos'],['extras9','🎁','Extras','Tomas falsas, fuera de cámaras, publicidad, promos y cámara libre'],['dvd9','🎲','Juegos DVD','Abre el juego del DVD cuando esté listo']];
-function bind9(col,only){col.querySelectorAll('[data-go]').forEach(b=>{const g=b.dataset.go;if(only&&!only.includes(g))return;b.onpointerdown=ev=>{ev.preventDefault();sfx('ok');if(g.startsWith('x9:'))return x9go(g);showMenu(g);};});}
+ publi9:()=>`<h2>📺 Publicidad</h2><div class="mtext">Anuncios ficticios, creados para este juego.</div>${D9.publi.map((x,i)=>mb9('x9:publi:'+i,'📺',esc9(x.n),'')).join('')}${back9('extras9')}`};
+const NEWMAIN9=[['mejor','⭐','Lo mejor de Pasapalabra','Mejores botes, roscos y momentos'],['extras9','🎁','Extras','Tomas falsas, fuera de cámaras, publicidad, promos y cámara libre'],['dvd9','🎲','Juegos DVD','El Pasapalabra clásico del DVD, con grafismos y vídeos originales']];
+function bind9(col,only){col.querySelectorAll('[data-go]').forEach(b=>{const g=b.dataset.go;if(only&&!only.includes(g))return;b.onpointerdown=ev=>{ev.preventDefault();sfx('ok');if(g=='dvd9')return dvdGo9();if(g.startsWith('x9:'))return x9go(g);showMenu(g);};});}
 {const _sm=showMenu;showMenu=function(s='main'){
-  if(SCR9[s]){_sm('cred');const col=menu.querySelector('.col');col.className='col';col.innerHTML=SCR9[s]();bind9(col);if(s=='dvd9')dvdCheck9(col);try{NAV.attach(s);}catch(e){console.error(e);}return;}
+  if(s=='dvd9'){dvdGo9();return;}
+  if(SCR9[s]){_sm('cred');const col=menu.querySelector('.col');col.className='col';col.innerHTML=SCR9[s]();bind9(col);try{NAV.attach(s);}catch(e){console.error(e);}return;}
   const r=_sm(s);
   if(s=='main'){const col=menu.querySelector('.col'),opt=col&&col.querySelector('[data-go=opt]');if(opt&&!col.querySelector('[data-go=mejor]')){opt.insertAdjacentHTML('beforebegin',NEWMAIN9.map(x=>mb9(x[0],x[1],x[2],x[3])).join(''));bind9(col,['mejor','extras9','dvd9']);try{NAV.attach(s);}catch(e){}}}
   if(s=='opt'){const col=menu.querySelector('.col'),anchor=col&&col.querySelector('h2');if(anchor&&!col.querySelector('[data-o9]')){const rows=[['boteVoz','🎙️','Christian dice el bote'],['conversa','💬','Charla del 1.er programa (concursante ficticio)'],['previas','🧩','Pruebas previas del juego (inventadas)'],['tomasIn','🎬','Tomas falsas entre pruebas'],['publiIn','📺','Publicidad entre pruebas'],['pad8','🕹️','Cruceta de botones (alternativa a deslizar con el dedo)']];
     anchor.insertAdjacentHTML('afterend',rows.map(([k,ic,t])=>`<div class="orow"><label>${ic} ${t}: <b class="v9">${OPT[k]?'Sí':'No'}</b></label><input type="range" min="0" max="1" step="1" value="${OPT[k]?1:0}" data-o9="${k}"></div>`).join(''));
     col.querySelectorAll('[data-o9]').forEach(i=>i.oninput=()=>{OPT[i.dataset.o9]=+i.value;i.parentNode.querySelector('.v9').textContent=+i.value?'Sí':'No';saveOpt();if(i.dataset.o9=='pad8')try{NAV.pad();}catch(e){}});const t0=NAV.screen==s&&NAV.cur()?NAV.cur().textContent:null;try{NAV.attach(s);if(t0!==null){const k=NAV.items.findIndex(e=>e.textContent===t0);if(k>=0&&k!==NAV.idx)NAV.focus(k,true);}}catch(e){}}}
   return r;};}
-async function dvdCheck9(col){let ok=false;try{const r=await fetch('dvd/index.html',{method:'HEAD'});ok=r.ok;}catch(e){}
- const m=col.querySelector('#dvdmsg9'),b=col.querySelector('#dvdbtn9');if(!m)return;
- if(ok){m.textContent='El juego del DVD está listo.';b.innerHTML=mb9('x9:dvd','▶','Abrir el juego del DVD','');b.firstChild.onpointerdown=ev=>{ev.preventDefault();location.href='dvd/index.html';};try{NAV.attach('dvd9');}catch(e){}}
- else m.innerHTML='<b>Próximamente.</b> El juego del DVD todavía no está listo; cuando lo esté, esta opción lo abrirá.';}
+let CL9=null;
+function dvdGo9(){if(CL9)return;
+ if(!window.montarClasico||!window.DVD_DATA){toast('El juego del DVD no se ha podido cargar');return;}
+ RUN++;stopMusic();window.DVD9=1;menu.classList.add('hidden');$('#ver').classList.add('hidden');$('#c').style.visibility='hidden';
+ const host=document.createElement('div');host.id='dvdhost9';host.style.cssText='position:fixed;inset:0;z-index:80;background:#000;touch-action:manipulation';document.body.appendChild(host);
+ const opc={mus:1,voz:1,sfx:1,musVol:Math.max(.3,Math.min(1,OPT.mus||.8)),vozVol:1,extra:0,saltar:0};
+ const salir=()=>{if(!CL9)return;const c=CL9;CL9=null;try{c.destruir();}catch(e){console.error(e);}host.remove();window.DVD9=0;$('#c').style.visibility='';last=performance.now();showMenu('main');};
+ try{const c=montarClasico(host,{base:'dvdc/',data:window.DVD_DATA,opc,salir});CL9=c;c.salir9=salir;}catch(e){console.error(e);CL9=null;host.remove();window.DVD9=0;$('#c').style.visibility='';showMenu('main');}}
+window.dvdGo9=dvdGo9;
+{const ob=window.onBack;window.onBack=function(){if(CL9){CL9.salir9();return;}return ob&&ob.apply(this,arguments);};}
 function x9go(g){const [,k,a]=g.split(':');
  if(k=='bote'){const b=D9.botes[+a];return scene9(async rid=>{cut('host');await v9say('H',b.say,rid);hostSay(`${b.n}: <b>${fmt9(b.imp)} €</b>${b.dud?' (⚠ dato dudoso, ver la lista)':''}`);
    const sv=OPT.etapa;if(b.n=='Fran González')OPT.etapa=2019;try{await premio8(rid,{amount:fmt9(b.imp)+' €',title:b.n.toUpperCase(),sub:b.f+' · '+b.c,keep:true,noBoteVoz:true,noClip:b.n!='Fran González'});}finally{OPT.etapa=sv;}},{back:'mejor_botes',banner:'⭐ LO MEJOR DE PASAPALABRA'});}

@@ -456,7 +456,7 @@ $('#skip').onpointerdown=e=>{e.preventDefault();showMenu();};
 window.onBack=()=>{if(MODE.menu)showMenu();else showMenu();};
 // ---------- bucle ----------
 let last=performance.now(),mT=0;
-function loop(now){requestAnimationFrame(loop);const dt=Math.min(.1,(now-last)/1000);last=now;
+function loop(now){requestAnimationFrame(loop);if(window.DVD9){last=now;return;}const dt=Math.min(.1,(now-last)/1000);last=now;
  if(!window.PAUSE){const d=dt*(window.SPEED||1);for(let i=AN.length-1;i>=0;i--){if(AN[i](d)===false)AN.splice(i,1);}}
  P.sphere.rotation.y+=dt*.35;P.sphere.rotation.x=Math.sin(now/4000)*.15;
  if(MODE.menu){mT+=dt;const a=mT*.06;cam.position.set(Math.sin(a+.8)*14,5.2+Math.sin(mT*.2)*.6,Math.cos(a+.8)*14);cam.fov=44;cam.updateProjectionMatrix();cam.lookAt(0,1,-2);}else updCam(dt);

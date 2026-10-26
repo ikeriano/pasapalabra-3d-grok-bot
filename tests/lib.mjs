@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer-core';
 import http from 'http';import fs from 'fs';import path from 'path';import {fileURLToPath} from 'url';
 const here=path.dirname(fileURLToPath(import.meta.url));
 export const WWW=process.env.WWW||path.join(here,'..','www');
-const MIME={'.html':'text/html','.js':'text/javascript','.ttf':'font/ttf','.ogg':'audio/ogg','.png':'image/png','.jpg':'image/jpeg','.json':'application/json'};
+const MIME={'.css':'text/css','.mp4':'video/mp4','.html':'text/html','.js':'text/javascript','.ttf':'font/ttf','.ogg':'audio/ogg','.png':'image/png','.jpg':'image/jpeg','.json':'application/json'};
 export function serve(){return new Promise(r=>{const s=http.createServer((q,res)=>{let p=decodeURIComponent(q.url.split('?')[0]);if(p=='/')p='/index.html';const f=path.join(WWW,p);if(!f.startsWith(WWW)||!fs.existsSync(f)||fs.statSync(f).isDirectory()){res.writeHead(404);return res.end();}
  res.writeHead(200,{'content-type':MIME[path.extname(f)]||'application/octet-stream'});fs.createReadStream(f).pipe(res);}).listen(0,'127.0.0.1',()=>r(s));});}
 export const sleep=ms=>new Promise(r=>setTimeout(r,ms));
