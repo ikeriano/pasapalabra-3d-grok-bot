@@ -3,7 +3,7 @@
 Todo lo nuevo e inventado está marcado como «inventado» en el propio juego.
 
 - 5 pruebas previas inventadas nuevas (opción «Pruebas previas nuevas», apagada por defecto).
-- Más «Lo mejor de Pasapalabra»: 14 botes, 6 roscos y 8 momentos nuevos recreados en 3D, y 3 niveles más de «Jugar un rosco famoso».
+- Más «Lo mejor de Pasapalabra»: 26 botes, 8 roscos y 16 momentos nuevos recreados en 3D, y 3 niveles más de «Jugar un rosco famoso».
 - Más fuera de cámaras (4), cámaras ocultas (6, inventadas) y 12 tomas falsas nuevas, con voces Piper es_ES.
 - 30 normas sorpresa inventadas; se sortean 10 por partida (rosco, segundos, bote, pruebas, turnos). Opción apagada por defecto.
 - Copresentador sorpresa inventado (opción apagada por defecto).
