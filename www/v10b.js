@@ -53,24 +53,33 @@ async function roscoRec11(rid,x,sp){const [h,m,who]=sp;clearG();MODE.split=false
  await slow(async()=>{for(let i=f0;i<f1;i++){g.state(i,0);}hits=Math.max(0,h-(f1-f0));g.ac.setT(String(hits));
   for(let i=f0;i<f1;i++){g.setAct(i);await wait(.5,rid);g.state(i,1);hits++;g.ac.setT(String(hits));sfx('ok');}g.setAct(-1);await wait(1,rid);});
  await wait(.8,rid);G.remove(g);clearG();setPeople(false);}
-async function momento11(rid,x){cut('wide');say(`<b>${esc(x.t)}</b><br>${esc(x.d)}${x.dud?'<br>⚠ '+esc(x.dud):''}`);toast11(x.t,3200);FX5.conf(['#ffd23a','#2a6af0','#fff'],3);sfx('aplauso');await wait(Math.max(4.5,Math.min(9,String(x.d).length*.045)),rid);}
-async function rosco11(rid,x,i){const sp=RREC[i];if(sp)return roscoRec11(rid,x,sp);
+// cuenta atrás 3D (v0.11): una cifra dorada que sube hasta el valor del dato {n|txt,u,sub,ic}
+async function m3d11(rid,x){const m=x.m3;clearG();MODE.split=false;cut('front');say(`<b>${esc(x.t)}</b><br>${esc(x.d)}${x.dud?'<br>⚠ '+esc(x.dud):''}`);toast11(x.t,3200);
+ const w=Math.min(GW-100,780);const tb=bar(w,64,COL.bl,(m.ic||'⭐')+' '+x.t,{fs:24});tb.position.set(0,215,0);G.add(tb);
+ const num=bar(Math.min(GW-160,620),150,0xb88500,m.txt||'0',{fs:m.txt?44:78});num.position.set(0,60,40);G.add(num);const sb=bar(w,52,COL.bl,m.sub||'',{fs:20});sb.position.set(0,-70,0);G.add(sb);
+ const rc=bar(300,30,COL.rd,'RECREACIÓN DE DATOS REALES',{fs:14});rc.position.set(0,-262,0);G.add(rc);
+ const fm=v=>m.u=='€'?fmt9(v)+' €':v+' '+(m.u||'');
+ if(m.txt){num.scale.setScalar(.01);await tween(.5,e=>num.scale.setScalar(.01+.99*e));}
+ else{let last=-1;await tween(2.6,(e,k)=>{const v=Math.round(m.n*e);if(v!==last&&(v-last>=Math.max(1,Math.floor(m.n/40))||v==m.n)){last=v;num.setT(fm(v));}num.rotation.z=Math.sin(k*9)*.02*(1-e);num.scale.setScalar(1+.06*Math.sin(Math.min(1,e)*PI));},x=>1-Math.pow(1-x,3));num.setT(fm(m.n));num.rotation.z=0;}
+ FX5.conf(['#ffd23a','#2a6af0','#fff'],3);sfx('aplauso');await wait(Math.max(3.2,Math.min(6,String(x.d).length*.03)),rid);clearG();}
+async function momento11(rid,x){if(x.m3)return m3d11(rid,x);cut('wide');say(`<b>${esc(x.t)}</b><br>${esc(x.d)}${x.dud?'<br>⚠ '+esc(x.dud):''}`);toast11(x.t,3200);FX5.conf(['#ffd23a','#2a6af0','#fff'],3);sfx('aplauso');await wait(Math.max(4.5,Math.min(9,String(x.d).length*.045)),rid);}
+async function rosco11(rid,x,i){const sp=RREC[i];if(sp)return roscoRec11(rid,x,sp);if(x.m3)return m3d11(rid,x);
  cut('wide');say(`<b>${esc(x.t)}</b><br>${esc(x.d)}${x.dud?'<br>⚠ '+esc(x.dud):''}`);toast11(x.t,3200);FX5.conf(['#ffd23a','#2a6af0','#fff'],3);sfx('aplauso');await wait(Math.max(4.5,Math.min(10,String(x.d).length*.04)),rid);}
 async function famaScene(rid){const a=fama().filter(r=>r.t=='bote').sort((x,y)=>y.b-x.b).slice(0,3);
  for(let i=a.length-1;i>=0;i--){toast11(['🥇','🥈','🥉'][i]+' '+a[i].n+' · '+eurx(a[i].b)+' €',2400);cut('host');
   await premio8(rid,{amount:eurx(a[i].b)+' €',title:String(a[i].n).toUpperCase(),sub:'Salón de la fama · '+a[i].d,keep:true,noBoteVoz:true,noClip:true});}}
 async function todo11(rid){cut('wide');FX5.conf(['#ffd23a','#2a6af0','#fff'],4);sfx('aplauso');say('<b>⭐ LO MEJOR DE PASAPALABRA</b><br>Cabecera · botes · roscos · momentos');toast11('⭐ LO MEJOR DE PASAPALABRA',3200);await wait(4,rid);
  const bs=D9.botes.slice(0,3);for(let i=bs.length-1;i>=0;i--){await bote11(rid,bs[i],i+1);chk(rid);}
- for(let i=0;i<4;i++){toast11('🎯 Rosco '+(i+1),1500);await rosco11(rid,D9.roscos[i],i);chk(rid);}
- for(const k of [2,3,6]){if(D9.momentos[k]){await momento11(rid,D9.momentos[k]);chk(rid);}}
+ for(const i of [0,1,2,3,6,8]){if(!D9.roscos[i])continue;toast11('🎯 Rosco '+(i+1),1500);await rosco11(rid,D9.roscos[i],i);chk(rid);}
+ for(const k of [2,3,6,7,10]){if(D9.momentos[k]){await momento11(rid,D9.momentos[k]);chk(rid);}}
  if(fama().some(r=>r.t=='bote'))await famaScene(rid);}
 // ---------- jugar un rosco famoso (niveles aproximados ⚠) ----------
 const LV=[['Rosco casi perfecto','Pablo Díaz',.95,25,'Aguanta 25 aciertos frente a un rival que acierta casi todo (24 en el original).'],
  ['Veinticinco contra veinticuatro','Marco Antonio',.93,25,'Rival que llegó a 24 aciertos.'],
  ['El rosco de una tacada','Orestes',.18,25,'Haz las 25 de una tacada, sin rival que te moleste.'],
  ['Fran contra Javier','Javier',.35,21,'Llega al menos a 21 aciertos, como Fran González.']];
-async function jugar11(i){const [t,rv,p,meta]=LV[i];close();
- return scene9(async rid=>{V5.rivalN=rv;V5.noBote=true;GAME.sec=[0,0];V5.cpuP=p;cut('host');say(`<b>${esc(t)}</b><br>Meta: ${meta} aciertos. Rival: ${esc(rv)}`);await wait(2.6,rid);
+async function jugar11(i){const [t,rv,p,meta,,sec]=LV[i];close();
+ return scene9(async rid=>{V5.rivalN=rv;V5.noBote=true;GAME.sec=[sec||0,0];V5.cpuP=p;cut('host');say(`<b>${esc(t)}</b><br>Meta: ${meta} aciertos. Rival: ${esc(rv)}`);await wait(2.6,rid);
   try{await rosco(rid);}finally{V5.rivalN=null;V5.noBote=false;V5.cpuP=.7;}
   const a=GAME.res||[0,0],ok=a[0]>=meta;cut('front');say(ok?`<b>¡Rosco famoso superado!</b> ${a[0]} aciertos (meta ${meta})`:`<b>Casi...</b> ${a[0]} aciertos (meta ${meta})`);
   if(ok){FX5.conf(['#ffd23a','#2a6af0','#fff'],4);sfx('aplauso');famaAdd({n:'Tú',b:a[0],t:'rosco',r:t});}else sfx('loser');await wait(3,rid);},

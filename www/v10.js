@@ -240,11 +240,12 @@ async function intro10(rid,T){const s=S();FX5.banner('PASAPALABRA EN FAMILIA');a
  await explain10(rid,s.n===1||s.how);s.how=0;
  say('<i>Las frases, definiciones, dibujos y canciones de las pruebas son contenido inventado para este juego.</i>');await wait(2.4,rid);say();}
 function pickPruebas(){const s=S();return s.pr>=6?ALL6.slice():shuffle(ALL6).slice(0,3);}
-async function programa10(rid){const s=S();const T=mkTeams();colSave();let g=null;
+async function programa10(rid){try{if(window.NS11)await NS11.empieza(true);}catch(e){console.error(e);}try{return await programa10i(rid);}finally{if(window.NS11)NS11.termina();}}
+async function programa10i(rid){const s=S();const T=mkTeams();colSave();let g=null;
  try{await intro10(rid,T);
   const ps=pickPruebas();const ORD=['ord1','ord2','ord3','ord4','ord5','ord6'];
-  for(const [i,id] of ps.entries()){cut('host');await hs(rid,T10[ORD[ps.length>=6||i<2||ps.length>3?i:i]]);await hs(rid,T10[id],.2);await PRUEBAS[id](rid,T);chk(rid);}
-  colRest();cut('host');
+  for(const [i,id] of ps.entries()){cut('host');await hs(rid,T10[ORD[ps.length>=6||i<2||ps.length>3?i:i]]);await hs(rid,T10[id],.2);const s0f=[T.az.sec,T.na.sec];await PRUEBAS[id](rid,T);chk(rid);if(window.NS11)NS11.famPr(T,s0f,i,ps.length);}
+  if(window.NS11)NS11.fam(T);colRest();cut('host');
   hostSay(T10.sumaNa);await wait(1.7,rid);await clip(rid,secF(T.na.sec));hostSay(T10.sumaAz);await wait(1.7,rid);await clip(rid,secF(T.az.sec));
   say(`<b>Segundos para el rosco — Naranja: ${T.na.sec} s — Azul: ${T.az.sec} s</b>`);await wait(1.6,rid);
   g=await rosco10(rid,T);colRest();await results10(rid,T,g);
@@ -286,6 +287,6 @@ SCR9.fam10n=()=>{const s=S();const inp=(i,v,ph)=>`<input class="n10" data-i="${i
   return r;};}
 {const _e=especial;especial=function(id){if(id=='familia')return showMenu('fam10');return _e.apply(this,arguments);};}
 try{L5.ESP.familia.sub='Juego propio: dos familias de tres, pruebas de segundos, rosco A–Ñ / O–Z y bote';}catch(e){}
-$('#ver').textContent='v0.10';
+$('#ver').textContent='v0.11';
 window.F10={S,mkTeams,resolve10,play:play10,how:how10,programa:programa10,rosco:rosco10,pruebas:PRUEBAS,pickPruebas,eur,secF,monF};
 }
