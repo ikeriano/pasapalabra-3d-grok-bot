@@ -210,9 +210,9 @@ V8.native=true;
 #sw9hint{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 4px);transform:translateX(-50%);z-index:29;pointer-events:none;font:800 clamp(9px,2.4vh,14px) N,Arial,sans-serif;color:#fff;background:#0b2a7acc;border-radius:99px;padding:2px 12px;display:none}
 .mbtn.sw9{outline:4px solid #fff;box-shadow:0 0 0 8px #ff9d00,0 0 22px 8px rgba(255,170,0,.8);transform:scale(1.04)}
 `;document.head.appendChild(st);}
-// la cruceta se puede ocultar desde Opciones (por defecto visible: no se quita nada)
-{const _pad=NAV.pad.bind(NAV);NAV.pad=function(){_pad();const p=$('#pad8');if(p)p.classList.toggle('off9',OPT.pad8===0);};}
-OPT.pad8=OPT.pad8===undefined?1:OPT.pad8;
+// la cruceta de botones está OCULTA por defecto (se desliza con el dedo); se activa/desactiva en Opciones y se recuerda
+{const _pad=NAV.pad.bind(NAV);NAV.pad=function(){_pad();const p=$('#pad8');if(p)p.classList.toggle('off9',!OPT.pad8);};}
+if(!OPT.pad9ok){OPT.pad8=0;OPT.pad9ok=1;try{saveOpt();}catch(e){}}
 // deslizar en horizontal sobre una fila de Opciones (años, selectores): cambia al valor anterior/siguiente; en vertical se desplaza la lista
 (()=>{let g=null;menu.addEventListener('pointerdown',e=>{if(!e.isPrimary)return;const r=e.target.closest&&e.target.closest('.orow');g=r&&!e.target.closest('input[type=range]')?{id:e.pointerId,x:e.clientX,y:e.clientY,r}:null;},true);
  menu.addEventListener('pointerup',e=>{if(!g||e.pointerId!==g.id)return;const dx=e.clientX-g.x,dy=e.clientY-g.y,r=g.r;g=null;

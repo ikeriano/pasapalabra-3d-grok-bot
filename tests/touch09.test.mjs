@@ -29,17 +29,28 @@ for(const s of SCR){await ev(s=>showMenu(s),s);await sleep(350);const i0=await i
 // tocar sigue funcionando (al levantar el dedo)
 await ev(()=>showMenu('main'));await sleep(300);
 {const [x,y]=await T.center('[data-go=opt]').then(c=>c||[0,0]);await ev(()=>document.querySelector('[data-go=opt]').scrollIntoView({block:'center'}));await sleep(200);const c2=await T.center('[data-go=opt]');await T.tap(...c2);await sleep(300);check('tocar «Opciones» abre Opciones',(await info()).h2=='Opciones',(await info()).h2);}
-check('arrastrar la lista empezando sobre un deslizador NO cambia su valor',await ev(()=>OPT.pad8)==1);
+check('arrastrar la lista empezando sobre un deslizador NO cambia su valor (sigue en No)',await ev(()=>OPT.pad8)==0);
 // slider: arrastrar horizontalmente sobre el control cambia el valor, vertical desplaza
 await ev(()=>{const c=document.querySelector('#menu .col');c.scrollTop=0;});await sleep(200);
 {const q=await ev(()=>{const i=document.querySelector('[data-o9=conversa]');if(i)i.scrollIntoView({block:'center'});const r=(i||document.querySelector('input[type=range]')).getBoundingClientRect();return [r.left,r.top+r.height/2,r.width];});await sleep(200);
  const q2=await ev(()=>{const r=document.querySelector('[data-o9=conversa]').getBoundingClientRect();return [r.left,r.top+r.height/2,r.width];});
  const v0=await ev(()=>document.querySelector('[data-o9=conversa]').value);await T.swipe(q2[0]+4,q2[1],q2[2]-8,0,8,{step:16});await sleep(250);const v1=await ev(()=>document.querySelector('[data-o9=conversa]').value);
  check('deslizador: arrastrar en horizontal cambia el valor',v0!=v1,`${v0}→${v1}`);}
-// cruceta (alternativa) sigue funcionando
-{const st0=(await ev(()=>NAV.idx));await T.tap(...await T.center('#pad8 .d'));await sleep(150);const st1=await ev(()=>NAV.idx);check('cruceta ▼ sigue funcionando',st1!=st0,st0+'→'+st1+' de '+await ev(()=>NAV.items.length));}
-// ocultar la cruceta desde Opciones
-await ev(()=>{const i=document.querySelector('[data-o9=pad8]');i.value=0;i.dispatchEvent(new Event('input',{bubbles:true}));});await sleep(150);
-check('opción «Cruceta de botones» No → cruceta oculta',await ev(()=>getComputedStyle(document.querySelector('#pad8')).display=='none'));
-await ev(()=>{const i=document.querySelector('[data-o9=pad8]');i.value=1;i.dispatchEvent(new Event('input',{bubbles:true}));});
+// cruceta de botones: oculta por defecto; el interruptor de Opciones la activa/desactiva y se recuerda
+const padVis=()=>ev(()=>{const e=document.querySelector('#pad8');return !!e&&getComputedStyle(e).display!='none';});
+check('cruceta oculta por defecto en esta pantalla de Opciones',!(await padVis()));
+await ev(()=>{const i=document.querySelector('[data-o9=pad8]');i.value=1;i.dispatchEvent(new Event('input',{bubbles:true}));});await sleep(200);
+check('activar «Cruceta de botones» en Opciones → aparece',await padVis());
+await ev(()=>document.querySelector('[data-o9=pad8]').scrollIntoView({block:'center'}));await sleep(200);
+await p.screenshot({path:OUT+'/v09_opciones_cruceta_SI.jpg',type:'jpeg',quality:82});
+{const st0=(await ev(()=>NAV.idx));await T.tap(...await T.center('#pad8 .d'));await sleep(150);const st1=await ev(()=>NAV.idx);check('cruceta ▼ funciona al activarla',st1!=st0,st0+'→'+st1+' de '+await ev(()=>NAV.items.length));}
+check('la elección se guarda (localStorage)',await ev(()=>JSON.parse(localStorage.getItem('pp3d_opt')).pad8)==1);
+await ev(()=>{const i=document.querySelector('[data-o9=pad8]');i.value=0;i.dispatchEvent(new Event('input',{bubbles:true}));});await sleep(200);
+check('desactivar «Cruceta de botones» → se oculta',!(await padVis()));
+check('la elección No se guarda',await ev(()=>JSON.parse(localStorage.getItem('pp3d_opt')).pad8)==0);
+await ev(()=>showMenu('main'));await sleep(500);check('menú principal sin cruceta',!(await padVis()));
+await p.screenshot({path:OUT+'/v09_menu_sin_cruceta.jpg',type:'jpeg',quality:82});
+// recarga: se recuerda la elección activada y desactivada
+for(const v of [1,0]){await ev(v=>{OPT.pad8=v;saveOpt();},v);await p.reload({waitUntil:'load'});await p.waitForFunction('window.DBG&&document.querySelector("#menu .title")',{timeout:60000});await T.tap(400,180);await p.waitForFunction('NAV.items.length>0',{timeout:6000});await sleep(500);
+ check(`tras recargar con cruceta=${v}: ${v?'visible':'oculta'} desde la primera pantalla de menú`,(await padVis())==!!v);}
 console.log('errs',T.errs);await T.close();process.exit(check.fail?1:0);
