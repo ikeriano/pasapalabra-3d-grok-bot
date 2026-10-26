@@ -202,6 +202,7 @@ async function results10(rid,T,g){const s=S();
  hostSay(T10.fin);await wait(1.4,rid);
  hostSay(T10.hitsNa);await wait(1.7,rid);await clip(rid,`p10/h${T.na.hits}.ogg`);hostSay(T10.hitsAz);await wait(1.7,rid);await clip(rid,`p10/h${T.az.hits}.ogg`);
  const r=resolve10(T.na.hits,T.na.miss,T.az.hits,T.az.miss,s.bote);
+ if(window.LM11)for(const k of r.full)if(!T[k]._c&&(r.bote[k]||0)>0)LM11.fama({n:T[k].name,b:r.bote[k],t:'bote'});
  if(T.na.hits===T.az.hits&&T.na.miss!==T.az.miss){await hs(rid,T10.empFal);}
  say(`<b>Naranja: ${T.na.hits} aciertos, ${T.na.miss} fallos · Azul: ${T.az.hits} aciertos, ${T.az.miss} fallos</b>`);await wait(1.2,rid);
  if(g)g.parent&&G.remove(g);clearG();setPeople(false);cut('front');
