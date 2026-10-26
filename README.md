@@ -6,6 +6,17 @@ Personajes estilizados, controles táctiles y teclado del móvil. Optimizado par
 Descarga el APK en Releases. Capturas y comparativas con la TV en `screenshots/`.
 
 
+## v0.10 – Pasapalabra en familia, equipos de 3 y «Lo mejor de Pasapalabra» completo
+
+- **👨‍👩‍👦 Pasapalabra en familia, como juego propio** (accesos en el menú principal, en Programas especiales y en Programas temáticos). Dos familias de **tres**: la **naranja** (ganó el programa anterior) y la **azul** (la que entra). Seis pruebas que dan **segundos**: *He dicho*, *Palabras cruzadas*, *¿Dónde están?*, *¿Tú qué pintas?*, *Esto me suena* y *La ristra* (3 al azar o las 6, en Opciones de la familia).
+- **El Rosco** de 25 palabras con **85 s + los segundos ganados**: en cada familia juegan **2 miembros**, uno **de la A a la Ñ** y el otro **de la O a la Z**, siempre por turnos (nunca a la vez); el turno pasa con un fallo o con «Pasapalabra». Empieza la familia con más segundos (la naranja si empatan).
+- **Resultado**: gana quien más aciertos tenga → 1.200 € y vuelve al programa; si empatan, quien tenga menos fallos; si empatan en todo, 600 € cada una y vuelven las dos. Con **25 aciertos** se llevan el **bote** (sube 6.000 € por programa sin ganador). Christian lo narra con sus propias palabras (voz es_ES), con grafismos naranja y azul, control táctil con el dedo y teclado fijo, todo en 3D.
+- **Equipos de 3 personas** en todos los modos por equipos (tres sillas por lado en el plató 3D).
+- **⭐ Lo mejor de Pasapalabra**, igual que el de «¡Ahora Caigo!»: botón dorado en el menú y **acceso en cada sección** (Especiales, Temáticos, Museo, Extras, Familia, Historia, Cómo se juega, Opciones…). Modal azul con borde dorado: especial completo, **mejores botes, roscos y momentos recreados en 3D sin presentador** (con **repetición a cámara lenta** al 30 % en los roscos; un toque la salta), **jugar un rosco famoso** (niveles aproximados), **Salón de la fama** (tus botes y roscos quedan guardados) y **🎞️ Vídeos de Ikeriano** (rejilla con póster, reproductor, anterior/siguiente; está **vacía y lista** para cargar vídeos).
+- Los datos dudosos aparecen marcados con ⚠; las pruebas, definiciones, dibujos y canciones de *Pasapalabra en familia* son **contenido inventado** para este juego.
+- Voces empaquetadas sin pérdida (el APK sigue por debajo de los 25 MB, sin recomprimir ningún audio).
+- Mismo applicationId y misma firma que las versiones anteriores (versionCode 11).
+
 ## v0.9 – Cabeceras 2019, Extras, Lo mejor de Pasapalabra, La Silla Azul verificada, pruebas previas por equipos y final dorado
 **Incluye todo lo de la versión anterior (v0.8).**
 - **Táctil (prioridad)**: menús y listas se desplazan arrastrando el dedo (scroll nativo con inercia en el WebView), sin pulsar al arrastrar; en juego, gestos naturales (deslizar para cambiar de opción/año, tocar para elegir) y la cruceta de botones como alternativa, **oculta por defecto** (se activa y desactiva con «Cruceta de botones» en Opciones y se recuerda; en PC sin táctil se sigue usando el teclado). Tests con toques CDP: `tests/touch08.test.mjs`, `tests/touch09.test.mjs`. La inercia (fling) no se puede reproducir en Chrome sin pantalla; está cubierta por el scroll nativo.
