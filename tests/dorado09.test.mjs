@@ -16,6 +16,8 @@ await p.evaluate(()=>{window.__sh='wide';});await sleep(1800);
 await p.screenshot({path:OUT+'/dorado09_3_dorado_plato.jpg',type:'jpeg',quality:84});
 await p.evaluate(()=>{gold9(false);});await sleep(1800);
 check('vuelve al azul',(await p.evaluate(()=>GOLD9.k))==0&&await p.evaluate(()=>!V9c.build()||true));
+check('por defecto «Plató dorado» = No (sesión limpia)',await p.evaluate(()=>OPT.dorado===0&&!localStorage.length||OPT.dorado===0),'OPT.dorado='+await p.evaluate(()=>OPT.dorado));
+await p.evaluate(()=>{OPT.dorado=1;});
 // flujo real: premio8
 await p.evaluate(()=>{window.__sh=null;});
 await p.evaluate(()=>{window.__pr=premio8(1,{amount:'1.542.000 €',title:'FRAN GONZÁLEZ',sub:'prueba',keep:true,noBoteVoz:true,noClip:true}).catch(e=>String(e));});

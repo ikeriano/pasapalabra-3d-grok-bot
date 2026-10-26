@@ -9,7 +9,7 @@
 //  Opción «Plató dorado al ganar» (por defecto Sí).
 // ======================================================================
 (function(){
-OPT.dorado=OPT.dorado===undefined?1:OPT.dorado;
+OPT.dorado=OPT.dorado===undefined?0:OPT.dorado;
 const GOLD9={k:0,to:0,on:false};window.GOLD9=GOLD9;
 function rng(s){return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
 // fondo: gradiente marrón → naranja con resplandor y haces verticales

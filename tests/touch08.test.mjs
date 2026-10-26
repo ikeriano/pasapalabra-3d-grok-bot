@@ -4,6 +4,7 @@
 // Con WWW=/ruta/a/otra/carpeta se puede probar otra versión (la v0.7 FALLA estas pruebas: así se vio el fallo).
 import {open,check,sleep} from './lib.mjs';
 const T=await open({w:800,h:360,dpr:2});const {p}=T;
+await p.evaluate(()=>{OPT.pad8=1;try{NAV.pad();}catch(e){}});// v0.9: la cruceta está oculta por defecto; este test v0.8 la comprueba activada
 const ev=(f,...a)=>p.evaluate(f,...a);
 const screenName=()=>ev(()=>{const h=document.querySelector('#menu h2');return h?h.textContent:(document.querySelector('#menu .title')?'title':'main');});
 const state=()=>ev(()=>({idx:NAV.idx,n:NAV.items.length,scr:NAV.screen,page:NAV.page,fo:[...document.querySelectorAll('.fo8')].length,menu:MODE.menu,focusTxt:(NAV.cur()||{}).textContent&&NAV.cur().textContent.trim().slice(0,24)}));
