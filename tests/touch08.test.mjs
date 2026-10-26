@@ -1,4 +1,4 @@
-// Prueba del control táctil v0.8: Chrome headless con viewport de móvil (Redmi A2: 720x1600 px físicos = 360x800 CSS,
+// Prueba del control táctil v0.8 (actualizada en v0.9: scroll con el dedo): Chrome headless con viewport de móvil (Redmi A2: 720x1600 px físicos = 360x800 CSS,
 // que en horizontal son 800x360 CSS a DPR 2) y eventos táctiles reales (CDP Input.dispatchTouchEvent).
 // Uso:  node tests/touch08.test.mjs      (necesita puppeteer-core y Google Chrome; CHROME=/ruta/chrome)
 // Con WWW=/ruta/a/otra/carpeta se puede probar otra versión (la v0.7 FALLA estas pruebas: así se vio el fallo).
@@ -20,17 +20,14 @@ check('cruceta visible con 5 botones ≥ 44×44 px CSS dentro de la pantalla',pa
 const btnPos=async i=>ev(i=>{const e=NAV.items[i];const r=e.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2];},i);
 const IX=async d=>ev(d=>NAV.items.findIndex(e=>e.dataset.go==d||e.dataset.e5==d),d);
 console.log(await ev(()=>NAV.items.map(e=>(e.dataset.go||'')+'|'+e.textContent.trim().slice(0,18)).join(' ; ')));
-const seq=[['lento 60px',0,-60,10,30],['rápido 60px',0,-60,3,4],['largo 200px',0,-200,12,16],['largo muy rápido 300px',0,-300,2,2]];
-for(const [name,dx,dy,n,st] of seq){await ev(()=>NAV.focus(2));const i0=(await state()).idx;const sc0=await screenName();
- const [x,y]=await btnPos(i0);await T.swipe(Math.min(x,560),Math.min(Math.max(y,40),320),dx,dy,n,{step:st});await sleep(350);
- const s2=await state();check(`deslizar arriba (${name}) empezando sobre un botón → mueve exactamente 1 y no activa nada`,s2.idx==i0+1&&(await screenName())==sc0,`idx ${i0}→${s2.idx} · pantalla ${await screenName()}`);}
-// hacia abajo
-await ev(()=>NAV.focus(4));{const [x,y]=await btnPos(4);await T.swipe(Math.min(x,560),Math.min(Math.max(y,60),300),0,90,8,{step:16});await sleep(300);const s2=await state();check('deslizar abajo → sube exactamente 1 opción',s2.idx==3&&(await screenName())=='main',JSON.stringify(s2));}
-// muchos deslizamientos seguidos: cada uno 1
-await ev(()=>NAV.focus(0));for(let k=0;k<4;k++){await T.swipe(300,250,0,-120,6,{step:12});await sleep(120);}
-check('4 deslizamientos seguidos → 4 opciones',(await state()).idx==4,'idx '+(await state()).idx);
-// un deslizamiento largo y lento que mantiene el dedo y sigue moviéndose NO repite
-await ev(()=>NAV.focus(0));await T.swipe(300,300,0,-300,40,{step:20});await sleep(300);check('un solo gesto largo con el dedo siempre en movimiento → solo 1 paso (sin inercia)',(await state()).idx==1,'idx '+(await state()).idx);
+// v0.9: los menús se desplazan con el dedo (scroll nativo con inercia); un arrastre empezando sobre un botón desplaza y NO lo pulsa
+const sc=()=>ev(()=>{const c=document.querySelector('#menu .col');return c?c.scrollTop:0;});
+const seq=[['lento 60px',-60,10,30],['rápido 60px',-60,3,4],['largo 150px',-150,12,16]];
+for(const [name,dy,n,st] of seq){await ev(()=>{document.querySelector('#menu .col').scrollTop=0;});await sleep(150);const sc0=await screenName();await ev(()=>{window.__ev.length=0;});
+ await T.swipe(300,Math.min(300,220-dy/2),0,dy,n,{step:st});await sleep(700);
+ const s1=await sc(),cl=await ev(()=>window.__ev.filter(e=>e=='click').length);check(`deslizar arriba (${name}) → desplaza el menú, no activa nada`,s1>20&&(await screenName())==sc0&&cl==0,`scrollTop 0→${Math.round(s1)} · pantalla ${await screenName()} · clics ${cl}`);}
+{const a=await sc();await T.swipe(300,120,0,110,8,{step:16});await sleep(600);const b=await sc();check('deslizar abajo → el menú vuelve hacia arriba',b<a-20||a<25,`${Math.round(a)}→${Math.round(b)}`);}
+await ev(()=>{document.querySelector('#menu .col').scrollTop=0;});
 // ---- toques
 await ev(()=>NAV.focus(0));
 {const ie=await IX('esp');const [x,y]=await btnPos(ie);await ev(()=>{window.__t0=performance.now();});await T.touch([[x,y],[x+5,y+4],[x+7,y+3]],{step:10,wait:20});await sleep(100);check('toque con temblor de 8 px sobre «Programas especiales» → responde a la primera',(await screenName()).includes('Programas especiales'),await screenName());}
@@ -70,7 +67,7 @@ await ev(()=>showMenu('how'));await sleep(250);
  const m=await ev(()=>{const c=NAV.col();return [c.scrollHeight,c.clientHeight,c.scrollTop];});
  const btn=await ev(()=>{const r=document.querySelector('#menu .col .mbtn').getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2,r.top];});
  const y0=Math.min(Math.max(btn[1],40),320);await T.swipe(400,200,0,-80,8,{step:14});await sleep(250);
- const m2=await ev(()=>NAV.col().scrollTop);check('arrastrar 80 px desplaza ~80 px el texto (sin inercia) y no sale de la pantalla',m[0]>m[1]?Math.abs(m2-80)<=14:true,`scrollTop ${m[2]}→${m2} (alto ${m[0]}/${m[1]})`);
+ const m2=await ev(()=>NAV.col().scrollTop);check('arrastrar 80 px desplaza 55–90 px (80 menos la holgura táctil del navegador) el texto (sin inercia) y no sale de la pantalla',m[0]>m[1]?(m2>=55&&m2<=90):true,`scrollTop ${m[2]}→${m2} (alto ${m[0]}/${m[1]})`);
  check('sigue en «Cómo se juega»',(await screenName())=='Cómo se juega',await screenName());
  await T.tap(...await T.center('#pad8 .ok'));await sleep(250);check('✔ (Volver) regresa al menú principal',(await screenName())=='main');}
 // ---- el tablero 3D: tocar vale, deslizar no

@@ -10,7 +10,7 @@ SHOTS.cuo={p:V3(-1.45,1.62,.15),l:V3(-3.95,1.55,.65),f:34,dr:.02};
 {const _bar=bar;bar=function(w,h,col,txt='',o={}){o=Object.assign({r:h/2-.5,bw:3,border:0xffd9a8},o);const g=_bar(w,h,col,txt,o);const sc=g.setC;const em=c=>{const C=new T.Color(c);g.face.material.emissive&&g.face.material.emissive.copy(C).multiplyScalar(.45);};em(col);g.setC=c=>{sc(c);em(c);};const st=g.setT;g.setT=(t,c)=>{st(t,c);if(c!==undefined)em(c);};return g;};}
 // reloj de TV: círculo naranja con aro blanco de progreso
 function tvTimer(){const g=new T.Group();g.max=null;
- const L=label(132,132,(c,cw,ch,k)=>{const r=cw/2;const gr=c.createRadialGradient(r*.75,r*.65,r*.1,r,r,r);gr.addColorStop(0,'#ffb24a');gr.addColorStop(1,'#df5a06');
+ const L=label(132,132,(c,cw,ch,k)=>{const r=cw/2;const gr=c.createRadialGradient(r*.75,r*.65,r*.1,r,r,r);gr.addColorStop(0,(window.TIMERC9||['#ffb24a','#df5a06'])[0]);gr.addColorStop(1,(window.TIMERC9||['#ffb24a','#df5a06'])[1]);
   c.fillStyle='rgba(0,0,0,.25)';c.beginPath();c.arc(r,r+3*k,r*.9,0,7);c.fill();c.fillStyle=gr;c.beginPath();c.arc(r,r,r*.88,0,7);c.fill();
   c.lineWidth=r*.11;c.strokeStyle='rgba(255,255,255,.3)';c.beginPath();c.arc(r,r,r*.76,0,7);c.stroke();
   const f=g.max?Math.max(0,Math.min(1,(g.v||0)/g.max)):1;c.strokeStyle='#fff';c.lineCap='round';c.beginPath();c.arc(r,r,r*.76,-PI/2,-PI/2+PI*2*f);c.stroke();

@@ -45,18 +45,18 @@ V5.doReact=ok=>{const t=ok?pick(V5.OK):'¡Oh, no!';const c=V5.clip(t);if(!c)retu
 async function sillaAzul(rid){prep();cut('host');
  hostSay('<b>La Silla Azul</b>: elige una de las dos letras y responde. ¡Quien falle dos preguntas, deja la silla!');await wait(3.4,rid);say();
  const LET='ABCDEFGHIJLMNOPRSTUVZ';const pool=[];ORIG.ROS.forEach((a,i)=>{const L=LETRAS[i];if(!LET.includes(L))return;a.forEach(([ans,def])=>{if(norm(ans[0]).startsWith(L))pool.push([L,ans,def]);});});
- const f=[0,0];let turn=0,used=new Set(),n=0;
+ const f=[0,0];let turn=0,used=new Set(),n=0;if(window.S9)S9.show(['TÚ','RIVAL'],['?','?']);
  while(f[0]<2&&f[1]<2&&n<8){chk(rid);n++;const ls=shuffle([...new Set(pool.filter(q=>!used.has(q[2])).map(q=>q[0]))]).slice(0,2);
-  cut(turn?'orange':'blue');let L;
+  cut(turn?'orange':'blue');if(window.S9)S9.turn(turn);let L;
   if(turn==0){hostSay('¿Qué letra eliges?');L=await new Promise(r=>setActs(ls.map(x=>({t:'Letra '+x,ic:x,cls:'y',cb:()=>r(x)}))));setActs();}
   else{await wait(1,rid);L=pick(ls);say(`El rival elige la <b>${L}</b>`);await wait(1.2,rid);}
-  const q=pick(pool.filter(x=>x[0]==L&&!used.has(x[2])));used.add(q[2]);
+  if(window.S9)S9.letter(turn,L);const q=pick(pool.filter(x=>x[0]==L&&!used.has(x[2])));used.add(q[2]);
   hostSay(`<b>Empieza por ${L}:</b> ${q[2].charAt(0)+q[2].slice(1).toLowerCase()}`);let ok;
   if(turn==0){let tl=15;const v=await ask(()=>(tl-=.016)<=0||rid!==RUN);chk(rid);ok=v!==null&&q[1].some(a=>norm(a)===norm(v));}
   else{await wait(Math.max(2,V5.left()+.5),rid);ok=Math.random()<.7;say(`Naranja responde: <b>${ok?q[1][0]:'…'}</b>`);await wait(1.2,rid);}
-  sfx(ok?'ok':'error');if(ok){if(turn==0)V5.doReact(1);await wait(1.2,rid);}else{f[turn]++;say(`La respuesta correcta: <b>${q[1][0]}</b>`);await wait(1.6,rid);}
+  sfx(ok?'ok':'error');if(ok){if(turn==0)V5.doReact(1);await wait(1.2,rid);}else{f[turn]++;if(window.S9)S9.fail(turn);say(`La respuesta correcta: <b>${q[1][0]}</b>`);await wait(1.6,rid);}
   turn=1-turn;}
- say();const w=f[0]<f[1]?0:f[1]<f[0]?1:-1;
+ if(window.S9)S9.hide();say();const w=f[0]<f[1]?0:f[1]<f[0]?1:-1;
  hostSay(w==0?'¡Te quedas en la <b>Silla Azul</b>! ¡Bien hecho!':w==1?'¡El rival se queda en la silla! Pero tú sigues jugando, ¡ánimo!':'¡Empate! ¡Seguimos los dos!');sfx(w==1?'loser':'winner');await wait(2.4,rid);say();clearG();}
 if(ETAPAS[2019]){ETAPAS[2019].pr.unshift(['silla',sillaAzul]);ETAPAS[2019].lines=ETAPAS[2019].lines||{};ETAPAS[2019].lines.silla='Empezamos con la <b>Silla Azul</b>';ETAPAS[2019].names='Silla Azul, '+ETAPAS[2019].names;}
 const _pc5=playCort;playCort=async function(id,rid){if(!CORT[id]&&!CORT[id+'B'])return;return _pc5(id,rid);};

@@ -24,6 +24,8 @@ playCort=async function(id,rid){
  const dur=a&&isFinite(a.duration)&&a.duration>0?a.duration:spec[1];
  const rest=dur-(performance.now()-t0)/1e3;
  if(rest>.05&&a){cut('wide');await wait(rest+.05,rid);}
+ // v0.9: espera a que el audio diga «terminado» de verdad (el arranque del audio puede retrasarse unas décimas)
+ if(a){const lim=performance.now()+(dur+2)*1e3;while(!a.ended&&!a.paused&&performance.now()<lim)await wait(.1,rid);}
  stopClip8();};
 window.V8c={H19,GEN};
 })();

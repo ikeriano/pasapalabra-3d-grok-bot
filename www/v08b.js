@@ -27,7 +27,7 @@ function montar(){
  // título delante
  const tt=mkTtl();
  P.ttl=new T.Mesh(new T.PlaneGeometry(13,3.25),new T.MeshBasicMaterial({map:tt,transparent:true,depthWrite:false}));P.ttl.position.set(0,3.6,-10.9);P.ttl.renderOrder=3;P.root.add(P.ttl);
- // esfera contenida detrás del título: NO gira (en el vídeo de referencia no rota: sus letras se solapan y bullen despacio)
+ // esfera contenida detrás del título: gira continuamente (v0.9)
  const G=new T.Group();G.position.set(0,3.6,-10.95);G.scale.set(1,1,.1);P.root.add(G);P.root.remove(P.sphere);P.sphere=new T.Group();// el bucle antiguo gira este grupo vacío
  const it=sphereItems(260,2.1,()=>new T.Color(1,1,1));
  it.forEach(x=>{x.s=.34;x.b=x.p.clone();x.bn=x.n.clone();x.ax=new T.Vector3(rnd(-1,1),rnd(-1,1),rnd(-1,1)).normalize();x.w=rnd(.15,.45);x.ph=rnd(0,6.28);x.am=rnd(.25,.55);
@@ -54,8 +54,15 @@ const q=new T.Quaternion(),tv=new T.Vector3();let last=performance.now(),tt=0;
 setInterval(()=>{if(document.hidden||!P.flo||!P.root.visible)return;const n=performance.now(),dt=Math.min(.2,(n-last)/1e3);last=n;tt+=dt;
  for(const x of P.flo.items){x.p.x+=x.vx*dt;x.p.y+=x.vy*dt;if(x.p.x>6.6)x.p.x=-6.6;else if(x.p.x<-6.6)x.p.x=6.6;if(x.p.y>3.4)x.p.y=-3.4;else if(x.p.y<-3.4)x.p.y=3.4;}
  P.flo.upd();
- for(const x of P.ball.items){q.setFromAxisAngle(x.ax,Math.sin(tt*x.w+x.ph)*x.am);x.p.copy(x.b).applyQuaternion(q);x.n.copy(x.bn).applyQuaternion(q);}
- P.ball.upd();},66);
+ },66);
+// v0.9: la bola GIRA de forma continua (medido en el programa real: ω=0,19 rad/s, 1 vuelta cada ~33 s), suave y constante:
+// ángulo calculado con el reloj (sin acumular errores ni sacudidas), 30 actualizaciones/s como máximo;
+// encima, el bamboleo lento de cada letra de la v0.8 (amplitud reducida)
+const RV=0.19,qy=new T.Quaternion(),yax=new T.Vector3(0,1,0);window.BOLA9={periodo:2*Math.PI/RV,ang:0};
+setInterval(()=>{if(document.hidden||!P.ball||!P.root.visible)return;const n=performance.now()/1e3,a=(n*RV)%(2*Math.PI);BOLA9.ang=a;
+ if(P.ball9){P.ball9.rotation.y=Math.PI*.9+a;return;}qy.setFromAxisAngle(yax,a);
+ for(const x of P.ball.items){q.setFromAxisAngle(x.ax,Math.sin(n*x.w+x.ph)*x.am*.5);x.p.copy(x.b).applyQuaternion(q).applyQuaternion(qy);x.n.copy(x.bn).applyQuaternion(q).applyQuaternion(qy);}
+ P.ball.upd();},33);
 // ---- tipografía Keedy Sans (font/keedy.ttf, local) en los rótulos
 const ROT8=t=>typeof t=='string'&&t.length>=4&&t===t.toUpperCase()&&/[A-ZÁÉÍÓÚÑ]/.test(t)&&/[ :·!¡¿?+]/.test(t);window.ROT8=ROT8;
 {let src=ftxt.toString().replace("const F=s==='Pasapalabra'?'K,N,Arial':'N,Arial';if(s==='Pasapalabra')w=400;","const K8=s==='Pasapalabra'||ROT8(s);const F=K8?'K,N,Arial':'N,Arial';if(K8)w=400;");

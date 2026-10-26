@@ -6,6 +6,21 @@ Personajes estilizados, controles táctiles y teclado del móvil. Optimizado par
 Descarga el APK en Releases. Capturas y comparativas con la TV en `screenshots/`.
 
 
+## v0.9 – Cabeceras 2019, Extras, Lo mejor de Pasapalabra, La Silla Azul verificada, pruebas previas por equipos y final dorado
+**Incluye todo lo de la versión anterior (v0.8).**
+- **Táctil (prioridad)**: menús y listas se desplazan arrastrando el dedo (scroll nativo con inercia en el WebView), sin pulsar al arrastrar; en juego, gestos naturales (deslizar para cambiar de opción/año, tocar para elegir) y cruceta/botones como alternativa. Tests con toques CDP: `tests/touch08.test.mjs`, `tests/touch09.test.mjs`. La inercia (fling) no se puede reproducir en Chrome sin pantalla; está cubierta por el scroll nativo.
+- **Cabeceras 2019 rehechas** a imagen de los fotogramas reales: La Pista, Una de Cuatro, Sopa de Letras, ¿Dónde Están?, El Rosco (`www/v09e.js`, captura `screenshots/v0.9/cabeceras2019_JUEGO.jpg`). Cada cabecera sigue sonando entera y el programa espera a que termine el audio.
+- **Bola de letras** como la del programa real de Fran (22-01-2019): letras más grandes y menos densas, giro lento medido (≈33 s por vuelta), inclinación 16°.
+- **Final dorado** al ganar el bote (opción, activada): plató y bola en dorado con rayos, sin tinte azul.
+- **Christian dice el bote en voz alta** (opción activada por defecto). Las demás opciones nuevas están desactivadas por defecto.
+- **La Silla Azul con datos verificados** (programa del 14/03/2017, Julio Escartín, 318.000 €; letras G y M; preguntas alternas, máximo dos fallos, «primero fallito, ¿vale?»). Grafismos A=2016 (azul oscuro), B=2018 (celeste), C=2020 (cian); las etapas sin referencia usan el estilo más cercano (suposición marcada). No hay Silla en junio de 2014 ni etapa 2015. La etapa Antena 3 NO está añadida.
+- **Lo mejor de Pasapalabra**: mejores botes, mejores roscos y récords, momentos. Datos reales de prensa y Wikipedia con su fuente; los datos dudosos llevan ⚠. Cada elemento se puede ver como recreación jugable (narración).
+- **Extras** (estilo Ahora Caigo): Tomas falsas con animaciones 3D, Fuera de cámaras, Publicidad (anuncios ficticios), Promos y Cámara libre. Voces Piper es_ES. Test: `tests/extras09.test.mjs`.
+- **Acumulado del programa / concursante y número de programas** en pantalla; conversaciones de primer programa.
+- **Pruebas previas del juego (inventadas)** en todas las etapas: Verdadero/Falso, Parejas, Intruso, Empieza por…, Rosco relámpago. Juegan DOS EQUIPOS, naranja (#fa8804) y azul (#1269f4), por turnos (nunca a la vez), con los grafismos del color del equipo. Capturas de los turnos naranja y azul en `screenshots/v0.9/`. Test: `tests/equipos09.test.mjs`.
+- **Juegos DVD → «Próximamente»**, con comprobación automática de `dvd/index.html`.
+- APK: `android/build09.sh` (versionCode 9, versionName 0.9, `com.ikeriano.pasapalabra3d.gb`, app aparte; no se instala sobre v0.7).
+
 ## v0.8 – Control táctil, final del bote, bola de letras, Keedy Sans y cabeceras enteras
 - **Control táctil rehecho**: se activa al SOLTAR el dedo (no al apoyarlo), un deslizamiento mueve exactamente UNA opción (sin inercia), cruceta grande ▲▼◀▶ ✔ siempre visible y opción resaltada. Tope de 30 fps. Test con toques reales simulados (`tests/touch08.test.mjs`).
 - **Bote**: al completar el rosco (25 aciertos) se gana el bote y TERMINA el programa: confeti, aplausos, pantalla con el importe, despedida y vuelta al menú. En todas las etapas y especiales. 2019 con el sonido y la despedida reales de Christian (22-01-2019). Test: `tests/bote08.test.mjs`.

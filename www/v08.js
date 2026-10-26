@@ -86,14 +86,14 @@ window.NAV=NAV;
  b('.u',()=>NAV.move(-1));b('.d',()=>NAV.move(1));b('.l',()=>NAV.side(-1));b('.r',()=>NAV.side(1));b('.ok',()=>NAV.ok());}
 // gestos sobre el menú (fase de captura): un solo paso por deslizamiento; en páginas de texto, arrastre 1:1 sin inercia
 (()=>{let g=null;
- menu.addEventListener('pointerdown',e=>{if(!e.isPrimary||!NAV.items.length)return;const c=NAV.col();g={id:e.pointerId,x:e.clientX,y:e.clientY,fired:false,rng:!!(e.target.closest&&e.target.closest('input[type=range]')),st:c?c.scrollTop:0};},true);
+ menu.addEventListener('pointerdown',e=>{if(V8.native||!e.isPrimary||!NAV.items.length)return;const c=NAV.col();g={id:e.pointerId,x:e.clientX,y:e.clientY,fired:false,rng:!!(e.target.closest&&e.target.closest('input[type=range]')),st:c?c.scrollTop:0};},true);
  document.addEventListener('pointermove',e=>{if(!g||e.pointerId!==g.id)return;const dx=e.clientX-g.x,dy=e.clientY-g.y;
   if(NAV.page){if(Math.abs(dy)>V8.SLOP||g.drag){g.drag=true;const c=NAV.col();if(c)c.scrollTop=g.st-dy;}return;}
   if(g.fired||Math.max(Math.abs(dx),Math.abs(dy))<V8.SW)return;g.fired=true;
   if(Math.abs(dx)>Math.abs(dy)*1.2){if(!g.rng)NAV.side(dx>0?1:-1);}else NAV.move(dy<0?1:-1);},true);
  const end=e=>{if(g&&e.pointerId===g.id)g=null;};document.addEventListener('pointerup',end,true);document.addEventListener('pointercancel',end,true);
  // rueda del ratón: un paso por giro (con pausa) — evita el doble desplazamiento
- let wl=0;menu.addEventListener('wheel',e=>{e.preventDefault();if(!NAV.items.length)return;const n=performance.now();if(n-wl<250)return;wl=n;NAV.move(e.deltaY>0?1:-1);},{passive:false});
+ let wl=0;menu.addEventListener('wheel',e=>{if(V8.native)return;e.preventDefault();if(!NAV.items.length)return;const n=performance.now();if(n-wl<250)return;wl=n;NAV.move(e.deltaY>0?1:-1);},{passive:false});
  addEventListener('keydown',e=>{if(!MODE.menu||menu.classList.contains('hidden')||!NAV.items.length||document.activeElement===KB)return;
   const k={ArrowUp:()=>NAV.move(-1),ArrowDown:()=>NAV.move(1),ArrowLeft:()=>NAV.side(-1),ArrowRight:()=>NAV.side(1),Enter:()=>NAV.ok(),' ':()=>NAV.ok()}[e.key];if(k){e.preventDefault();if(!e.repeat)k();}});})();
 // al pintar cada pantalla del menú, enganchar la navegación
