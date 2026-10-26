@@ -103,3 +103,65 @@ new MutationObserver(()=>NAV.pad()).observe(menu,{attributes:true,attributeFilte
 menu.addEventListener('click',e=>{const it=e.target.closest&&e.target.closest('.orow,.mtext');if(!it)return;const i=NAV.items.indexOf(it);if(i>=0&&i!==NAV.idx)NAV.focus(i);});
 $('#ver').textContent='v0.8';
 Object.assign(window.DBG||{},{NAV,V8});
+
+// ======================================================================
+//  v0.8 · FINAL DEL BOTE: completar el rosco (25 aciertos) gana el bote y TERMINA el programa
+//  pantalla de premio con importe + confeti + aplausos + despedida del presentador + créditos + menú
+//  (en 2019 el sonido es el REAL del programa de Fran del 22-01-2019: celebración y despedida de Christian)
+// ======================================================================
+{const st=document.createElement('style');st.textContent=`
+#premio8{position:fixed;inset:0;z-index:37;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;font-family:N,Arial,sans-serif;text-align:center;
+ background:radial-gradient(ellipse at 50% 55%,#ffb40055 0%,#8a520099 55%,#1a0d00cc 100%);opacity:0;transition:opacity .8s}
+#premio8.on{opacity:1}
+#premio8 .t1{font-size:clamp(18px,6vh,44px);font-weight:900;color:#fff;letter-spacing:.06em;text-shadow:0 3px 0 #8a5200,0 0 24px #ffcf40;transform:translateY(-30px) scale(.8);opacity:0;transition:all .7s .2s cubic-bezier(.2,1.6,.4,1)}
+#premio8.on .t1{transform:none;opacity:1}
+#premio8 .am{font-size:clamp(34px,17vh,140px);font-weight:900;line-height:1.05;margin:.1em 0;background:linear-gradient(#fff6b0,#ffd23a 45%,#f0a000 55%,#ffe680);-webkit-background-clip:text;background-clip:text;color:transparent;
+ filter:drop-shadow(0 4px 0 #8a5200) drop-shadow(0 0 18px #ffcf40);transform:scale(.2);opacity:0;transition:all .9s .5s cubic-bezier(.2,1.5,.4,1)}
+#premio8.on .am{transform:none;opacity:1;animation:pm8 1.6s 1.6s ease-in-out infinite alternate}
+@keyframes pm8{to{transform:scale(1.045)}}
+#premio8 .t2{font-size:clamp(13px,4vh,28px);color:#fff;font-weight:800;text-shadow:0 2px 6px #000a;margin-top:.2em;opacity:0;transition:opacity .8s 1.3s}
+#premio8.on .t2{opacity:1}
+#premio8 .t3{font-size:clamp(12px,3.4vh,24px);color:#ffe9a0;font-weight:700;margin-top:.5em;max-width:80vw;opacity:0;transition:opacity .8s 1.8s;text-shadow:0 2px 6px #000a}
+#premio8.on .t3{opacity:1}`;document.head.appendChild(st);}
+const GOLD8=['#ffd23a','#fff6b0','#f0a000','#ffffff','#ff8a00'];
+const FAREWELL8={2007:'¡Enhorabuena, campeón! Has completado el rosco y te llevas el bote. ¡Gracias por jugar a Pasapalabra!',
+ default:'¡Enhorabuena, campeón! Has completado el rosco y te llevas el bote. Seguimos jugando en Telecinco, en Pasapalabra. ¡Hasta pronto!'};
+// frase real de Christian Gálvez al despedir el programa (22-01-2019), tal como suena en el clip
+const DESP2019_TXT='«Seguimos jugando en Telecinco, en Pasapalabra. Y como siempre solemos decir: ojo, cuidado, que lo mejor está por llegar. No se pierda el próximo Pasapalabra.»';
+let clip8=null;
+function playClip8(f,vol){stopClip8();if(OPT.sfx<=0&&OPT.mus<=0)return null;try{clip8=new Audio('snd/'+f);clip8.volume=Math.min(1,vol||Math.max(OPT.sfx,OPT.mus,.7));clip8.play().catch(()=>{});}catch(e){}return clip8;}
+function stopClip8(){if(clip8){try{clip8.pause();}catch(e){}clip8=null;}}
+async function premio8(rid,o){o=o||{};const E=ETAPAS[OPT.etapa]||{};const amount=o.amount||boteTxt();
+ const el=document.createElement('div');el.id='premio8';
+ el.innerHTML=`<div class="t1">🏆 ¡${o.title||'ROSCO COMPLETADO'}! 🏆</div><div class="am">${amount}</div><div class="t2">${o.sub||'¡Has ganado el bote!'}</div><div class="t3"></div>`;document.body.appendChild(el);
+ try{
+  say();setActs&&setActs();stopMusic();V5&&V5.stop&&V5.stop();
+  const y=OPT.etapa,real=(y==2019&&!o.noClip);
+  cut('front');FX5.tint('#ffa000aa');FX5.conf(GOLD8,9);
+  if(real){playClip8('bote2019.ogg',1);}else{music('winner');sfx('aplauso');}
+  hostSay('<b>¡¡'+(o.title||'ROSCO COMPLETADO')+'!!</b> '+amount);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('on')));
+  await wait(2.2,rid);if(!real)sfx('aplauso');
+  cut('wide');FX5.conf(GOLD8,7);await wait(3.2,rid);cut('host');
+  if(!real){sfx('aplauso');}await wait(4,rid);
+  FX5.conf(GOLD8,6);cut('front');await wait(real?5:3,rid);
+  // despedida del presentador
+  el.querySelector('.t3').textContent=real?DESP2019_TXT:(FAREWELL8[y]||FAREWELL8.default);
+  say();cut('host');hostSay(real?DESP2019_TXT:(FAREWELL8[y]||FAREWELL8.default));
+  if(real){stopClip8();playClip8('desp_bote2019.ogg',1);await wait(11.6,rid);}else{music(y==2007?'despedida':'desp'+y);await wait(6,rid);}
+  stopClip8();
+ }finally{stopClip8();el.classList.remove('on');setTimeout(()=>el.remove(),900);FX5.tint('');}
+ if(!o.keep){GAME.boteDone=true;OPT.bote=60000;saveOpt();}}
+{const _b=bote;bote=async function(rid,won){if(won===true){const c=arguments[2]||{};return premio8(rid,c);}return _b.apply(this,arguments);};}
+// tras el bote: sin más programa: créditos y menú (no vuelve a sumar bote ni repite la despedida)
+{const _d=despedida;despedida=async function(rid){if(GAME.boteDone){GAME.boteDone=false;clearG();stopMusic();stopClip8();setPeople(false);cut('front');say();FX5.off();
+  if(typeof creditos6=='function')await creditos6(rid);MOSCA.visible=false;showMenu();return;}return _d.apply(this,arguments);};}
+// especiales: primetime (300.000 €), torneo (premio del especial); copa/duelo no tienen importe → no se inventa
+(()=>{let src=especial.toString();let n=0;
+ const rp=(a,b)=>{if(src.includes(a)){src=src.replace(a,b);n++;}else console.warn('v08 especial: no encuentro',a.slice(0,50));};
+ rp("if(win){FX5.conf(E.conf,6);hostSay(L5.ESPL[8]);await wait(3,rid);}","if(win){await premio8(rid,{amount:'300.000 €',title:'ROSCO COMPLETADO',sub:'Has completado el rosco: ¡300.000 euros!',noClip:true,keep:1});}");
+ rp("if(win){FX5.conf(E.conf,7);sfx('aplauso');music('winner');hostSay(L5.ESPL[7]+(E.prize?' <b>'+E.prize+'</b>':''));await wait(3.4,rid);}","if(win){if(E.prize)await premio8(rid,{amount:E.prize,title:'CAMPEÓN DEL TORNEO',sub:'¡Eres el campeón!',noClip:true,keep:1});else{FX5.conf(E.conf,7);sfx('aplauso');music('winner');hostSay(L5.ESPL[7]);await wait(3.4,rid);}}");
+ rp("hostSay(L5.ESPL[win?11:12]);","hostSay(GAME.boteDone?'¡Rosco completo!':L5.ESPL[win?11:12]);");
+ (0,eval)('especial='+src);})();
+{const _e=especial;especial=function(){GAME.boteDone=false;return _e.apply(this,arguments);};
+ const _p=programa;programa=function(){GAME.boteDone=false;return _p.apply(this,arguments);};}
