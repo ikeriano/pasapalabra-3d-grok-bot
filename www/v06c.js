@@ -18,7 +18,7 @@ TH6.hat=function(type,d){const g=new T.Group(),M=c=>new T.MeshLambertMaterial({c
 TH6.emoji=function(e){const t=cv(96,96,(c,w,h)=>{c.clearRect(0,0,w,h);c.font='72px serif';c.textAlign='center';c.textBaseline='middle';c.fillText(e,w/2,h/2+4);});return new T.Sprite(new T.SpriteMaterial({map:t,transparent:true,depthWrite:false}));};
 TH6.apply=function(id){TH6.clear();const d=(typeof DR6!=='undefined')&&DR6[id];if(!d||!P.root)return 0;const tok=++TH6.tok;const C=x=>new T.Color(x);
  const sv=TH6.sv={tok,mats:[],add:[],bg:S.background&&S.background.isColor?S.background.clone():null,fog:S.fog?S.fog.color.clone():null,lights:[],cap:null};
- const skip=new Set();[P.host,P.ply,P.ply2,P.cpu,P.cpu2].concat(P.heads||[]).forEach(o=>o&&o.traverse&&o.traverse(m=>skip.add(m)));const AM=(window.V4&&V4.aud&&V4.aud.M)||{};Object.values(AM).forEach(m=>skip.add(m));
+ const skip=new Set();[P.host,P.ply,P.ply2,P.ply3,P.cpu,P.cpu2,P.cpu3].concat(P.heads||[]).forEach(o=>o&&o.traverse&&o.traverse(m=>skip.add(m)));const AM=(window.V4&&V4.aud&&V4.aud.M)||{};Object.values(AM).forEach(m=>skip.add(m));
  const cache=new Map();const swap=(o,nc)=>{const mt=o.material;let cl=cache.get(mt);if(!cl){cl=mt.clone();cl.color.copy(nc);cache.set(mt,cl);}sv.mats.push([o,mt]);o.material=cl;};
  P.root.traverse(o=>{if(!o.isMesh||skip.has(o)||!o.material||Array.isArray(o.material)||!o.material.color)return;const mt=o.material,h={};mt.color.getHSL(h);let nc=null;
   if(mt.type=='MeshBasicMaterial'){if(!mt.map&&h.s>.45&&h.l>.25&&h.l<.85)nc=(h.h>.5&&h.h<.75)?C(d.glow):C(d.acc);}
@@ -110,7 +110,7 @@ async function espProg6(id,E){const sv={etapa:OPT.etapa,plato:OPT.plato,final:OP
   V6.cur={id,name:E.name,emoji:E.emoji,banner:E.banner,saludo:E.intro[0],intro:E.intro.slice(1),conf:E.conf,tint:E.tint||''};
   if(E.alaz)OPT.final='alaz';
   if(E.add){const pr=ETAPAS[y].pr;prSv=pr;const np=pr.slice();const [nid,before]=E.add;const fn={connueve:conNueve,dibujadas:palabrasDibujadas}[nid];const bi=np.findIndex(p=>p[0]==before);np.splice(bi<0?np.length-1:bi,0,[nid,fn]);ETAPAS[y].pr=np;}
-  if(E.kids){kids=[P.ply,P.ply2,P.cpu,P.cpu2].filter(Boolean).map(p=>[p,p.scale.clone()]);kids.forEach(([p])=>p.scale.multiplyScalar(.82));V5.rivalN=E.rivalN||null;}
+  if(E.kids){kids=[P.ply,P.ply2,P.ply3,P.cpu,P.cpu2,P.cpu3].filter(Boolean).map(p=>[p,p.scale.clone()]);kids.forEach(([p])=>p.scale.multiplyScalar(.82));V5.rivalN=E.rivalN||null;}
   const a=TH6.apply(E.dr||id),b=Q6.use(E.q||id);
   menu.classList.add('hidden');$('#ver').classList.add('hidden');MODE.menu=false;document.body.classList.add('ingame');$('#skip').classList.remove('hidden');
   try{await programa();}finally{TH6.clear(a);Q6.reset(b);}}

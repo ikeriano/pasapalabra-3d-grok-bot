@@ -22,7 +22,7 @@ const C6={
  host:()=>({2007:'Christian Gálvez',2011:'Christian Gálvez',2014:'Christian Gálvez',2017:'Christian Gálvez',2019:'Christian Gálvez'})[OPT.etapa]||'Christian Gálvez',
  list(){const E=(typeof ETAPAS!=='undefined'&&ETAPAS[OPT.etapa])||{},N=E.names||{};const riv=V5.rivalN||'Equipo naranja';
   return [['Presentado por',[C6.host()+' (presentador virtual)']],
-  ['Concursantes',['Equipo azul: tú y tu invitada famosa',riv+': el rival y su invitado','Etapa '+OPT.etapa+(OPT.tema&&OPT.tema!='normal'?' · programa temático':'')]],
+  ['Concursantes',['Equipo azul: tú y tus dos invitados famosos',riv+': el rival y sus dos invitados','Etapa '+OPT.etapa+(OPT.tema&&OPT.tema!='normal'?' · programa temático':'')]],
   ['Juego creado por',['Iker']],
   ['Basado en',['«Pasapalabra»','Telecinco (2007-2019) · Antena 3 (2000-2006 y desde 2020)']],
   ['Música y sonidos',['Sintonías, cabeceras, cortinillas y despedidas','de los programas originales','Juego de móvil Pasapalabra (2007)']],

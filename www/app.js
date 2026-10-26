@@ -117,14 +117,15 @@ function buildPlato(){const root=new T.Group();S.add(root);P.root=root;
  for(const sx of [-1,1]){const p=new T.Mesh(new T.PlaneGeometry(3.2,1.8),new T.MeshBasicMaterial({map:screenTex()}));p.position.set(sx*9.2,5.2,-8.6);(P.sideS=P.sideS||[]).push(p);p.rotation.y=-sx*.55;root.add(p);}
  // personajes: presentador + equipos (azul = tú, naranja = rival CPU)
  P.host=person({shirt:0x26262c,pants:0x1a1d26,hair:0x9a7a4a});P.host.position.set(0,0,-4.3);root.add(P.host);
- P.seats={b:[[3.95,.5],[3.75,1.6]],o:[[-3.95,.5],[-3.75,1.6]]};
+ P.seats={b:[[3.95,.5],[3.75,1.6],[4.15,-.65]],o:[[-3.95,.5],[-3.75,1.6],[-4.15,-.65]]};// v0.10: equipos de 3 personas
  const mk=(team,i,o)=>{const [x,z]=P.seats[team][i];P.stool(x,z);const p=person(Object.assign({sit:true,badge:team=='b'?0x2a6af0:0xf07a1a},o));p.position.set(x,0,z);p.lookAt(0,0,z*.5);root.add(p);
   const pul=new T.Group();const hm=MP(0xd5d9e0,140);for(const s of [-1,1]){const hs=new T.Mesh(new T.SphereGeometry(.17,14,8,0,PI*2,0,PI/2),hm);hs.position.x=s*.19;pul.add(hs);}const bs=new T.Mesh(new T.BoxGeometry(.6,.05,.25),MP(0x9aa2b0));pul.add(bs);pul.position.set(x*.86,1.08,z*.86);pul.lookAt(x*2,1.08,z*2);root.add(pul);p.pul=pul;pul.visible=false;return p;};
  P.ply=mk('b',0,{shirt:0xf2f2f6,hair:0x2a1c12});P.ply2=mk('b',1,{shirt:0x3a3f8a,hair:0x6a4a2a,long:true,skin:0xf0c8a0});
  P.cpu=mk('o',0,{shirt:0x8a5a3a,hair:0xa8331a,long:true,skin:0xf0c8a0});P.cpu2=mk('o',1,{shirt:0xffffff,hair:0x1a1a1a});
+ P.ply3=mk('b',2,{shirt:0x2b6a5a,hair:0x1a1410,skin:0xc89870});P.cpu3=mk('o',2,{shirt:0x6a2b3a,hair:0x6a4a2a,long:true,skin:0xe0b090});
  // silla del rosco (delante de la pantalla)
  P.rStool=P.stool(0,-4.9);P.rStool.visible=false;
- P.rosc=person({shirt:0xf2f2f6,hair:0x2a1c12,badge:0x2a6af0});P.rosc.position.set(0,0,-4.9);P.rosc.visible=false;root.add(P.rosc);P.heads=[P.host,P.ply,P.ply2,P.cpu,P.cpu2,P.rosc];
+ P.rosc=person({shirt:0xf2f2f6,hair:0x2a1c12,badge:0x2a6af0});P.rosc.position.set(0,0,-4.9);P.rosc.visible=false;root.add(P.rosc);P.heads=[P.host,P.ply,P.ply2,P.ply3,P.cpu,P.cpu2,P.cpu3,P.rosc];
 }
 // ---------- cámaras de TV ----------
 const V3=(x,y,z)=>new T.Vector3(x,y,z);
@@ -401,7 +402,7 @@ async function programa(){const rid=++RUN;GAME.sec=[0,0];GAME.ac=[0,0];MOSCA.vis
  try{await cabecera(rid);
   if(!await voz('intro',rid)){cut('host');hostSay('¡Hola, hola! Bienvenidos a <b>Pasapalabra</b>. ¡Hoy jugamos el equipo <b>azul</b> contra el equipo <b>naranja</b>!');await wait(3.6,rid);}
   cut('wide');hostSay('Y en el bote hoy hay…');await bote(rid,false);
-  cut('team_b');hostSay('Equipo <b>azul</b>: ¡tú y tu invitada!');await wait(2.2,rid);cut('team_o');hostSay('Equipo <b>naranja</b>: ¡nuestro rival!');await wait(2.2,rid);say();
+  cut('team_b');hostSay('Equipo <b>azul</b>: ¡tú y tus dos invitados!');await wait(2.2,rid);cut('team_o');hostSay('Equipo <b>naranja</b>: ¡nuestro rival!');await wait(2.2,rid);say();
   const E=ETAPAS[OPT.etapa]||ETAPAS[2007];
   for(const [id,fn] of E.pr){cut('host');stopMusic();if(!await voz(id+'_pre',rid)){if(E.lines&&E.lines[id]){hostSay(E.lines[id]);await wait(2.4,rid);say();}else await wait(.6,rid);}await playCort(id,rid);await voz(id+'_exp',rid);await fn(rid);}
   await despedida(rid);}catch(e){if(!(e instanceof Stop))console.error(e);}}
