@@ -52,7 +52,7 @@ function qg12(e,seed){const r=mul12(seed*7919+e*104729+13),pk=a=>a[Math.floor(r(
  for(let n=0;n<70;n++){
   if(id=='refran'){const [a,b]=pk(Q12.ref);Q.push(three(a+' …',b,Q12.ref.map(x=>x[1]),24));}
   else if(id=='vf'){const [t,v]=pk(Q12.vf);Q.push({q:t,fs:22,o:[['VERDADERO',v],['FALSO',1-v]]});}
-  else if(id=='intruso'){const c=sh(Q12.cat),a=c[0],b=c[1],w=sh(a[1]).slice(0,3),x=pk(b[1]);Q.push({q:'¿Cuál es el intruso?',fs:26,o:sh([...w.map(y=>[y,0]),[x,1]]),g:4});}
+  else if(id=='intruso'){const c=sh(Object.values(Q12.cat)),a=c[0],b=c[1],w=sh(a.filter(y=>!b.includes(y))).slice(0,3),x=pk(b.filter(y=>!a.includes(y)));Q.push({q:'¿Cuál es el intruso?',fs:26,o:sh([...w.map(y=>[y,0]),[x,1]]),g:4});}
   else if(id=='anagrama'){const w=pk(Q12.ana),ls=sh(nrm12(w).split('')).join('·');Q.push(three('Ordena: '+ls,w,Q12.ana,26));}
   else if(id=='capital'){const [p,c]=pk(Q12.cap);Q.push(three('Capital de '+p,c,Q12.cap.map(x=>x[1]),26));}
   else if(id=='serie'){const k=Math.floor(r()*4);let s=[],nx;const a=1+Math.floor(r()*9),d=2+Math.floor(r()*7);
