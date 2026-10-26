@@ -1,0 +1,54 @@
+{
+ "escritas_a_mano": {
+  "monólogos": {
+   "chistes (planteamiento+remate)": 60,
+   "aperturas": 20,
+   "puentes": 16,
+   "cierres": 20
+  },
+  "cámaras ocultas": {
+   "premisas": 36,
+   "escaladas": 36,
+   "reacciones": 48,
+   "aperturas": 12,
+   "revelaciones": 14,
+   "finales": 16,
+   "público": 8
+  },
+  "fuera de cámaras": {
+   "diálogos de 2 frases": 70,
+   "cierres": 24,
+   "lugares": 12
+  },
+  "tomas falsas": {
+   "fallos (frase+reacción)": 50,
+   "pistas de letra": 25,
+   "aperturas": 12,
+   "cortes": 14,
+   "risas": 8
+  },
+  "mejores momentos": {
+   "momentos (relato+reacción)": 60,
+   "aperturas": 12,
+   "cierres": 12
+  },
+  "pruebas previas": {
+   "motores de juego": 10,
+   "refranes": 40,
+   "verdadero/falso": 59,
+   "grupos de intruso": 14,
+   "palabras": 110,
+   "capitales": 30,
+   "antónimos": 40
+  }
+ },
+ "escenas_combinadas_en_menu": {
+  "mono": 600,
+  "cam": 600,
+  "fuera": 600,
+  "tomas": 600,
+  "mej": 600,
+  "prev": 300
+ },
+ "frases_grabadas_unicas": 853
+}
