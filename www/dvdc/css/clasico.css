@@ -2,6 +2,9 @@
 #cls{position:absolute;inset:0;z-index:30;background:#0a6fc0 url(../clasico/img/azul.jpg) center/cover;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:"Gill Sans","Trebuchet MS",Roboto,Arial,sans-serif;color:#fff;-webkit-user-select:none;user-select:none;touch-action:manipulation}
 #cls .hide{display:none!important}
 #cst{position:relative;background:#0b8ee0 center/100% 100% no-repeat;overflow:hidden;box-shadow:0 0 0 1px #0004}
+#cbg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:none;z-index:0;background:#0b6fd0;transform-origin:50% 0}
+#cst.sub #cbg{transform:scale(1.45)}
+#cst.sub:before{content:"";position:absolute;inset:0;background:rgba(4,36,100,.5);z-index:1;pointer-events:none}
 #cvw{position:absolute;inset:0;z-index:2}
 #cvid{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;background:#000;display:none;z-index:1}
 #cls button{font-family:inherit;font-size:inherit;color:#fff;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}

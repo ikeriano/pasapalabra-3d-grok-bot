@@ -20,7 +20,7 @@ R=sys.argv[1];z=zipfile.ZipFile('base.apk','a');z.write('dex/classes.dex','class
 for d,_,fs in os.walk(R):
   for f in fs:
     p=os.path.join(d,f);a='assets/www/'+os.path.relpath(p,R)
-    z.write(p,a,zipfile.ZIP_STORED if f.endswith(('.ogg','.png','.jpg','.ttf')) else zipfile.ZIP_DEFLATED)
+    z.write(p,a,zipfile.ZIP_STORED if f.endswith(('.ogg','.png','.jpg')) else zipfile.ZIP_DEFLATED)
 z.close()
 P
 $BT/zipalign -f -p 4 base.apk aligned.apk

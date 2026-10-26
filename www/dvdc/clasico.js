@@ -1,12 +1,13 @@
 // Pasapalabra DVD — «Juego clásico del DVD». Módulo 2D reutilizable.
 // Uso:  import { montarClasico } from './clasico.js';
 //       const c = montarClasico(hostEl, { base:'', data:D, opc:OPC, salir:()=>{...} });  c.destruir();
-// Recursos (relativos a `base`): a/*.mp3, v/c/*.mp4, v/reglas.mp4, clasico/img/*.jpg, css/clasico.css
+// Recursos (relativos a `base`): a/*.mp3, v/c/*.mp4, v/reglas.mp4, v/dvd/*.mp4 (menú en bucle, intro, cabeceras, XXX), clasico/img/*.jpg, css/clasico.css
+// Opciones: base, data, opc, salir, intro (false = no reproducir la animación de título al empezar «Partida completa»)
 function montarClasico(host, o) {
   const B = o.base || '', D = o.data, OPC = o.opc || { mus: 1, voz: 1, sfx: 1, musVol: 0.8, vozVol: 1, extra: 0, saltar: 0 };
   if (!document.getElementById('cls-css')) { const l = document.createElement('link'); l.id = 'cls-css'; l.rel = 'stylesheet'; l.href = B + 'css/clasico.css'; document.head.appendChild(l); }
-  host.insertAdjacentHTML('beforeend', '<div id="cls"><div id="cst"><div id="cvw"></div><video id="cvid" muted playsinline preload="auto"></video><div id="cturno" class="hide"></div></div><button id="cpb" class="cbx nar cpb" style="width:auto;padding:.3em 1em;font-size:1.4em;bottom:auto">Salir</button><div id="cpa" class="hide"></div></div>');
-  const R = host.querySelector('#cls'), st = R.querySelector('#cst'), vw = R.querySelector('#cvw'), vid = R.querySelector('#cvid'), tur = R.querySelector('#cturno'), pb = R.querySelector('#cpb'), pa = R.querySelector('#cpa');
+  host.insertAdjacentHTML('beforeend', '<div id="cls"><div id="cst"><video id="cbg" loop muted playsinline preload="auto"></video><div id="cvw"></div><video id="cvid" muted playsinline preload="auto"></video><div id="cturno" class="hide"></div></div><button id="cpb" class="cbx nar cpb" style="width:auto;padding:.3em 1em;font-size:1.4em;bottom:auto">Salir</button><div id="cpa" class="hide"></div></div>');
+  const R = host.querySelector('#cls'), st = R.querySelector('#cst'), vw = R.querySelector('#cvw'), vid = R.querySelector('#cvid'), bg = R.querySelector('#cbg'), tur = R.querySelector('#cturno'), pb = R.querySelector('#cpb'), pa = R.querySelector('#cpa');
   const rnd = n => (Math.random() * n) | 0, shuf = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const NOM = { N: 'Naranja', A: 'Azul' }, otro = t => t == 'N' ? 'A' : 'N', c1 = t => t == 'N' ? 'n' : 'a', c2 = t => t == 'N' ? 'na' : 'az';
   const html = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -16,7 +17,16 @@ function montarClasico(host, o) {
   // ---- audio ----
   let musA = null, musN = '', duck = 1, vozA = null, vozRes = null, run = 0, pausado = false, muerto = false;
   const aud = n => { const a = new Audio(B + 'a/' + n + '.ogg'); a.preload = 'auto'; return a; };
-  const vol = () => { if (musA) musA.volume = Math.min(1, OPC.musVol * duck); };
+  const vol = () => { if (musA) musA.volume = Math.min(1, OPC.musVol * duck); if (fondoN) bgVol(); };
+  // vídeo de fondo en bucle (menú del DVD, con su audio). n: 0 = oculto, 1 = menú, 2 = submenús (ampliado y oscurecido para tapar los botones del DVD)
+  let fondoN = 0;
+  const bgVol = () => { bg.muted = !OPC.mus; bg.volume = Math.min(1, OPC.musVol * duck); };
+  function fondo(n) {
+    fondoN = n; st.classList.toggle('sub', n == 2);
+    if (!n) { bg.pause(); bg.style.display = 'none'; return; }
+    if (!bg.getAttribute('src')) bg.src = B + 'v/dvd/menu.mp4';
+    bg.style.display = 'block'; bgVol(); if (!pausado) bg.play().catch(() => { bg.muted = true; bg.play().catch(() => {}); });
+  }
   function musica(n, loop = true) { pararMus(); musN = n; if (!OPC.mus) return null; musA = aud(n); musA.loop = loop; musA.volume = Math.min(1, OPC.musVol * duck); musA.play().catch(() => {}); return musA; }
   function pararMus() { if (musA) { musA.pause(); musA = null; } musN = ''; }
   function sfx(n, v = 1, loop = false) { if (!OPC.sfx) return null; const a = aud(n); a.volume = Math.min(1, v * OPC.vozVol); a.loop = loop; a.play().catch(() => {}); return a; }
@@ -26,8 +36,8 @@ function montarClasico(host, o) {
   const esperar = ms => W(new Promise(r => { let acc = 0, last = performance.now(); const iv = setInterval(() => { const n = performance.now(); if (!pausado) acc += n - last; last = n; if (acc >= ms || muerto) { clearInterval(iv); r(); } }, 50); }));
   // ---- pantallas ----
   let respuesta = null; const IMG = n => 'url(' + B + 'clasico/img/' + n + '.jpg)';
-  function pant(bg, h, turno) {
-    st.style.backgroundImage = IMG(bg); vw.innerHTML = h; vid.style.display = 'none';
+  function pant(img, h, turno, f) {
+    fondo(f || 0); st.style.backgroundImage = IMG(img); vw.innerHTML = h; vid.style.display = 'none';
     if (turno) { tur.className = c1(turno); tur.textContent = 'Equipo ' + NOM[turno]; } else tur.className = 'hide';
   }
   const esp = (r) => W(new Promise(res => { respuesta = res; })).then(v => { respuesta = null; return v; });
@@ -53,25 +63,40 @@ function montarClasico(host, o) {
       voz(n).then(() => { aOk = true; chk(); }); if (tap) st.addEventListener('click', skip);
     }));
   }
+  // vídeo real del DVD (v/dvd/<n>.mp4) sobre toda la pantalla, con su audio. skip: tocar = saltar. mantener: deja el último fotograma. Devuelve true/false (false = no se pudo reproducir)
+  function video(n, skip = true, mantener = false) {
+    return W(new Promise(res => {
+      cancelaVoz(); pararMus(); fondo(0); let fin = false, tm = 0;
+      const hecho = ok => { if (fin) return; fin = true; clearTimeout(tm); vid.onended = vid.onerror = null; st.removeEventListener('click', sk); vid.pause(); vid.muted = true; if (!mantener) { vid.style.display = 'none'; vid.removeAttribute('src'); } res(ok); };
+      const sk = () => hecho(true), vig = () => { if (pausado) tm = setTimeout(vig, 1000); else hecho(true); };
+      vid.muted = !OPC.mus; vid.volume = Math.min(1, OPC.musVol); vid.style.display = 'block'; vid.src = B + 'v/dvd/' + n + '.mp4';
+      vid.onended = () => hecho(true); vid.onerror = () => hecho(false); tm = setTimeout(vig, 60000);
+      vid.play().catch(() => { vid.muted = true; vid.play().catch(() => hecho(false)); });
+      if (skip) st.addEventListener('click', sk);
+    }));
+  }
   // ---- menú DVD ----
   function menu() {
     run++; cancelaVoz(); respuesta = null; pausado = false; pa.classList.add('hide'); pb.textContent = 'Salir'; pb.classList.remove('hide');
-    pant('menu', hs('j', 0.19, 0.74, 0.46, 0.86) + hs('r', 0.56, 0.74, 0.84, 0.86)); if (musN != 'm_menu') musica('m_menu');
+    pararMus(); pant('menu', hs('j', 0.19, 0.74, 0.46, 0.86) + hs('r', 0.56, 0.74, 0.84, 0.86), null, 1);
     respuesta = v => v == 'j' ? juegos() : reglas();
   }
   function juegos() {
-    pant('azul', '<div class="ctit">Juegos</div><div class="clist">' + bar('full', 'Partida completa') + bar('pul', 'El Pulsador') + bar('dpp', 'De Par en Par') + bar('pi', 'La Palabra imposible') + bar('rosco', 'El Rosco') + '</div>' + cb('b', 'Volver', 'rj', 'l'));
+    pant('azul', '<div class="ctit">Juegos</div><div class="clist">' + bar('full', 'Partida completa') + bar('pul', 'El Pulsador') + bar('dpp', 'De Par en Par') + bar('pi', 'La Palabra imposible') + bar('rosco', 'El Rosco') + '</div>' + cb('b', 'Volver', 'rj', 'l'), null, 2);
     respuesta = v => v == 'b' ? menu() : v == 'rosco' ? eligeSeg() : eligeEquipo(v, 10);
   }
-  function eligeSeg() { pant('azul', '<div class="ctit">El Rosco · tiempo por pregunta</div><div class="clist">' + bar(5, '5 segundos') + bar(10, '10 segundos') + bar(15, '15 segundos') + '</div>' + cb('b', 'Volver', 'rj', 'l')); respuesta = v => v == 'b' ? juegos() : eligeEquipo('rosco', +v); }
-  function eligeEquipo(modo, seg) { pant('azul', '<div class="ctit">¿Qué equipo empieza?</div><div class="clist">' + bar('N', 'Equipo Naranja') + bar('A', 'Equipo Azul', 'az') + '</div>' + cb('b', 'Volver', 'rj', 'l')); respuesta = v => v == 'b' ? juegos() : partida(modo, v, seg); }
-  function reglas() { pararMus(); cancelaVoz(); run++; pb.classList.add('hide'); tur.className = 'hide'; vid.style.display = 'block'; vid.muted = false; vid.volume = Math.min(1, OPC.vozVol); vid.src = B + 'v/reglas.mp4'; vw.innerHTML = '<button class="cbx nar r" data-r="x" style="bottom:2%;width:26%;opacity:.85">Cerrar vídeo</button>'; vid.play().catch(() => {});
+  function eligeSeg() { pant('azul', '<div class="ctit">El Rosco · tiempo por pregunta</div><div class="clist">' + bar(5, '5 segundos') + bar(10, '10 segundos') + bar(15, '15 segundos') + '</div>' + cb('b', 'Volver', 'rj', 'l'), null, 2); respuesta = v => v == 'b' ? juegos() : eligeEquipo('rosco', +v); }
+  function eligeEquipo(modo, seg) { pant('azul', '<div class="ctit">¿Qué equipo empieza?</div><div class="clist">' + bar('N', 'Equipo Naranja') + bar('A', 'Equipo Azul', 'az') + '</div>' + cb('b', 'Volver', 'rj', 'l'), null, 2); respuesta = v => v == 'b' ? juegos() : partida(modo, v, seg); }
+  function reglas() { fondo(0); pararMus(); cancelaVoz(); run++; pb.classList.add('hide'); tur.className = 'hide'; vid.style.display = 'block'; vid.muted = false; vid.volume = Math.min(1, OPC.vozVol); vid.src = B + 'v/reglas.mp4'; vw.innerHTML = '<button class="cbx nar r" data-r="x" style="bottom:2%;width:26%;opacity:.85">Cerrar vídeo</button>'; vid.play().catch(() => {});
     const fin = () => { vid.onended = null; vid.pause(); vid.muted = true; vid.style.display = 'none'; vid.removeAttribute('src'); menu(); }; vid.onended = fin; respuesta = fin; }
   // ---- partidas ----
   const G = { tiempo: { N: [10, 10, 10], A: [10, 10, 10] }, n: { N: 0, A: 0 } };
   const usados = { pul: [], dpp: [], pi: [] };
   function unico(l, n) { let c; do { c = rnd(n); } while (l.includes(c) && l.length < n); l.push(c); return c; }
-  async function titulo(img, mus, boton) {
+  // cabecera de prueba: vídeo real del DVD (hv) con su música; si no se puede reproducir, imagen fija + música PC/mp3 (mus)
+  async function titulo(img, mus, boton, hv) {
+    pant(img, '', null); const ok = hv ? await video(hv, !boton, boton) : false;
+    if (ok) { if (boton) { vw.innerHTML = hs('i', 0.5, 0.67, 0.82, 0.81); await esp(); respuesta = null; } else await esperar(300); return; }
     pant(img, boton ? hs('i', 0.5, 0.67, 0.82, 0.81) : '', null); const a = musica(mus, false); const dur = a ? new Promise(r => { a.onended = r; a.onerror = r; setTimeout(r, 40000); }) : esperar(2500);
     if (boton) { await esp(); } else await W(Promise.race([dur, esp()])); respuesta = null; pararMus();
   }
@@ -111,12 +136,12 @@ function montarClasico(host, o) {
         if (fallo) break; await esperar(450);
       }
       mejor = Math.max(mejor, ok); if (!fallo) break;
-      pant('xxx', ['<div class="cxo" style="left:42%"></div><div class="cxo" style="left:62%"></div>', '<div class="cxo" style="left:62%"></div>', ''][at - 1] || '', team); await clip('t4_att' + at + c1(team));
+      pant('xxx', ['<div class="cxo" style="left:42%"></div><div class="cxo" style="left:62%"></div>', '<div class="cxo" style="left:62%"></div>', ''][at - 1] || '', team); await video('xxx', true); await clip('t4_att' + at + c1(team));
     } return mejor;
   }
-  const PRUEBAS = [{ n: 'pul', img: 't_pul', m: 'm_h_pul', f: pulsador, tot: 5 }, { n: 'dpp', img: 't_dpp', m: 'm_h_dpp', f: depar, tot: 9 }, { n: 'pi', img: 't_pi', m: 'm_h_pi', f: imposible, tot: 8 }];
+  const PRUEBAS = [{ n: 'pul', img: 't_pul', m: 'm_h_pul', v: 'h_pul', f: pulsador, tot: 5 }, { n: 'dpp', img: 't_dpp', m: 'm_h_dpp', v: 'h_dpp', f: depar, tot: 9 }, { n: 'pi', img: 't_pi', m: 'm_h_pi', v: 'h_pi', f: imposible, tot: 8 }];
   async function pruebaDos(k, starter) {
-    const P = PRUEBAS[k]; await titulo(P.img, P.m, k == 0); await clip(['t2_in_', 't3_in_', 't4_intro_'][k] + c1(starter)); if (k == 2) await clip('t4_rules_' + c1(starter));
+    const P = PRUEBAS[k]; await titulo(P.img, P.m, k == 0, P.v); await clip(['t2_in_', 't3_in_', 't4_intro_'][k] + c1(starter)); if (k == 2) await clip('t4_rules_' + c1(starter));
     for (const [i, t] of [starter, otro(starter)].entries()) { if (i == 1 && k < 2) await clip(['t2_tn_', 't3_tn_'][k] + c2(t)); const n = await P.f(t); await resultado(t, n, k); }
   }
   // Rosco
@@ -148,12 +173,12 @@ function montarClasico(host, o) {
   }
   async function partida(modo, starter, fijo) {
     run++; pb.textContent = 'Pausa'; pb.classList.remove('hide'); G.tiempo = { N: [10, 10, 10], A: [10, 10, 10] }; usados.pul = []; usados.dpp = []; usados.pi = []; let st2 = starter;
-    if (modo == 'full') { pararMus(); await clip('ch_hola'); }
+    if (modo == 'full') { pararMus(); if (o.intro !== false) await video('intro', true); await clip('ch_hola'); }
     if (modo == 'full' || modo == 'rosco') {
       const Rr = nuevoRosco(); let ganador = null;
       for (let k = 0; k < 3; k++) {
         if (modo == 'full') await pruebaDos(k, st2); else G.tiempo.N[k] = G.tiempo.A[k] = fijo;
-        if (k == 0 || modo == 'full') await titulo('t_pi', 'm_h_ros', false).catch(() => {}); musica('m_menu'); duck = 0.35; vol();
+        if (k == 0 || modo == 'full') await titulo('t_pi', 'm_h_ros', false, 'h_ros').catch(() => {}); musica('m_menu'); duck = 0.35; vol();
         const res = await etapa(Rr, k, st2, { N: G.tiempo.N[k], A: G.tiempo.A[k] }); if (res.fin) { ganador = res.ganador; break; } st2 = res.primero;
       }
       duck = 1; if (ganador) { const v = await victoria(ganador); return v == 'o' ? partida(modo, starter, fijo) : menu(); }
@@ -163,13 +188,13 @@ function montarClasico(host, o) {
   // ---- pausa / salir ----
   pb.onclick = () => {
     if (pb.textContent == 'Salir') { run++; cancelaVoz(); pararMus(); o.salir && o.salir(); return; }
-    if (!pa.classList.contains('hide')) return; pausado = true; if (vozA) vozA.pause(); if (musA) musA.pause(); vid.pause(); pa.classList.remove('hide');
+    if (!pa.classList.contains('hide')) return; pausado = true; if (vozA) vozA.pause(); if (musA) musA.pause(); vid.pause(); bg.pause(); pa.classList.remove('hide');
     pa.innerHTML = '<div class="p"><h1 style="font-size:3em">Pausa</h1><button class="cbar vd" data-p="c">Continuar</button><button class="cbar rj" data-p="s">Salir al menú del DVD</button></div>';
   };
-  pa.addEventListener('click', e => { const b = e.target.closest('[data-p]'); if (!b) return; pausado = false; pa.classList.add('hide'); if (b.dataset.p == 'c') { if (vozA) vozA.play().catch(() => {}); if (musA) musA.play().catch(() => {}); if (vid.src && vid.style.display != 'none') vid.play().catch(() => {}); } else { cancelaVoz(); vid.pause(); vid.style.display = 'none'; menu(); } });
+  pa.addEventListener('click', e => { const b = e.target.closest('[data-p]'); if (!b) return; pausado = false; pa.classList.add('hide'); if (b.dataset.p == 'c') { if (vozA) vozA.play().catch(() => {}); if (musA) musA.play().catch(() => {}); if (vid.src && vid.style.display != 'none') vid.play().catch(() => {}); if (fondoN) bg.play().catch(() => {}); } else { cancelaVoz(); vid.pause(); vid.style.display = 'none'; menu(); } });
   menu();
-  return { menu, partida, destruir() { muerto = true; run++; cancelaVoz(); pararMus(); vid.pause(); removeEventListener('resize', fit); R.remove(); },
-    dbg: { G, pant, clip, juegos, pulsador, depar, imposible, etapa, nuevoRosco, victoria, titulo, reglas, resultado, get ORDEN() { return ORDEN; } } };
+  return { menu, partida, destruir() { muerto = true; run++; cancelaVoz(); pararMus(); vid.pause(); bg.pause(); bg.removeAttribute('src'); bg.load(); removeEventListener('resize', fit); R.remove(); },
+    dbg: { G, pant, clip, video, fondo, juegos, pulsador, depar, imposible, etapa, nuevoRosco, victoria, titulo, reglas, resultado, get ORDEN() { return ORDEN; } } };
 }
 
 window.montarClasico=montarClasico;
