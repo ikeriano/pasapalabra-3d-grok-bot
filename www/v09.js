@@ -192,7 +192,7 @@ function x9go(g){const [,k,a]=g.split(':');
  if(k=='fuera')return scene9(fuera9,{back:'extras9',banner:'🎥 FUERA DE CÁMARAS'});
  if(k=='publi')return scene9(rid=>publi9(rid,+a),{back:'publi9'});
  if(k=='cam')return scene9(camlibre9,{back:'extras9'});}
-$('#ver').textContent='v0.9';
+$('#ver').textContent='v0.9.1';
 Object.assign(window.DBG||{},{V9,D9,toma9,publi9,fuera9,camlibre9,pVF,pPares,pIntruso,pLetra,pFlash,sillaAzul17,convo9,syncPrev9,scene9,x9go});
 // ======================================================================
 //  v0.9 · TÁCTIL NATURAL: deslizar con el dedo para desplazar menús y listas (inercia nativa del WebView),

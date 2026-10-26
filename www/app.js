@@ -15,8 +15,10 @@ const cam2=new T.PerspectiveCamera(30,8/9,0.1,120);
 const GS=new T.Scene();const GZ=2041.5;const gcam=new T.PerspectiveCamera(20,16/9,200,4000);gcam.position.z=GZ;
 GS.add(new T.AmbientLight(0xffffff,1.25));{const d=new T.DirectionalLight(0xffffff,2.2);d.position.set(-300,500,900);GS.add(d);const d2=new T.DirectionalLight(0x9fc0ff,0.8);d2.position.set(400,-300,500);GS.add(d2);}
 let W=1280,H=720,GW=1280;
-function resize(){W=innerWidth;H=innerHeight;R.setSize(W,H,false);cam.aspect=W/H;cam.updateProjectionMatrix();gcam.aspect=W/H;gcam.updateProjectionMatrix();GW=720*W/H;if(window.onGW)onGW();}
+function resize(){if(typeof ASK!=='undefined'&&ASK&&document.activeElement===document.getElementById('kb')&&innerWidth===W&&innerHeight<H)return;/* v0.9.1: con el teclado abierto NO se reescala el 3D */W=innerWidth;H=innerHeight;R.setSize(W,H,false);cam.aspect=W/H;cam.updateProjectionMatrix();gcam.aspect=W/H;gcam.updateProjectionMatrix();GW=720*W/H;if(window.onGW)onGW();}
 addEventListener('resize',resize);
+// v0.9.1: al tocar la escena 3D mientras se escribe no se pierde el foco del campo (el teclado no se cierra) y el documento no se desplaza
+(()=>{const c=document.getElementById('c');document.addEventListener('pointerdown',e=>{const t=e.target;if(document.body.classList.contains('askon')&&document.activeElement===document.getElementById('kb')&&!(t.closest&&t.closest('button,input,a,#menu,#modal,#dvdhost9')))e.preventDefault();},true);addEventListener('scroll',()=>{if(scrollX||scrollY)scrollTo(0,0);});document.getElementById('kb').addEventListener('blur',()=>setTimeout(resize,60));})();
 // ---------- anim ----------
 const AN=[];const anim=f=>AN.push(f);
 const eio=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2,eout=k=>1-Math.pow(1-k,3),eback=k=>{const c=1.7;return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2);};
@@ -258,10 +260,14 @@ function toast(s,ms=1800){toastE.textContent=s;toastE.classList.remove('hidden')
 function setActs(list){acts.innerHTML='';(list||[]).forEach(b=>{const e=document.createElement('button');e.className='mbtn '+(b.cls||'');e.innerHTML=(b.ic?`<span class="ic">${b.ic}</span>`:'')+b.t;e.onpointerdown=ev=>{ev.stopPropagation();ev.preventDefault();b.cb();};acts.appendChild(e);});}
 const norm=s=>s.toUpperCase().replace(/Ñ/g,'#').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/#/g,'Ñ').replace(/[^A-ZÑ0-9 ]/g,'').replace(/\s+/g,' ').trim();
 let ASK=null;
-function ask(stop){return new Promise(res=>{KB.value='';ASK={res,stop};const upd=()=>{ansE.innerHTML=KB.value?KB.value.toUpperCase():'<i>Toca aquí para escribir ⌨</i>';};upd();ansE.classList.remove('hidden');KB.oninput=upd;
- ansE.onpointerdown=e=>{e.preventDefault();KB.focus();};try{KB.focus();}catch(e){}
- const fin=v=>{if(!ASK)return;ASK=null;ansE.classList.add('hidden');KB.blur();res(v);};ASK.fin=fin;
- KB.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();fin(KB.value);}};
+function ask(stop){return new Promise(res=>{clearTimeout(KB.__t);KB.value='';ASK={res,stop};const upd=()=>{ansE.innerHTML=KB.value?KB.value.toUpperCase():'<i>Toca aquí para escribir ⌨</i>';};upd();ansE.classList.remove('hidden');document.body.classList.add('askon');KB.oninput=upd;
+ // v0.9.1: el campo de texto es visible y se toca directamente (el teclado del sistema sale con un toque real); se escucha «input» (también durante la composición del teclado predictivo), nunca solo keydown
+ try{KB.focus({preventScroll:true});}catch(e){}
+ const fin=v=>{if(!ASK||ASK.res!==res)return;ASK=null;ansE.classList.add('hidden');clearTimeout(KB.__t);
+  // sin parpadeo del teclado entre preguntas seguidas: si no llega otra pregunta en 350 ms, se oculta
+  KB.__t=setTimeout(()=>{if(!ASK){document.body.classList.remove('askon');KB.blur();resize();}},350);res(v);};ASK.fin=fin;
+ KB.onkeydown=e=>{if(e.key==='Enter'||e.keyCode===13){if(e.isComposing&&e.keyCode===229)return;e.preventDefault();fin(KB.value);}};
+ $('#kbf').onsubmit=e=>{e.preventDefault();fin(KB.value);return false;};
  anim(()=>{if(!ASK||ASK.res!==res)return false;if(stop&&stop()){fin(null);return false;}return true;});});}
 function askEnd(v=null){if(ASK)ASK.fin(v);}
 // toques sobre los grafismos 3D

@@ -48,7 +48,17 @@ html,body{margin:0;height:100%;overflow:hidden;background:#02040c;font-family:N,
 #acts{position:fixed;right:2vw;bottom:3vh;z-index:25;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
 #acts .mbtn{font-size:clamp(14px,2.4vw,20px);padding:8px 18px}
 #skip{position:fixed;right:2vw;top:2vh;z-index:26;font-size:14px;padding:4px 14px}
-#kb{position:fixed;left:0;bottom:0;width:2px;height:2px;opacity:0;border:0;padding:0;font-size:16px}
+/* v0.9.1: campo de respuesta REAL y visible (antes era un <input> de 2 px transparente): se toca directamente, el teclado sale seguro y queda siempre arriba, a salvo del teclado */
+#kbf{position:fixed;left:50%;top:2vh;transform:translateX(-50%);z-index:27;display:none;align-items:center;gap:8px;margin:0}
+body.askon #kbf{display:flex}
+body.askon #ans{display:none!important}
+body.askon #sub{bottom:auto;top:calc(2vh + 62px)}
+body.askon #acts{bottom:auto;top:calc(2vh + 62px);max-height:62vh;overflow-y:auto}
+body.askon #skip{display:none}
+#kb{width:min(56vw,540px);height:48px;font:900 22px N,Arial,sans-serif;text-transform:uppercase;text-align:center;background:linear-gradient(#fff,#dfe8ff);color:#0b1a55;border:3px solid #2f6cff;border-radius:30px;padding:4px 16px;margin:0;outline:none;-webkit-user-select:text;user-select:text;touch-action:manipulation;pointer-events:auto;-webkit-appearance:none;appearance:none}
+#kb::placeholder{color:#5a6a9a;font-size:16px;font-weight:700;text-transform:none}
+#kb:focus{border-color:#ffd23a;box-shadow:0 0 0 4px #ff9d0099}
+#kbok{height:48px;min-width:56px;border-radius:30px;border:3px solid #fff;background:#1fa84a;color:#fff;font:900 24px N,Arial,sans-serif;padding:0 14px;touch-action:manipulation}
 #modal{position:fixed;inset:0;z-index:50;background:#0009;display:flex;align-items:center;justify-content:center}
 .mcard{max-width:min(92vw,560px);max-height:92vh;overflow:auto;background:linear-gradient(#0d2a8a,#061440);border:3px solid #8fc4ff;border-radius:20px;padding:14px 22px;color:#fff;font:700 clamp(13px,2.2vw,17px)/1.4 N,Arial;text-align:center}
 .mcard h3{color:#ffd23a;margin:4px 0 8px;font-size:1.4em}
@@ -66,7 +76,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#02040c;font-family:N,
 <div id="modal" class="hidden"></div>
 <div id="ver">v0.8</div>
 <div id="rot">Gira el móvil 📱↻</div>
-<input id="kb" type="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="done">
+<form id="kbf" action="javascript:void 0" autocomplete="off"><input id="kb" type="text" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="send" maxlength="60" aria-label="Escribe tu respuesta" placeholder="Escribe tu respuesta"><button id="kbok" type="submit">✔</button></form>
 <script src="lib/three.js"></script>
 <script src="data.js"></script>
 <script src="data2.js"></script>
