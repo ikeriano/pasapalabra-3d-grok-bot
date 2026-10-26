@@ -1,0 +1,10 @@
+import {open,sleep} from './lib.mjs';
+const OUT=process.env.SHOTS||'/workspace/pasa3d_08/shots';
+const T=await open({w:800,h:360,dpr:2});const p=T.p;
+await T.tap(...await T.center('#menu .title'));await sleep(1200);
+await p.screenshot({path:OUT+'/keedy_menu.jpg',type:'jpeg',quality:82});
+await p.evaluate(()=>{MODE.menu=false;menu.classList.add('hidden');document.body.classList.add('ingame');OPT.etapa=OPT.plato=2019;applyPlato(2019);cut('rosco');hostSay('Presentador: <b>Empieza por Z</b>');});await sleep(1500);
+await p.screenshot({path:OUT+'/keedy_rosco_a.jpg',type:'jpeg',quality:82});await sleep(4000);
+await p.screenshot({path:OUT+'/keedy_rosco_b.jpg',type:'jpeg',quality:82});
+await p.evaluate(()=>cut('wide'));await sleep(1500);await p.screenshot({path:OUT+'/keedy_wide.jpg',type:'jpeg',quality:82});
+console.log('errs',T.errs);await T.close();

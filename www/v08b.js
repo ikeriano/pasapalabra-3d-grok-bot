@@ -21,17 +21,24 @@ screenTex=function(){return cv(1024,512,(g,w,h)=>{fondo(g,w,h,'#3d8dfa','#1f5fd8
 scrTexY=function(y){return cv(1024,512,(g,w,h)=>{fondo(g,w,h,y>=2014?'#4aa0ff':'#3d8dfa',y>=2019?'#0d3aa8':'#1f5fd8');scrBall(g,w,h,1);});};
 // pantalla grande: solo fondo (la bola es 3D y va detrás del título; el título es otro plano delante)
 const MAIN={};const mainTex=y=>MAIN[y]||(MAIN[y]=cv(1024,512,(g,w,h)=>fondo(g,w,h,y>=2014?'#4aa0ff':'#3d8dfa',y>=2019?'#0d3aa8':'#1f5fd8')));
+const mkTtl=()=>cv(1024,256,(g,w,h)=>{g.save();g.shadowColor='rgba(0,30,90,.55)';g.shadowBlur=8;ftxt(g,'Pasapalabra',w/2,h/2,h,'#ffffff','center',671,0,700);g.restore();});
 function montar(){
  if(!P.scr||P.ttl)return;
  // título delante
- const tt=cv(1024,256,(g,w,h)=>{g.save();g.shadowColor='rgba(0,30,90,.55)';g.shadowBlur=8;ftxt(g,'Pasapalabra',w/2,h/2,h,'#ffffff','center',671,0,700);g.restore();});
+ const tt=mkTtl();
  P.ttl=new T.Mesh(new T.PlaneGeometry(13,3.25),new T.MeshBasicMaterial({map:tt,transparent:true,depthWrite:false}));P.ttl.position.set(0,3.6,-10.9);P.ttl.renderOrder=3;P.root.add(P.ttl);
- // esfera contenida, aplanada en z (para que no atraviese pantalla ni título), azul y fina
- const sp=P.sphere,G=new T.Group();G.position.set(0,3.6,-10.95);G.scale.set(1,1,.1);P.root.add(G);P.root.remove(sp);G.add(sp);sp.position.set(0,0,0);P.ballG=G;
- sp.items.forEach(it=>{it.p.setLength(2.1);it.s=.42;it.c=new T.Color().setHSL(.6,.8,Math.random()<.45?.86:.4+.1*it.n.y);});
- // recolorear: vertexColors
- const col=sp.geometry.attributes.color;sp.items.forEach((it,i)=>{for(let j=0;j<4;j++)col.setXYZ(i*4+j,it.c.r,it.c.g,it.c.b);});col.needsUpdate=true;
- sp.upd();sp.material.opacity=.9;sp.renderOrder=2;P.scr.renderOrder=0;
+ // esfera contenida detrás del título: NO gira (en el vídeo de referencia no rota: sus letras se solapan y bullen despacio)
+ const G=new T.Group();G.position.set(0,3.6,-10.95);G.scale.set(1,1,.1);P.root.add(G);P.root.remove(P.sphere);P.sphere=new T.Group();// el bucle antiguo gira este grupo vacío
+ const it=sphereItems(260,2.1,()=>new T.Color(1,1,1));
+ it.forEach(x=>{x.s=.34;x.b=x.p.clone();x.bn=x.n.clone();x.ax=new T.Vector3(rnd(-1,1),rnd(-1,1),rnd(-1,1)).normalize();x.w=rnd(.15,.45);x.ph=rnd(0,6.28);x.am=rnd(.25,.55);
+  const k=Math.random();x.c=new T.Color().setHSL(k<.4?.54:.6,k<.4?.9:.8,k<.55?.88:.55);});
+ const ball=letterCloud(it,{op:.92});ball.renderOrder=2;G.add(ball);P.ball=ball;P.ballG=G;
+ // letras sueltas flotando SIEMPRE (deriva lenta multidireccional, sin giro ni parpadeo, tamaños variados)
+ const fl=[];for(let i=0;i<64;i++){const big=Math.random()<.18,tiny=Math.random()<.22,sz=big?rnd(.8,1.3):tiny?rnd(.1,.18):rnd(.25,.55),a=rnd(0,6.28),v=rnd(.025,.07)*(big?.6:1);
+  fl.push({ch:pick([...AL]),p:new T.Vector3(rnd(-6.3,6.3),rnd(-3.1,3.1),0),s:sz,r:rnd(-.5,.5),vx:Math.cos(a)*v,vy:Math.sin(a)*v,
+   c:new T.Color().setHSL(Math.random()<.5?.55:.6,Math.random()<.5?.9:.5,big?.62:tiny?.78:.9)});}// grandes = tono sobre tono (efecto desenfoque)
+ const fc=letterCloud(fl,{op:.85});fc.renderOrder=1;const FG=new T.Group();FG.position.set(0,3.6,-10.97);P.root.add(FG);FG.add(fc);P.flo=fc;
+ P.ballT=0;
 }
 function refrescar(){if(!P.fl)return;
  for(const k in PLC)delete PLC[k];
@@ -42,5 +49,18 @@ function aplicar(y){if(!P.scr||!P.ttl)return;P.scr.material.map=mainTex(y);P.scr
 const _ap=applyPlato;applyPlato=function(y){const r=_ap.apply(this,arguments);montar();aplicar(y);return r;};
 if(window.DBG)DBG.applyPlato=applyPlato;
 refrescar();
+// animación continua barata: ~15 actualizaciones/s, solo con la pantalla visible
+const q=new T.Quaternion(),tv=new T.Vector3();let last=performance.now(),tt=0;
+setInterval(()=>{if(document.hidden||!P.flo||!P.root.visible)return;const n=performance.now(),dt=Math.min(.2,(n-last)/1e3);last=n;tt+=dt;
+ for(const x of P.flo.items){x.p.x+=x.vx*dt;x.p.y+=x.vy*dt;if(x.p.x>6.6)x.p.x=-6.6;else if(x.p.x<-6.6)x.p.x=6.6;if(x.p.y>3.4)x.p.y=-3.4;else if(x.p.y<-3.4)x.p.y=3.4;}
+ P.flo.upd();
+ for(const x of P.ball.items){q.setFromAxisAngle(x.ax,Math.sin(tt*x.w+x.ph)*x.am);x.p.copy(x.b).applyQuaternion(q);x.n.copy(x.bn).applyQuaternion(q);}
+ P.ball.upd();},66);
+// ---- tipografía Keedy Sans (font/keedy.ttf, local) en los rótulos
+const ROT8=t=>typeof t=='string'&&t.length>=4&&t===t.toUpperCase()&&/[A-ZÁÉÍÓÚÑ]/.test(t)&&/[ :·!¡¿?+]/.test(t);window.ROT8=ROT8;
+{let src=ftxt.toString().replace("const F=s==='Pasapalabra'?'K,N,Arial':'N,Arial';if(s==='Pasapalabra')w=400;","const K8=s==='Pasapalabra'||ROT8(s);const F=K8?'K,N,Arial':'N,Arial';if(K8)w=400;");
+ if(src.includes('K8'))(0,eval)('ftxt='+src);else console.warn('v08b: ftxt no parcheado');}
+const st=document.createElement('style');st.textContent='#sub,#toast,#premio8 .t1,#premio8 .t2,#menu h2,#menu .mtag,#menu .tsub,#menu .ttap{font-family:K,N,Arial,sans-serif!important;font-weight:400!important;letter-spacing:.02em}#premio8 .am{font-family:K,N,Arial,sans-serif!important;font-weight:400!important}';document.head.appendChild(st);
+document.fonts.load('400 40px K').then(()=>{if(window.P&&P.fl)for(const k in PLC)delete PLC[k];if(P.fl){refrescar();if(P.ttl){P.ttl.material.map=mkTtl();P.ttl.material.needsUpdate=true;}}}).catch(()=>{});
 window.V8b={refrescar};
 })();
