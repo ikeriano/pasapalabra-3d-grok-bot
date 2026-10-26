@@ -42,12 +42,12 @@ async function bote11(rid,b,n){if(n)toast11('🏆 Nº '+n,1800);cut('host');host
 const RREC={0:[25,0,'Julio Escartín'],1:[25,0,'Sofía Álvarez'],2:[25,0,'Rafa Castaño'],3:[21,0,'Fran González']};
 async function roscoRec11(rid,x,sp){const [h,m,who]=sp;clearG();MODE.split=false;P.ply.pul.visible=P.cpu.pul.visible=false;setPeople(true);roscoPerson(0);cut('rosco');
  const g=roscoGraf();g.team(COL.bl);g.tm.visible=false;g.ac.setT('0');let tl=0;anim(dt=>{if(rid!==RUN||!g.parent)return false;tl+=dt;g.tick(tl);return true;});
- say(`<b>${esc(who)}</b> · ${esc(x.t)}`);await g.fly(1.2);chk(rid);
+ say(`<b>${esc(who)}</b> — ${esc(x.t)}`);await g.fly(1.2);chk(rid);
  const ms=[];for(let k=0;ms.length<m&&k<99;k++){const q=(k*7+who.length*3)%25;if(!ms.includes(q))ms.push(q);}
  let hits=0;const run=async(from,to,w)=>{for(let i=from;i<to;i++){g.setAct(i);await wait(w,rid);const bad=ms.includes(i);if(i<h+m){g.state(i,bad?2:1);if(!bad){hits++;sfx('ok');}else sfx('error');g.ac.setT(String(hits));}}};
  await run(0,25,.17);g.setAct(-1);
  if(h>=25){FX5.conf(['#ffd23a','#2a6af0','#fff'],4);sfx('aplauso');}else sfx('winner');
- say(`<b>${esc(who)}: ${h} aciertos</b>${h>=25?' · ¡rosco completo!':''}`);await wait(1.6,rid);
+ say(`<b>${esc(who)}: ${h} aciertos</b>${h>=25?' — ¡rosco completo!':''}`);await wait(1.6,rid);
  // repetición a cámara lenta de las últimas letras
  const f0=Math.max(0,Math.min(24,(h>=25?25:h)-5)),f1=h>=25?25:h;
  await slow(async()=>{for(let i=f0;i<f1;i++){g.state(i,0);}hits=Math.max(0,h-(f1-f0));g.ac.setT(String(hits));

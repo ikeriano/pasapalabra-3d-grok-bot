@@ -204,7 +204,7 @@ async function results10(rid,T,g){const s=S();
  const r=resolve10(T.na.hits,T.na.miss,T.az.hits,T.az.miss,s.bote);
  if(window.LM11)for(const k of r.full)if(!T[k]._c&&(r.bote[k]||0)>0)LM11.fama({n:T[k].name,b:r.bote[k],t:'bote'});
  if(T.na.hits===T.az.hits&&T.na.miss!==T.az.miss){await hs(rid,T10.empFal);}
- say(`<b>Naranja: ${T.na.hits} aciertos, ${T.na.miss} fallos · Azul: ${T.az.hits} aciertos, ${T.az.miss} fallos</b>`);await wait(1.2,rid);
+ say(`<b>Naranja: ${T.na.hits} aciertos, ${T.na.miss} fallos — Azul: ${T.az.hits} aciertos, ${T.az.miss} fallos</b>`);await wait(1.2,rid);
  if(g)g.parent&&G.remove(g);clearG();setPeople(false);cut('front');
  const fx=(c)=>{try{FX5.conf(c,5);}catch(e){}sfx('aplauso');};
  if(r.full.length){
@@ -246,7 +246,7 @@ async function programa10(rid){const s=S();const T=mkTeams();colSave();let g=nul
   for(const [i,id] of ps.entries()){cut('host');await hs(rid,T10[ORD[ps.length>=6||i<2||ps.length>3?i:i]]);await hs(rid,T10[id],.2);await PRUEBAS[id](rid,T);chk(rid);}
   colRest();cut('host');
   hostSay(T10.sumaNa);await wait(1.7,rid);await clip(rid,secF(T.na.sec));hostSay(T10.sumaAz);await wait(1.7,rid);await clip(rid,secF(T.az.sec));
-  say(`<b>Segundos para el rosco · Naranja: ${T.na.sec} s · Azul: ${T.az.sec} s</b>`);await wait(1.6,rid);
+  say(`<b>Segundos para el rosco — Naranja: ${T.na.sec} s — Azul: ${T.az.sec} s</b>`);await wait(1.6,rid);
   g=await rosco10(rid,T);colRest();await results10(rid,T,g);
   FX5.off();clearG();say();setActs();stopMusic();showMenu('fam10');
  }catch(e){if(!(e instanceof Stop))console.error(e);}finally{colRest();}}
