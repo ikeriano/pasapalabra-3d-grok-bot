@@ -25,7 +25,10 @@ const PV11={ids:Object.keys(D11.prev),
  sync(){for(const y in ETAPAS){const E=ETAPAS[y];if(E&&E.pr)E.pr=E.pr.filter(p=>!/^p11_/.test(p[0]));}
   if(!OPT.previas11)return;const E=ETAPAS[OPT.etapa];if(!E||!E.pr)return;const n=1+(Math.random()<.5?1:0);const ks=shuffle(PV11.ids.slice()).slice(0,n);E.lines=E.lines||{};
   for(const k of ks){const i=E.pr.findIndex(p=>p[0]=='rosco');E.pr.splice(i<0?E.pr.length:i,0,['p11_'+k,PV11.fn[k]]);E.lines['p11_'+k]=`Otra <b>prueba previa del juego</b>: ${esc9(D11.prev[k].t)} (inventada)`;}}};
-for(const k of PV11.ids)CORT['p11_'+k]={title:PV11.CORT[k],tx:0,ty:0,fs:78};
+{const mkW=w=>(AW,blue)=>{const it=[];const s=w.replace(/ /g,'');for(let r=0;r<7;r++)for(let i=0;i<14;i++)it.push({ch:s[(i+r*3)%s.length],base:new T.Vector3(-AW*.5+i*AW/13,-260+r*90,-40+(i%3)*30),p:new T.Vector3(),s:r==3?70:34,r:rnd(-.3,.3),c:0xffffff,row:r,d:(i+r)*.03});
+ const art=letterCloud(it,{op:.85});art.anim=t=>{art.items.forEach(x=>{const k=Math.min(1,Math.max(0,(t-x.d)*1.4));x.p.set(x.base.x,x.base.y+(1-eout(k))*600,x.base.z);});art.upd();};return art;};
+ const W={sinon:'SINONIMOSDEHOY',calc:'CALCULOMENTAL',orden:'ORDENAELABECEDARIO',cuenta:'CUENTALOSDIBUJOS',rima:'RIMASALVUELO'};
+ for(const k of PV11.ids)CORT['p11_'+k]={title:PV11.CORT[k],tx:0,ty:0,fs:78,mk:mkW(W[k]||'PASAPALABRA')};}
 function inv11tag(){const tg=bar(360,30,COL.rd,'🧪 PRUEBA PREVIA INVENTADA',{fs:15});tg.position.set(130,-262,0);G.add(tg);}
 function genQ11(k,pool){
  if(k=='sinon'||k=='rima'){const s=pool.pop();const [w,r,a,b]=s;const o=shuffle([[r,1],[a,0],[b,0]]);return {q:k=='sinon'?`Sinónimo de «${w}»`:`¿Qué palabra rima con «${w}»?`,o,fs:24};}
