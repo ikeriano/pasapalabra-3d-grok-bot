@@ -4,7 +4,7 @@ const OUT=process.env.SHOTS||'/workspace/pasa3d_10/shots';
 const T=await open({w:800,h:360,dpr:2});const p=T.p;const ev=(f,...a)=>p.evaluate(f,...a);
 const shot=n=>p.screenshot({path:`${OUT}/${n}.jpg`,type:'jpeg',quality:82});
 await ev(()=>{OPT.vozp=0;OPT.mute5=1;OPT.sfx=0;OPT.mus=0;OPT.etapa=OPT.plato=2019;OPT.fam10=null;});
-check('versión v0.10',await ev(()=>document.querySelector('#ver').textContent)=='v0.10');
+check('versión v0.11',await ev(()=>document.querySelector('#ver').textContent)=='v0.11');
 // ---- reglas puras
 const R=(...a)=>ev((...x)=>F10.resolve10(...x),...a);
 let r=await R(20,3,15,1,6000);check('más aciertos gana: 1.200 €, vuelve y el bote sube 6.000',r.w=='na'&&r.prize.na==1200&&r.prize.az==0&&r.boteNext==12000&&r.returns.join()=='na');

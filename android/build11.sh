@@ -12,7 +12,10 @@ cp -r "$REPO/www" "$OUT/www" && python3 "$REPO/tools/v10/pack.py" "$OUT/www"
 sed -e "s#package=\"com.ikeriano.pasapalabra3d\"#package=\"com.ikeriano.pasapalabra3d.gb\"#" \
     -e "s#android:versionCode=\"[0-9]*\" android:versionName=\"[^\"]*\"#android:versionCode=\"$VC\" android:versionName=\"$VN\"#" \
     -e 's#android:name=".MainActivity"#android:name="com.ikeriano.pasapalabra3d.MainActivity"#' "$REPO/android/AndroidManifest.xml" > AndroidManifest.xml
-javac -source 8 -target 8 -cp "$AJ" -d cls "$REPO"/android/src/com/ikeriano/pasapalabra3d/*.java 2>&1 | grep -v "^warning\|^Note\|bootstrap" || true
+# sin JDK en la caja: las fuentes Java no cambian desde v0.10, se reutilizan las clases compiladas de v0.10
+export PATH="/home/box/.gradle/jdks/jre17/bin:$PATH"
+if command -v javac >/dev/null; then javac -source 8 -target 8 -cp "$AJ" -d cls "$REPO"/android/src/com/ikeriano/pasapalabra3d/*.java 2>&1 | grep -v "^warning\|^Note\|bootstrap" || true
+else cp -r /workspace/pasa3d_10/build10/cls/. cls/; fi
 $BT/d8 --min-api 21 --lib "$AJ" --output dex $(find cls -name '*.class')
 $BT/aapt2 compile --dir "$REPO/android/res" -o res.zip
 $BT/aapt2 link -o base.apk -I "$AJ" --manifest AndroidManifest.xml res.zip --min-sdk-version 21 --target-sdk-version 34 --version-code $VC --version-name $VN
