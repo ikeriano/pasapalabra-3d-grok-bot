@@ -6,6 +6,15 @@ Personajes estilizados, controles táctiles y teclado del móvil. Optimizado par
 Descarga el APK en Releases. Capturas y comparativas con la TV en `screenshots/`.
 
 
+## v0.8 – Control táctil, final del bote, bola de letras, Keedy Sans y cabeceras enteras
+- **Control táctil rehecho**: se activa al SOLTAR el dedo (no al apoyarlo), un deslizamiento mueve exactamente UNA opción (sin inercia), cruceta grande ▲▼◀▶ ✔ siempre visible y opción resaltada. Tope de 30 fps. Test con toques reales simulados (`tests/touch08.test.mjs`).
+- **Bote**: al completar el rosco (25 aciertos) se gana el bote y TERMINA el programa: confeti, aplausos, pantalla con el importe, despedida y vuelta al menú. En todas las etapas y especiales. 2019 con el sonido y la despedida reales de Christian (22-01-2019). Test: `tests/bote08.test.mjs`.
+- **Bola de letras** del plató contenida detrás y centrada con el título «Pasapalabra»; letras sueltas que flotan siempre (sin girar).
+- **Tipografía Keedy Sans** incrustada en local (`www/font/keedy.ttf`) en rótulos, título, premio y subtítulos.
+- **Cabeceras**: cada cabecera suena entera de principio a fin y el programa espera a que termine la música (`www/v08c.js`, `tests/cab08.test.mjs`). 2019: audio real de las cinco cabeceras (La Pista, Una de Cuatro, Sopa de Letras, ¿Dónde Están?, El Rosco).
+- APK como app aparte: `com.ikeriano.pasapalabra3d.gb` (firma nueva, no se instala sobre v0.7).
+- Pendiente para v0.9: La Silla Azul verificada en programas reales, «Lo mejor de Pasapalabra», sección Extras (tomas falsas, etc.).
+
 ## v0.3 – Cortinillas reales, cabeceras plano a plano y realización TV
 - Cortinillas recreadas fotograma a fotograma para cada etapa: iris 3D descentrado, título Keedy con bisel que llega letra a letra (2007 en orden aleatorio, 2011–2017 en orden con giro y zoom), barrido de luz, salida con disco junto al título; 2019 con estallido de símbolos, título grande y letras que salen despedidas hacia la cámara.
 - Cabeceras recreadas plano a plano con su música original sincronizada: campo de letras, túnel de anillos, esfera, letras gigantes en órbita, logotipo en espejo, iris y grúa sobre el plató (2019 con sus cortes, cintas y anillos de luz).
