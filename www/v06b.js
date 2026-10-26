@@ -127,7 +127,7 @@ async function alaZ(rid){clearG();MODE.split=false;P.ply.pul.visible=P.cpu.pul.v
  const shape=(p,i)=>{const w=items[p][i][0][0];return [...w].map((ch,j)=>ch==' '?' ':(j==0&&norm(ch)==LETRAS[i])||rev[p][i]===j||(norm(ch)==LETRAS[i]&&rev[p]['c'+i]===j)?ch:'_').join(' ');};
  const show=p=>{cut(p?'orange':'blue');tmr.set(Math.ceil(tm[p]));tmr.max=110+GAME.sec[p];hits.setT(String(st[p].filter(x=>x==1).length));};
  show(0);
- while(alive(0)||alive(1)){chk(rid);if(!alive(turn)){turn=1-turn;show(turn);continue;}
+ while((alive(0)||alive(1))&&st[0].filter(x=>x==1).length<25){chk(rid);if(!alive(turn)){turn=1-turn;show(turn);continue;}
   const i=next(turn);pos[turn]=i;const [ans,def]=items[turn][i],L=LETRAS[i],starts=norm(ans[0]).startsWith(L);
   if(!starts&&rev[turn]['c'+i]===undefined){rev[turn]['c'+i]=[...ans[0]].findIndex(ch=>norm(ch)==L);}
   const f=Math.max(.15,Math.min(.85,tm[0]/(tm[0]+tm[1]||1)));

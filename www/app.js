@@ -266,7 +266,9 @@ function ask(stop){return new Promise(res=>{KB.value='';ASK={res,stop};const upd
 function askEnd(v=null){if(ASK)ASK.fin(v);}
 // toques sobre los grafismos 3D
 const ray=new T.Raycaster(),mv=new T.Vector2();let TAP=null;
-$('#c').addEventListener('pointerdown',e=>{if(MODE.menu)return;mv.set(e.clientX/W*2-1,-(e.clientY/H)*2+1);ray.setFromCamera(mv,gcam);const h=ray.intersectObjects(G.children,true).find(x=>{let o=x.object;while(o){if(o.userData.tap!==undefined)return true;o=o.parent;}return false;});
+// v0.8: el toque se resuelve al LEVANTAR el dedo y solo si no se ha movido (un deslizamiento ya no pulsa nada)
+const TAP8={};$('#c').addEventListener('pointerdown',e=>{TAP8.id=e.pointerId;TAP8.x=e.clientX;TAP8.y=e.clientY;});$('#c').addEventListener('pointercancel',()=>{TAP8.id=null;});
+$('#c').addEventListener('pointerup',e=>{if(TAP8.id!==e.pointerId)return;TAP8.id=null;if(Math.hypot(e.clientX-TAP8.x,e.clientY-TAP8.y)>12)return;if(MODE.menu)return;mv.set(e.clientX/W*2-1,-(e.clientY/H)*2+1);ray.setFromCamera(mv,gcam);const h=ray.intersectObjects(G.children,true).find(x=>{let o=x.object;while(o){if(o.userData.tap!==undefined)return true;o=o.parent;}return false;});
  if(h){let o=h.object;while(o.userData.tap===undefined)o=o.parent;if(TAP)TAP(o.userData.tap,o);return;}if(TAP)TAP(null,null,e);});
 // ---------- estado de juego ----------
 const MODE={menu:true,split:false};
@@ -363,7 +365,7 @@ async function rosco(rid){clearG();MODE.split=false;P.ply.pul.visible=P.cpu.pul.
  const show=async()=>{roscoPerson(turn);cut('rosco');g.team(turn?COL.or:COL.bl);st[turn].forEach((s,i)=>g.state(i,s));g.tm.set(Math.ceil(tm[turn]));g.ac.setT(String(st[turn].filter(x=>x==1).length));await g.fly(1.5);};
  await show();chk(rid);let tl=0;anim(dt=>{if(rid!==RUN||!g.parent)return false;tl+=dt;g.tick(tl);return true;});
  const alive=p=>tm[p]>0&&st[p].some(x=>x==0);
- while(alive(0)||alive(1)){chk(rid);if(!alive(turn)){turn=1-turn;await show();continue;}
+ while((alive(0)||alive(1))&&st[0].filter(x=>x==1).length<25){chk(rid);if(!alive(turn)){turn=1-turn;await show();continue;}
   const i=next();pos[turn]=i;g.setAct(i);const [ans,def]=items[i],L=LETRAS[i],starts=norm(ans[0]).startsWith(L);
   hostSay(`<b>${starts?'Empieza por':'Contiene la'} ${L}:</b> ${def.charAt(0)+def.slice(1).toLowerCase()}`);
   let res;
