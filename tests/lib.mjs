@@ -10,7 +10,7 @@ export const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 // El juego se ve en horizontal (sensorLandscape): el Redmi A2 es 720x1600 y gira a 1600x720.
 export async function open(opts={}){
  const s=await serve(),port=s.address().port;
- const b=await puppeteer.launch({executablePath:process.env.CHROME||'/usr/bin/google-chrome',headless:'new',args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required','--ignore-gpu-blocklist']});
+ const b=await puppeteer.launch({executablePath:process.env.CHROME||'/usr/bin/google-chrome',headless:'new',protocolTimeout:600000,args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required','--ignore-gpu-blocklist']});
  const p=await b.newPage();const W=opts.w||1600,H=opts.h||720;
  await p.setViewport({width:W,height:H,deviceScaleFactor:opts.dpr||1,isMobile:true,hasTouch:true});
  const errs=[];p.on('pageerror',e=>errs.push(String(e)));
