@@ -6,6 +6,14 @@ Personajes estilizados, controles táctiles y teclado del móvil. Optimizado par
 Descarga el APK en Releases. Capturas y comparativas con la TV en `screenshots/`.
 
 
+## v0.12 – Modo clásico (juego de PC de Silvia Jato), etapas de Antena 3, «A la Z» y banco de escenas
+
+- **🖥 Modo clásico · juego de PC de Silvia Jato (2000-2002)**, botón en el menú principal: los 6 juegos del PASAP.EXE de Antena 3 (A-Z, Palabra incompleta, Famosos, Pirámide, Palabra imposible, Rosco de 28) en 2D, con sus 52 programas, fondos, caricaturas y sonidos. Pantallas recompuestas (aproximado).
+- **Antena 3**: Silvia Jato (2000), Constantino Romero (2002) y Jaime Cantizano (2006) (inventados donde no hay dato, marcados «INVENTADO»), Roberto Leal 2020-presente, **Palabras cruzadas** en 2023 (opción apagada) y **«A la Z»** de junio de 2026 en adelante.
+- **La Escalera** de Telecinco alineada con la Pirámide: 90 s, +1 s por palabra, un fallo pasa al compañero y empieza el naranja.
+- **Banco de escenas** enorme (monólogos, cámaras ocultas, fuera de cámaras, tomas falsas, mejores momentos y pruebas previas), todo inventado y con las opciones apagadas.
+- Incluye todo lo de la versión anterior.
+
 ## v0.10 – Pasapalabra en familia, equipos de 3 y «Lo mejor de Pasapalabra» completo
 
 - **👨‍👩‍👦 Pasapalabra en familia, como juego propio** (accesos en el menú principal, en Programas especiales y en Programas temáticos). Dos familias de **tres**: la **naranja** (ganó el programa anterior) y la **azul** (la que entra). Seis pruebas que dan **segundos**: *He dicho*, *Palabras cruzadas*, *¿Dónde están?*, *¿Tú qué pintas?*, *Esto me suena* y *La ristra* (3 al azar o las 6, en Opciones de la familia).

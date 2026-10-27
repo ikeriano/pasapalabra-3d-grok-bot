@@ -1,0 +1,72 @@
+{
+ "jato": {
+  "R": "F",
+  "N": "Silvia Jato",
+  "intro": "¡Buenas tardes y bienvenidos a Pasapalabra! Soy Silvia Jato. Seis juegos de palabras y, al final, el rosco de veintiocho letras.",
+  "j1_pre": "Primer juego: de la A a la Z. Cada respuesta empieza por la letra que os digo.",
+  "j2_pre": "Segundo juego: la palabra incompleta. Os doy el principio y vosotros me decís la palabra entera.",
+  "j3_pre": "Tercer juego: famosos con pista. Adivinad quién es el famoso de la noticia.",
+  "j4_pre": "Cuarto juego: la pirámide. Una palabra de siete letras, otra de seis, de cinco, de cuatro y de tres.",
+  "j5_pre": "Quinto juego: la palabra imposible. Os doy la definición, vosotros elegís entre cuatro palabras.",
+  "j6_pre": "Y llegamos al juego final: el rosco. Veintiocho letras, con la K, la LL y la W, y cien segundos más los que hayáis acumulado.",
+  "desp": "Hasta mañana. Y recordad: si no sabéis la respuesta, ¡pasapalabra!"
+ },
+ "romero": {
+  "R": "M",
+  "N": "Constantino Romero",
+  "intro": "Buenas tardes. Soy Constantino Romero y esta tarde sustituyo a Silvia Jato en Pasapalabra. Vamos allá, que el rosco no espera.",
+  "una2_pre": "Empezamos con una de dos: una pregunta y dos respuestas. Solo una es la buena.",
+  "escalera_pre": "Seguimos con la pirámide: siete letras, seis, cinco, cuatro y tres.",
+  "pulsador_pre": "Ahora, el pulsador. El que sepa la respuesta, que apriete.",
+  "depar_pre": "Es el turno de de par en par: unid las parejas.",
+  "antes_pre": "Y ahora, antes y después: elegid si queréis ver el principio o el final de la palabra.",
+  "imposible_pre": "Llega la palabra imposible. Cinco segundos para el equipo que más acierte.",
+  "rosco_pre": "Y por fin, el rosco. Veinticinco letras y noventa segundos más los que hayáis acumulado.",
+  "desp": "Esto ha sido todo por hoy. Yo soy Constantino Romero. Buenas tardes y hasta mañana."
+ },
+ "canti": {
+  "R": "H",
+  "N": "Jaime Cantizano",
+  "intro": "¡Hola, buenas tardes! Soy Jaime Cantizano y esto es Pasapalabra, en Antena 3. Dos equipos, un rosco y un bote enorme.",
+  "una2_pre": "Primera prueba: una de dos. Dos respuestas, una sola correcta.",
+  "escalera_pre": "Cuarta prueba: la pirámide. De siete letras a tres.",
+  "pulsador_pre": "Segunda prueba: el pulsador. ¡Rapidez, que se acaba el tiempo!",
+  "depar_pre": "Tercera prueba: de par en par.",
+  "imposible_pre": "Quinta prueba: la palabra imposible.",
+  "rosco_pre": "¡Y llega el rosco! Veinticinco letras y noventa segundos más los acumulados.",
+  "desp": "Hasta mañana. Soy Jaime Cantizano y esto ha sido Pasapalabra."
+ },
+ "leal": {
+  "R": "H",
+  "N": "Roberto Leal",
+  "intro": "¡Muy buenas, bienvenidos a Pasapalabra! Soy Roberto Leal. Hoy el equipo azul se enfrenta al naranja, con el bote en juego.",
+  "u4_pre": "Comenzamos con la primera prueba: una de cuatro.",
+  "pista_pre": "Seguimos con la pista musical. Escuchad bien.",
+  "sopa_pre": "Nos vamos a la sopa de letras. Tres palabras escondidas en cada panel.",
+  "cruz12_pre": "Llega una prueba nueva: palabras cruzadas. Nueve palabras en setenta y cinco segundos.",
+  "donde_pre": "Última prueba, ¿dónde están? Memoria y rapidez.",
+  "rosco_pre": "Y ahora sí, el rosco final de Pasapalabra. Ochenta y cinco segundos más los que hayáis ganado.",
+  "desp": "Hasta mañana. Soy Roberto Leal y esto ha sido Pasapalabra. ¡Pasapalabra!"
+ },
+ "a26": {
+  "R": "H",
+  "N": "Roberto Leal",
+  "intro": "¡Muy buenas, bienvenidos a Pasapalabra! Soy Roberto Leal. Desde hoy, el programa tiene una prueba final nueva.",
+  "u4_pre": "Empezamos con una de cuatro.",
+  "pista_pre": "Ahora, la pista musical.",
+  "cruz12_pre": "Siguiente prueba: palabras cruzadas.",
+  "donde_pre": "Y para terminar las pruebas, ¿dónde están?",
+  "rosco_pre": "Y ahora, la gran novedad: la prueba final A la Z. Ciento diez segundos más los que hayáis acumulado.",
+  "alaz_dir": "Quien llegue con más segundos elige el sentido: de la A a la Z, o de la Z a la A. El rival jugará al revés.",
+  "alaz_cab": "¡A la Z! Cada uno en su cabina, de la A a la Z o al revés.",
+  "desp": "Hasta mañana. Esto ha sido Pasapalabra. ¡A la Z!"
+ },
+ "jato_pc": {
+  "R": "F",
+  "N": "Silvia Jato",
+  "hola": "Bienvenidos al juego de Pasapalabra.",
+  "azul": "Equipo azul.",
+  "rojo": "Equipo rojo.",
+  "tiempo": "Se acabó el tiempo."
+ }
+}
