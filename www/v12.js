@@ -3,12 +3,12 @@
 // (2007 ó 2019) para que todo el código anterior funcione igual. Al empezar el programa se sustituye ETAPAS[base] por la etapa real y se deshace al acabar.
 const SW12={on:false,real:0,base:0,sv:null,prog:0};
 const ST12={
- 2000:{k:'jato',base:2007,n:'Silvia Jato',fechas:'24/7/2000 – 15/11/2002 y 8/1/2003 – 17/3/2006',tag:'aproximado (juego de PC = fiel a PASAP.EXE; plató aproximado)',suit:0x7a2a3a,hair:0xc8a060,long:true,bg:0x0a1a5c,frame:0xe8a020,lc:0xffb030,gl:0xffa030},
+ 2000:{k:'jato',base:2007,n:'Silvia Jato',fechas:'24/7/2000 – 15/11/2002 y 8/1/2003 – 17/3/2006',tag:'aproximado (juego de PC = fiel a PASAP.EXE; plató aproximado)',suit:0x7a2a3a,hair:0xc8a060,long:true,bg:0x0a1a5c,frame:0xe8c030,lc:0xffd84a,gl:0xffd040},
  2002:{k:'romero',base:2007,n:'Constantino Romero',fechas:'18/11/2002 – 7/1/2003',tag:'🆕 INVENTADO (pruebas, plató y reglas)',suit:0x1a1c24,hair:0xb8b8c0,bg:0x1a1038,frame:0x9a50e0,lc:0xc080ff,gl:0xb070ff},
- 2006:{k:'canti',base:2007,n:'Jaime Cantizano',fechas:'20/3/2006 – 9/6/2006',tag:'🆕 INVENTADO (pruebas, plató y reglas)',suit:0x2a3a5a,hair:0x2a1c12,bg:0x2a0f0a,frame:0xe05020,lc:0xff8040,gl:0xff6a30},
- 2020:{k:'leal',base:2019,n:'Roberto Leal',fechas:'desde el 13/5/2020',tag:'aproximado (rosco de 85 s)',suit:0x20283a,hair:0x1a1410,bg:0x06123a,frame:0x1a3c9a,lc:0x2a7bff,gl:0xff8a1a},
- 2023:{k:'leal',base:2019,n:'Roberto Leal',fechas:'desde diciembre de 2023',tag:'aproximado (palabras cruzadas en Opciones)',suit:0x20283a,hair:0x1a1410,bg:0x06123a,frame:0x1a3c9a,lc:0x2a7bff,gl:0xff8a1a},
- 2026:{k:'a26',base:2019,n:'Roberto Leal',fechas:'junio de 2026 en adelante',tag:'aproximado (faltan imágenes del 19/6)',suit:0x20283a,hair:0x1a1410,bg:0x2f8fe8,frame:0xff7a1a,lc:0x4ab0ff,gl:0xff7a1a,booths:true}};
+ 2006:{k:'canti',base:2007,n:'Jaime Cantizano',fechas:'20/3/2006 – 9/6/2006',tag:'🆕 INVENTADO (pruebas, plató y reglas)',suit:0x2a3a5a,hair:0x2a1c12,bg:0x0a2a2a,frame:0x1a9a8a,lc:0x40e0c8,gl:0x30d0b8},
+ 2020:{k:'leal',base:2019,n:'Roberto Leal',fechas:'desde el 13/5/2020',tag:'aproximado (rosco de 85 s)',suit:0x20283a,hair:0x1a1410,bg:0x06123a,frame:0x1a3c9a,lc:0x2a7bff,gl:0x3a7bff},
+ 2023:{k:'leal',base:2019,n:'Roberto Leal',fechas:'desde diciembre de 2023',tag:'aproximado (palabras cruzadas en Opciones)',suit:0x20283a,hair:0x1a1410,bg:0x06123a,frame:0x1a3c9a,lc:0x2a7bff,gl:0x3a7bff},
+ 2026:{k:'a26',base:2019,n:'Roberto Leal',fechas:'junio de 2026 en adelante',tag:'aproximado (faltan imágenes del 19/6)',suit:0x20283a,hair:0x1a1410,bg:0x2f8fe8,frame:0x1a3c9a,lc:0x4ab0ff,gl:0x3a7bff,booths:true}};
 const A3_ORD=[2000,2002,2006,2020,2023,2026];
 OPT.a3=OPT.a3||0;if(OPT.cruz12===undefined)OPT.cruz12=0;
 const esc12=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
@@ -65,7 +65,7 @@ for(const [i,t] of [[1,['De la','A a la Z']],[2,['La Palabra','Incompleta']],[3,
 let alaZ12=null;{const _a=alaZ,src=_a.toString();
  if(src.includes('ans.some(a=>norm(a)===norm(v))')){let s=src.replace('ans.some(a=>norm(a)===norm(v))','norm(ans[0])===norm(v)').replace('Una definición por letra:','Cada concursante juega en su <b>cabina individual</b>. Una definición por letra:').replace('Con el botón <b>Pista</b>','Solo vale la respuesta exacta. Con el botón <b>Pista</b>').replace('async function alaZ(','async function alaZ12x(');
   try{alaZ12=(0,eval)('('+s+')');}catch(e){console.error('alaZ12',e);}}
- alaZ=async function(rid){if(SW12.on&&SW12.real==2026&&alaZ12){try{if(await voz('alaz_dir',rid)){}}catch(e){if(e instanceof Stop)throw e;}return alaZ12(rid);}return _a.apply(this,arguments);};}
+ alaZ=async function(rid){if(SW12.on&&SW12.real==2026&&alaZ12){try{if(await voz('alaz_dir',rid)){}}catch(e){if(e instanceof Stop)throw e;}const o26=ST12[2026],F=P.frame&&P.frame.material,G0=P.glow&&P.glow.material;const sf=F&&F.color.getHex(),sg=G0&&G0.color.getHex();try{if(F)F.color.setHex(0xff7a1a);if(G0)G0.color.setHex(0xff7a1a);cabinas12(true);return await alaZ12(rid);}finally{cabinas12(false);if(F)F.color.setHex(sf);if(G0)G0.color.setHex(sg);}}return _a.apply(this,arguments);};}
 // ---------- cabinas 3D (2026) ----------
 function cabinas12(on){if(!P.root)return;if(!P.cab12){const g=new T.Group();const pm=new T.MeshBasicMaterial({color:0xff7a1a}),gm=new T.MeshBasicMaterial({color:0x7fd0ff,transparent:true,opacity:.18,side:T.DoubleSide});
   for(const [x,sg] of [[3.95,1],[-3.95,-1]]){const c=new T.Group();c.position.set(x,0,.5);
@@ -84,7 +84,7 @@ function look12(y){const o=ST12[y];if(!P.root||!P.host)return;
   [...HL12.su].forEach(m=>{if(!m.userData.own){m.material=m.material.clone();m.userData.own=1;}m.material.color.setHex(o?o.suit:m.userData.c12);});
   HL12.ha.forEach(m=>{if(!m.userData.own){m.material=m.material.clone();m.userData.own=1;}m.material.color.setHex(o?o.hair:m.userData.c12);});
   const hm=HL12.ha[0];if(hm){if(!HL12.long){HL12.long=new T.Mesh(new T.CylinderGeometry(.15,.17,.34,12,1,true,PI*.3,PI*1.4),hm.material);HL12.long.position.set(0,-.12,-.03);hm.parent.add(HL12.long);}HL12.long.visible=!!(o&&o.long);}}
- cabinas12(o&&o.booths);}
+ cabinas12(false);}
 {const _ap=applyPlato;applyPlato=function(y){const r=_ap.apply(this,arguments);try{look12(OPT.a3);}catch(e){console.error(e);}return r;};if(window.DBG)DBG.applyPlato=applyPlato;}
 function setA3(y){const o=ST12[y];OPT.a3=o?y:0;if(o){OPT.etapa=OPT.plato=o.base;}saveOpt();applyPlato(OPT.plato);LOGO=logoURL();}
 // ---------- tablas de pruebas de cada etapa ----------

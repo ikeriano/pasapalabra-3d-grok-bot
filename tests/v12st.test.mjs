@@ -14,7 +14,7 @@ for(const s of ['a12hub','a12s26','a12reg','a12info']){await ev(s=>showMenu(s),s
 await ev(()=>showMenu('opt'));await sleep(500);check('fila de etapas Antena 3 y cruzadas en Opciones',await ev(()=>!!document.querySelector('[data-a3]')&&!!document.querySelector('[data-o12c=cruz12]')));
 check('cruzadas apagadas por defecto',await ev(()=>!OPT.cruz12));await shot('v12_opciones_antena3');
 await ev(()=>showMenu('x12:b12'));}
-async function juega(nombre,js,shots=[],max=1400,quick){await ev(js=>{eval(js);},js);let ini=false,fin=false,k=0;
+async function juega(nombre,js,shots=[],max=+process.env.MAX||1400,quick){await ev(js=>{eval(js);},js);let ini=false,fin=false,k=0;
  for(let i=0;i<max&&!fin;i++){await sleep(120);const m=await ev(()=>MODE.menu);if(!ini){if(!m)ini=true;continue;}
   if(shots.includes(k))await shot('v12_'+nombre+'_'+k);k++;
   await ev(()=>{try{askEnd(Math.random()<.5?'pasapalabra':'xx');}catch(e){}if(typeof TAP==='function')try{TAP(Math.floor(Math.random()*3));}catch(e){}const mb=[...document.querySelectorAll('.mbtn')].filter(e=>e.offsetParent&&e.onpointerdown);if(mb.length)try{mb[Math.floor(Math.random()*mb.length)].onpointerdown({preventDefault(){}});}catch(e){}const b=document.querySelector('#pc12 .pcb,#pc12 .opt:not(.ok):not(.no)');if(b&&b.onpointerdown)try{b.onpointerdown({preventDefault(){}});}catch(e){}});
