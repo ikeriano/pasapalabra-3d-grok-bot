@@ -141,6 +141,7 @@ let CAB12=null;
 function go12(g){const [,k,a]=g.split(':');
  if(k=='play'){setA3(+a);return startGame();}
  if(k=='prog'){setA3(2026);SW12.bote0=OPT.bote;SW12.prog=+a;OPT.bote=658000+(+a-1)*6000;return startGame();}
+ if((k=='pc'||k=='pcm')&&window.SJ13&&SJ13.disponible())return SJ13.abrir(k=='pcm'?'main':'a12hub');
  if(k=='pc'||k=='pcm')return scene9(async rid=>{PCX().setTag();PCX().newTeams();await PCX().pcMenu(rid);},{back:k=='pcm'?'main':'a12hub',banner:'🖥 MODO CLÁSICO · JUEGO DE PC DE SILVIA JATO (2000-2002) · aproximado'});
  if(k=='cab')return scene9(async rid=>{sw12(2026);try{await alazCab(rid);}finally{unsw12();}},{back:'a12s26',banner:'🎞 CABECERA «A LA Z»'});
  if(k=='alaz')return scene9(async rid=>{sw12(2026);GAME.sec=[Math.round(rnd(8,30)),Math.round(rnd(8,30))];GAME.ac=[0,0];try{await voz('alaz_cab',rid);await alaZ(rid);}finally{unsw12();}},{back:'a12s26',banner:'🔤 A LA Z · 2026'});}

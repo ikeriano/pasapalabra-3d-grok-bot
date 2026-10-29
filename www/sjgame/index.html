@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Pasapalabra - Silvia Jato (Bialplen 2001)</title>
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;font-family:Arial,sans-serif}
+#c{position:absolute;image-rendering:auto;background:#000}
+#back{position:absolute;left:50%;transform:translateX(-50%);top:2px;opacity:.7;z-index:9;background:rgba(0,0,40,.75);color:#fff;border:1px solid #88f;border-radius:6px;font-size:13px;padding:5px 9px}
+#kb{position:absolute;left:0;right:0;bottom:0;display:none;background:#0a1450;border-top:2px solid #f5c400;padding:3px 2px;box-sizing:border-box}
+#kb .r{display:flex;justify-content:center;gap:3px;margin:3px 0}
+#kb b{flex:1;max-width:58px;text-align:center;color:#fff;background:linear-gradient(#3a52e8,#1a2aa0);border:1px solid #9ab;border-radius:5px;font:bold 17px Arial;padding:8px 0}
+#kb b.w{max-width:120px;flex:2;background:linear-gradient(#e83a3a,#a01a1a)}
+#kb b:active{background:#f5c400;color:#000}
+#load{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font:16px Arial}
+</style></head><body>
+<canvas id="c" width="640" height="480"></canvas>
+<div id="load">Cargando...</div>
+<button id="back">⟵ Pasapalabra 3D</button>
+<div id="kb"></div>
+<script src="rects.js"></script>
+<script src="data.js"></script>
+<script src="sj.js"></script>
+</body></html>

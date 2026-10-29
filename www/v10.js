@@ -28,7 +28,7 @@ function mkTeams(){const s=S();
 let SV=null;
 const colSave=()=>{SV={bl:COL.bl,blD:COL.blD,or:COL.or,orD:COL.orD};};
 const colRest=()=>{if(SV)Object.assign(COL,SV);SV=null;window.TIMERC9=null;try{FX5.tint('');}catch(e){}};
-function setTeam(t){const tm=t.tm,o=TEAM9[t.k=='na'?'az':'na'];COL.bl=tm.c;COL.blD=tm.d;COL.or=o.c;COL.orD=o.d;window.TIMERC9=tm.t;try{FX5.tint(tm.tint);}catch(e){}}
+function setTeam(t){const tm=t.tm,o=TEAM9[t.k=='na'?'az':'na'];COL.bl=tm.c;COL.blD=tm.d;COL.or=o.c;COL.orD=o.d;window.TIMERC9=tm.t;if(window.F16)F16.team(t.k);try{FX5.tint(tm.tint);}catch(e){}}
 async function hs(rid,t,extra=0){hostSay(t);const c=VOZ5[t];await wait((c?c[1]+.3:Math.max(1.2,t.length*.05))+extra,rid);chk(rid);}
 async function clip(rid,f){await v9play(f);chk(rid);await wait(.15,rid);}
 const secF=n=>n>60?'p10/sm.ogg':'p10/s'+Math.max(0,n)+'.ogg';
@@ -114,10 +114,10 @@ async function pPinta(rid,T){const topics=shuffle(F10D.pinta.flatMap(([tp,ws])=>
   const pu=()=>{drawing=false;};el.addEventListener('pointerdown',pd);el.addEventListener('pointermove',pm);addEventListener('pointerup',pu);addEventListener('pointercancel',pu);
   try{
    while(st.t>0){
-    if(!t.cpu){const [tp,w]=topics[ti++%topics.length];clr();dn=false;tb.setT('TEMA: '+tp.toUpperCase(),t.tm.c);hostSay('Dibuja una persona; los demás adivinan. Toca «Ver la palabra» solo si te toca dibujar.');
+    if(!t.cpu){const [tp,w]=topics[ti++%topics.length];clr();dn=false;V13.draw=false;tb.setT('TEMA: '+tp.toUpperCase(),t.tm.c);hostSay('Dibuja una persona; los demás adivinan. Toca «Ver la palabra» solo si te toca dibujar.');
      const v=await evt(st,rid,f=>setActs([{t:'Ver la palabra',ic:'👁',cls:'y',cb:()=>f('see')}]));setActs();if(v=='time')break;
      const wb=bar(Math.min(GW*.5,480),70,GOLD,w,{fs:44});wb.position.set(0,40,40);G.add(wb);say('<b>¡Que nadie más la vea!</b>');await wait(3,rid);G.remove(wb);say();
-     dn=true;const r=await evt(st,rid,f=>setActs([{t:'¡Acertamos! +3 s',ic:'✔',cls:'y',cb:()=>f('ok')},{t:'Pasar',ic:'⟳',cb:()=>f('pass')}]));setActs();dn=false;
+     dn=true;V13.draw=true;const r=await evt(st,rid,f=>setActs([{t:'¡Acertamos! +3 s',ic:'✔',cls:'y',cb:()=>f('ok')},{t:'Pasar',ic:'⟳',cb:()=>f('pass')}]));setActs();dn=false;V13.draw=false;
      if(r=='time')break;if(r=='ok'){hits++;sfx('ok');tb.setT('¡ACERTADO! '+w,COL.gr);await wait(.9,rid);}else{sfx('splash');}
     }else{const [tp,w]=cpuW[ci++%cpuW.length];clr();tb.setT('TEMA: '+tp.toUpperCase()+' · DIBUJA LA CPU',t.tm.c);hostSay('Dibuja un miembro de la familia y los demás adivinan…');
      g.strokeStyle=t.k=='na'?'#c86400':'#0b3fb0';const sc=BH/100*.92,ox=(BW-100*sc)/2,oy=BH*.04;g.save();g.translate(ox,oy);g.scale(sc,sc);g.lineWidth=7/sc;
@@ -125,7 +125,7 @@ async function pPinta(rid,T){const topics=shuffle(F10D.pinta.flatMap(([tp,ws])=>
      g.restore();if(broke)break;await wait(.8,rid);chk(rid);if(st.t<=0)break;
      if(Math.random()<.62){hits++;sfx('ok');tb.setT('¡ACERTADO! '+w,COL.gr);}else{sfx('error');tb.setT('NO LO ADIVINAN · ERA '+w,COL.rd);}await wait(1.2,rid);}
     chk(rid);}
-  }finally{dn=false;el.removeEventListener('pointerdown',pd);el.removeEventListener('pointermove',pm);removeEventListener('pointerup',pu);removeEventListener('pointercancel',pu);setActs();say();tex.dispose();}
+  }finally{dn=false;V13.draw=false;el.removeEventListener('pointerdown',pd);el.removeEventListener('pointermove',pm);removeEventListener('pointerup',pu);removeEventListener('pointercancel',pu);setActs();say();tex.dispose();}
   return hits;});}
 // ===== PRUEBA 5 · ESTO ME SUENA =====
 async function pSuena(rid,T){const songs=shuffle(F10D.suena);
@@ -170,13 +170,13 @@ async function rosco10(rid,T){clearG();MODE.split=false;P.ply.pul.visible=P.cpu.
  const alive=k=>{const r=R[k];if(r.tm<=0)return false;if(r.seg==0&&!pending(k,0,13))r.seg=1;return pending(k,seg(k)[0],seg(k)[1]);};
  const next=k=>{const r=R[k],[lo,hi]=seg(k),n=hi-lo+1;let p=r.pos;if(p<lo||p>hi)p=lo;for(let q=0;q<n;q++){const i=lo+((p-lo+q)%n);if(r.st[i]==0)return i;}return -1;};
  const cnt=(k,v)=>R[k].st.filter(x=>x==v).length;
- cut('host');await hs(rid,T10.roscoIni);
+ if(window.F16)await F16.vid('rosco',rid);cut('host');await hs(rid,T10.roscoIni);
  hostSay(T10.conNa);await wait(1.7,rid);await clip(rid,secF(85+T.na.sec));hostSay(T10.conAz);await wait(1.7,rid);await clip(rid,secF(85+T.az.sec));
  let cur=T.na.sec>=T.az.sec?T.na:T.az;if(T.na.sec===T.az.sec)cur=T.na;
  await hs(rid,T.na.sec===T.az.sec?T10.empEmp:cur.k=='na'?T10.empNa:T10.empAz);
- setPeople(true);const g=roscoGraf();let nb=null;
+ setPeople(true);const g=roscoGraf();if(window.F16)F16.rosco(g,T);let nb=null;
  const show=async()=>{const k=cur.k;await gate(rid,cur);setTeam(cur);roscoPerson(cur.tm.i);cut('rosco');g.team(cur.tm.c);R[k].st.forEach((s,i)=>g.state(i,s));g.tm.set(Math.ceil(R[k].tm));g.ac.setT(String(cnt(k,1)));
-  if(nb)G.remove(nb);const pl=R[k].seg,who=cur.mem[R[k].ply[pl]];nb=bar(Math.min(GW*.5,480),36,cur.tm.c,`${who} · ${pl?'O→Z':'A→Ñ'} · ${cur.tm.n}`.toUpperCase(),{fs:21});nb.position.set(0,328,0);G.add(nb);
+  if(nb)G.remove(nb);const pl=R[k].seg,who=cur.mem[R[k].ply[pl]];nb=bar(Math.min(GW*.5,480),36,cur.tm.c,`${who} · ${pl?'O→Z':'A→Ñ'} · ${cur.tm.n}`.toUpperCase(),{fs:21});nb.position.set(0,328,0);G.add(nb);if(window.F16){F16.seg(pl);nb.visible=false;}
   await g.fly(1.1);chk(rid);if(!R[k].said[pl]){R[k].said[pl]=1;await hs(rid,pl?T10.j2:T10.j1);}};
  await show();let tl=0;anim(dt=>{if(rid!==RUN||!g.parent)return false;tl+=dt;g.tick(tl);return true;});
  while(alive('na')||alive('az')){chk(rid);const k=cur.k,o=cur.k=='na'?T.az:T.na;
@@ -196,7 +196,7 @@ async function rosco10(rid,T){clearG();MODE.split=false;P.ply.pul.visible=P.cpu.
   g.setAct(-1);if(alive(o.k)){cur=o;await show();chk(rid);}else if(res=='pasa'||res=='ko'){continue;}}
  say();setActs();g.setAct(-1);
  T.na.hits=cnt('na',1);T.na.miss=cnt('na',2);T.az.hits=cnt('az',1);T.az.miss=cnt('az',2);
- return g;}
+ if(window.F16)await F16.roscoEnd(rid,R,T);return g;}
 // ===== resultados =====
 async function results10(rid,T,g){const s=S();
  hostSay(T10.fin);await wait(1.4,rid);
@@ -222,7 +222,7 @@ async function results10(rid,T,g){const s=S();
   if(!r.tie){const wk=r.w;const winnerIsMe=wk==mk;s.or=winnerIsMe?'me':'cpu';if(winnerIsMe)s.c++;}}
  else if(!r.tie)s.or=r.w=='na'?s.or:(s.or=='A'?'B':'A');
  saveOpt();
- await hs(rid,T10.adios);}
+ await hs(rid,T10.adios);if(window.F16)await F16.vid('desp',rid);}
 // ===== presentación =====
 async function famPres(rid,T,k){const t=T[k],tm=t.tm;cut(tm.shot);await hs(rid,k=='na'?T10.naranja:T10.azul);cut(k=='na'?'team_o':'team_b');const nb=nameBar(t);
  if(t._c&&t.line)await hs(rid,t.line);else{hostSay(`La familia ${esc(t.name.replace(/^Familia /,''))}: ${t.mem.slice(0,2).map(esc).join(', ')} y ${esc(t.mem[2])}.`);await wait(3,rid);}
@@ -231,7 +231,7 @@ async function explain10(rid,full){let skip=false;setActs([{t:'Saltar explicaci�
  const L=full?['e1','e2','e3','e5','e6','e7','e8','e9','e10','e11','e12','e13']:['recuerdo'];
  for(const k of L){if(skip)break;hostSay(T10[k]);const c=VOZ5[T10[k]];let t=0;const need=(c?c[1]+.4:3);while(t<need&&!skip){await wait(.2,rid);t+=.2;}chk(rid);}
  setActs();say();}
-async function intro10(rid,T){const s=S();FX5.banner('PASAPALABRA EN FAMILIA');await cabecera(rid);chk(rid);cut('host');await hs(rid,T10.hola);
+async function intro10(rid,T){const s=S();FX5.banner('PASAPALABRA EN FAMILIA');await (window.F16?F16.cab(rid,cabecera):cabecera(rid));chk(rid);cut('host');await hs(rid,T10.hola);
  say(`<b>Programa número ${s.n}</b>`);if(s.n<=400)await clip(rid,`bote/pg${s.n}.ogg`);
  await hs(rid,T10.dos);
  await famPres(rid,T,'na');await famPres(rid,T,'az');
@@ -241,16 +241,16 @@ async function intro10(rid,T){const s=S();FX5.banner('PASAPALABRA EN FAMILIA');a
  say('<i>Las frases, definiciones, dibujos y canciones de las pruebas son contenido inventado para este juego.</i>');await wait(2.4,rid);say();}
 function pickPruebas(){const s=S();return s.pr>=6?ALL6.slice():shuffle(ALL6).slice(0,3);}
 async function programa10(rid){try{if(window.NS11)await NS11.empieza(true);}catch(e){console.error(e);}try{return await programa10i(rid);}finally{if(window.NS11)NS11.termina();}}
-async function programa10i(rid){const s=S();const T=mkTeams();colSave();let g=null;
+async function programa10i(rid){const s=S();const T=mkTeams();colSave();let g=null;if(window.F16)F16.start(T);
  try{await intro10(rid,T);
   const ps=pickPruebas();const ORD=['ord1','ord2','ord3','ord4','ord5','ord6'];
-  for(const [i,id] of ps.entries()){cut('host');await hs(rid,T10[ORD[ps.length>=6||i<2||ps.length>3?i:i]]);await hs(rid,T10[id],.2);const s0f=[T.az.sec,T.na.sec];await PRUEBAS[id](rid,T);chk(rid);if(window.NS11)NS11.famPr(T,s0f,i,ps.length);}
+  for(const [i,id] of ps.entries()){cut('host');await hs(rid,T10[ORD[ps.length>=6||i<2||ps.length>3?i:i]]);await hs(rid,T10[id],.2);const s0f=[T.az.sec,T.na.sec];if(window.F16)await F16.prueba(id,rid);await PRUEBAS[id](rid,T);chk(rid);if(window.NS11)NS11.famPr(T,s0f,i,ps.length);}
   if(window.NS11)NS11.fam(T);colRest();cut('host');
   hostSay(T10.sumaNa);await wait(1.7,rid);await clip(rid,secF(T.na.sec));hostSay(T10.sumaAz);await wait(1.7,rid);await clip(rid,secF(T.az.sec));
   say(`<b>Segundos para el rosco — Naranja: ${T.na.sec} s — Azul: ${T.az.sec} s</b>`);await wait(1.6,rid);
   g=await rosco10(rid,T);colRest();await results10(rid,T,g);
   FX5.off();clearG();say();setActs();stopMusic();showMenu('fam10');
- }catch(e){if(!(e instanceof Stop))console.error(e);}finally{colRest();}}
+ }catch(e){if(!(e instanceof Stop))console.error(e);}finally{colRest();if(window.F16)F16.end();}}
 function scene10(fn){const rid=++RUN;MODE.menu=false;menu.classList.add('hidden');$('#ver').classList.add('hidden');document.body.classList.add('ingame');
  const sk=$('#skip');sk.textContent='Menú ☰';sk.classList.remove('hidden');sk.onpointerdown=e=>{e.preventDefault();V5.stop();FX5.off();colRest();showMenu('fam10');};
  setPeople(false);P.host.visible=true;MOSCA.visible=true;clearG();setActs();GAME.sec=[0,0];GAME.ac=[0,0];GAME.res=null;V5.onTurn=null;V5.rivalN=null;V5.noBote=false;V5.cpuP=.7;

@@ -209,7 +209,9 @@ async function puro(rid,juegos=[1,2,3,4,5,6]){newTeams();GAME.sec=[0,0];GAME.ac=
   for(const j of juegos){chk(rid);if(j==6){const r=await rosco28(rid,{n:28,base:100});await final(rid,r,28);setRes(r,28);}else{await GAMES[j](rid);}}
  }finally{close();stopMusic();}}
 async function juego(rid,j){ // un solo juego dentro del programa 3D
- if(!TMS)newTeams();try{if(j==6){const r=await rosco28(rid,{n:28,base:100});await final(rid,r,28);setRes(r,28);}else await GAMES[j](rid);}finally{close();}}
+ if(!TMS)newTeams();let full=false;try{if(j==6){const r=window.__t13r28?await window.__t13r28(rid,28):await rosco28(rid,{n:28,base:100});await final(rid,r,28);setRes(r,28);full=(r[0]&&r[0].hits||0)>=28;}else await GAMES[j](rid);}finally{close();}
+ // v0.14: rosco de 28 completo dentro del programa 3D = se gana el bote y termina el programa (antes solo ponía GAME.res=25 y no llamaba al bote)
+ if(full&&!V5?.noBote){music('winner');await bote(rid,true);}}
 async function pcMenu(rid){newTeams();setProg(Math.floor(Math.random()*JQ12.length));GAME.sec=[0,0];
  try{music('j12_intro');for(;;){chk(rid);const v=await menuPC(rid);if(v=='x')break;
   if(v=='all'){await puro(rid);newTeams();}
