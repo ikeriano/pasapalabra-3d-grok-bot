@@ -1,0 +1,18 @@
+html,body{margin:0;height:100%;background:linear-gradient(135deg,#06132a,#102f66);font-family:Arial,Helvetica,sans-serif;color:#fff;overflow:hidden}
+.stage{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,#1a4a9a55,#061225 70%)}
+.brand{position:absolute;top:18px;right:28px;text-align:right}
+.brand b{display:block;color:#ffda71;font-size:28px}
+.brand small{color:#c0d7ff}
+.p37{font-family:Arial,sans-serif;color:#fff}
+.p37 button{font:800 16px Arial;border:1px solid #78a8ff;border-radius:18px;padding:8px 13px;color:#fff;background:#164bb3;min-height:36px}
+.p37 input,.p37 select{font:700 16px Arial;border:2px solid #8fbdff;border-radius:12px;padding:7px;background:#fff;color:#142458}
+.p37 .invent{color:#ffe390;font-size:12px;margin:6px 0}
+.p37 .row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+#chat37{position:fixed;left:24px;top:8vh;z-index:102;width:min(460px,54vw);max-height:88vh;background:#061222f2;border:1px solid #8cacdd;border-radius:14px;padding:9px;box-shadow:0 8px 28px #0009;display:block}
+#chat37 .log{height:auto;min-height:220px;max-height:58vh;overflow-y:auto;font-size:15px;line-height:1.45}
+#chat37 .line{padding:6px 4px;border-bottom:1px solid #ffffff12;overflow-wrap:anywhere}
+#chat37 .sender{font-weight:900;color:#ffcb63}
+#chat37 form{display:flex;gap:5px;margin-top:6px}
+#chat37 input{min-width:0;flex:1}
+#chatToggle37{position:fixed;left:24px;bottom:18px;z-index:100;font:800 14px Arial;padding:8px 14px;border-radius:20px;border:2px solid #a9c8ff;background:#102448df;color:#fff}
+#ver{position:absolute;left:24px;top:18px;color:#ffda71;font:800 18px Arial}

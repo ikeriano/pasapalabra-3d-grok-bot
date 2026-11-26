@@ -1,0 +1,62 @@
+{
+  "c1": [
+    {
+      "user": "Hola",
+      "who": "Christian",
+      "reply": "¡Buenas! Si buscabas un rato agradable, has llamado a la puerta correcta.",
+      "intent": "saludo"
+    },
+    {
+      "user": "Me llamo iker",
+      "who": "Christian",
+      "reply": "¡Me llamo Christian, y tú Iker! Qué bien suena eso. Pasa, que te estaba esperando.",
+      "intent": "nombre"
+    },
+    {
+      "user": "¿Qué tal estás?",
+      "who": "Christian",
+      "reply": "Yo perfecto. Un poquito de nervio de directos, nada grave. ¿Y tú, cómo andas?",
+      "intent": "comoestas"
+    },
+    {
+      "user": "Ayer soñé con un autobús de lunares",
+      "who": "Christian",
+      "reply": "Oye, lo de «Ayer soñé con un autobús de lunares» me suena interesante. No quiero dejarlo pasar: cuéntame un poquito más.",
+      "intent": "fallback"
+    }
+  ],
+  "c2": [
+    {
+      "user": "Cuéntame un chiste",
+      "who": "Christian",
+      "reply": "El secreto de este plató es que las letras se llevan bien… hasta que sale la equis. Esa siempre llega seria.",
+      "intent": "chiste"
+    },
+    {
+      "user": "Adiós",
+      "who": "Christian",
+      "reply": "¡Chao! Ha sido un placer. Te dejo el rosco calentito por si regresas.",
+      "intent": "despedida"
+    }
+  ],
+  "lola": [
+    {
+      "user": "Hola",
+      "who": "Lola",
+      "reply": "Hey, bienvenido. Yo soy un poco cotorra, lo admito, pero con buen corazón. ¿Qué tal?",
+      "intent": "saludo"
+    },
+    {
+      "user": "Me llamo iker",
+      "who": "Lola",
+      "reply": "Vaya, Iker. Este chat se pone mucho más alegre. ¿Qué te apetece hacer?",
+      "intent": "nombre"
+    },
+    {
+      "user": "Cuéntame un chiste",
+      "who": "Lola",
+      "reply": "Una rápida: la eñe entra a un bar y pide… nada, que está de dieta. Ay, lo siento.",
+      "intent": "chiste"
+    }
+  ]
+}

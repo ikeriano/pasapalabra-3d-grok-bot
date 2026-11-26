@@ -1,5 +1,5 @@
 'use strict';
-// v0.38 · App original de Momentum Games (1.3.1 y 1.15.2) como opciones del menú.
+// v0.39 · App original de Momentum Games (1.3.1 y 1.15.2) como opciones del menú.
 // Las apps van en APKs a parte, firmadas, y se abren si están instaladas. El contenido de esas apps no se modifica.
 (()=>{
 const BR=()=>window.Oficial38||null;
@@ -37,11 +37,11 @@ function panel(id){
 }
 const _sm=showMenu;
 showMenu=function(s='main'){
-  if(s==='orig131'){const r=_sm.call(this,'main');try{panel('v131');}catch(e){console.error(e);}try{el('ver').textContent='v0.38';}catch(e){}return r;}
-  if(s==='orig152'){const r=_sm.call(this,'main');try{panel('v152');}catch(e){console.error(e);}try{el('ver').textContent='v0.38';}catch(e){}return r;}
+  if(s==='orig131'){const r=_sm.call(this,'main');try{panel('v131');}catch(e){console.error(e);}try{el('ver').textContent='v0.39';}catch(e){}return r;}
+  if(s==='orig152'){const r=_sm.call(this,'main');try{panel('v152');}catch(e){console.error(e);}try{el('ver').textContent='v0.39';}catch(e){}return r;}
   const r=_sm.apply(this,arguments);
   try{
-    el('ver').textContent='v0.38';
+    el('ver').textContent='v0.39';
     if(s==='main'){
       const col=menu.querySelector('.col');
       if(col&&!el('entryOficial38')){
