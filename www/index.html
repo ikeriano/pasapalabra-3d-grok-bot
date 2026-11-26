@@ -4,6 +4,7 @@
 <style>
 @font-face{font-family:K;src:url(font/keedy.ttf)}
 @font-face{font-family:N;src:url(font/nunito.ttf);font-weight:200 1000}
+@font-face{font-family:B2;src:url(font/baloo2.ttf);font-weight:400 800}@font-face{font-family:MS;src:url(font/montserrat.ttf);font-weight:100 900}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
 html,body{margin:0;height:100%;overflow:hidden;background:#02040c;font-family:N,Arial,sans-serif;touch-action:none}
 #c{position:fixed;inset:0;width:100%;height:100%;display:block}
@@ -64,6 +65,13 @@ body.askon #skip{display:none}
 .mcard h3{color:#ffd23a;margin:4px 0 8px;font-size:1.4em}
 #rot{position:fixed;inset:0;z-index:99;background:#02040c;color:#fff;display:none;align-items:center;justify-content:center;font:900 22px N,Arial}
 @media (orientation:portrait){#rot{display:flex}}
+</style><style>/* v0.30 */
+.stamp30{position:fixed;left:50%;top:38%;z-index:45;transform:translate(-50%,-50%) rotate(-12deg);font:900 clamp(26px,7vw,68px) N,Arial;color:#ff2a2a;border:6px solid #ff2a2a;border-radius:14px;padding:4px 22px;background:#ffffffd9;letter-spacing:3px;pointer-events:none;animation:st30 .35s ease-out}
+@keyframes st30{from{transform:translate(-50%,-50%) rotate(-12deg) scale(2.4);opacity:0}to{transform:translate(-50%,-50%) rotate(-12deg) scale(1);opacity:1}}
+#rot30{position:fixed;left:2%;top:9%;z-index:41;display:none;pointer-events:none;font:700 clamp(10px,2.4vh,15px) N,Arial;color:#fff;background:#0b2a7ae0;border-left:6px solid #ffd23a;border-radius:6px;padding:4px 12px;text-shadow:0 1px 2px #000;max-width:60vw}
+#rot30 i{color:#ffd23a;font-style:normal}
+.cred30{position:fixed;left:50%;bottom:9%;transform:translateX(-42%);text-align:center;z-index:44;pointer-events:none;opacity:0;transition:opacity .6s;font-family:N,Arial;text-shadow:0 2px 6px #000}
+.cred30.on{opacity:1}.cred30 b{display:block;color:#f6eaa0;font:700 clamp(14px,4.4vh,34px) 'Arial Narrow',Arial}.cred30 span{display:block;color:#f6eaa0;font:700 clamp(15px,4.6vh,36px) 'Arial Narrow',Arial;letter-spacing:1px}.cred30 i{color:#fff;font:700 12px N,Arial;font-style:normal}
 </style></head><body>
 <canvas id="c"></canvas>
 <div id="ui"></div>
@@ -80,12 +88,30 @@ body.askon #skip{display:none}
 <script src="v13tap.js"></script><script src="lib/three.js"></script><script src="pk10idx.js"></script><script src="pk10.js"></script>
 <script src="data.js"></script>
 <script src="data2.js"></script>
-<script src="app.js"></script>
+<script src="app.js"></script><script src="logos35.js"></script>
 <script src="etapas.js"></script>
 <script src="v03.js"></script>
 <script src="v04.js"></script>
 <script src="v05data.js"></script>
 <script src="v05voz.js"></script>
 <script src="v05.js"></script><script src="v05lines.js"></script><script src="v05b.js"></script><script src="v06.js"></script><script src="v06b.js"></script><script src="v06data.js"></script><script src="v06c.js"></script><script src="v07.js"></script><script src="v07voz.js"></script><script src="v08.js"></script><script src="v08b.js"></script><script src="v08c.js"></script>
-<script src="v09data.js"></script><script src="v09voz.js"></script><script src="v09.js"></script><script src="v09b.js"></script><script src="v09c.js"></script><script src="v09d.js"></script><script src="v09e.js"></script><script src="dvdc/data.js"></script><script src="dvdc/clasico.js"></script><script src="v10data.js"></script><script src="v10voz.js"></script><script src="v10.js"></script><script src="videos/lista11.js"></script><script src="v10b.js"></script><script src="v11data.js"></script><script src="v11voz.js"></script><script src="v11.js"></script><script src="v11b.js"></script><script src="v12scenes.js"></script><script src="v12qdata.js"></script><script src="v12voz.js"></script><script src="v12s.js"></script><script src="v12lines.js"></script><script src="v12voz2.js"></script><script src="v12jato.js"></script><script src="v12p.js"></script><script src="v12.js"></script><script src="v13sj.js"></script><script src="v16fam.js"></script><script src="v20a3.js"></script><script src="v21cab.js"></script><script src="font/n900.js"></script><script src="v22cab3d.js"></script><script src="v22tv.js"></script><script src="v23u4.js"></script><script src="v23extra.js"></script><script src="v23voz.js"></script>
+<script src="v09data.js"></script><script src="v09voz.js"></script><script src="v09.js"></script><script src="v09b.js"></script><script src="v09c.js"></script><script src="v09d.js"></script><script src="v09e.js"></script><script src="dvdc/data.js"></script><script src="dvdc/clasico.js"></script><script src="v10data.js"></script><script src="v10voz.js"></script><script src="v10.js"></script><script src="videos/lista11.js"></script><script src="v10b.js"></script><script src="v11data.js"></script><script src="v11voz.js"></script><script src="v11.js"></script><script src="v11b.js"></script><script src="v12scenes.js"></script><script src="v12qdata.js"></script><script src="v12voz.js"></script><script src="v12s.js"></script><script src="v12lines.js"></script><script src="v12voz2.js"></script><script src="v12jato.js"></script><script src="v12p.js"></script><script src="v12.js"></script><script src="v13sj.js"></script><script src="v16fam.js"></script><script src="v20a3.js"></script><script src="v21cab.js"></script><script src="font/n900.js"></script><script src="v22cab3d.js"></script><script src="v22tv.js"></script><script src="v23u4.js"></script><script src="v23extra.js"></script><script src="v23voz.js"></script><script src="v24.js"></script><script src="v24a3.js"></script><script src="v25rules.js"></script><script src="v25cab.js"></script><script src="v25open.js"></script><script src="v25graf.js"></script><script src="videos/v28meta.js"></script><script src="v27vid.js"></script><script src="v27graf.js"></script>
+<script src="v28cruz.js"></script>
+<script src="v28s18.js"></script>
+<script src="v28esc.js"></script>
+<script src="v28donde.js"></script>
+<script src="v28antes.js"></script>
+<script src="v28imp.js"></script>
+<script src="v29.js"></script>
+<script src="aps/antenaps.js"></script>
+<script src="aps/tvdata36.js"></script>
+<script src="aps/tv36.js"></script>
+<script src="v29tv.js"></script>
+<script src="pp30data.js"></script><script src="pp30/vozidx.js"></script><script src="estudio/navidad.js"></script><script src="estudio/reportaje.js"></script><script src="reportaje30.js"></script><script src="platoreal30.js"></script><script src="deco30.js"></script>
+<script src="cab2000_30.js"></script><script src="pp30.js"></script>
+<script src="logos30.js"></script>
+<script src="decocab30.js"></script><script src="esp30.js"></script>
+<script src="lib/gltf170.js"></script><script src="alaz35.js"></script><script src="silla35.js"></script><script src="seat35.js"></script>
+
+<script src="contenido037.js"></script><script src="v037.js"></script><script src="oficial38.js"></script>
 </body></html>

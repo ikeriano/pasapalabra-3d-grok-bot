@@ -1,0 +1,16 @@
+const fs=require('fs'),p=require('/workspace/ac174/tools/node_modules/puppeteer-core');const root='/workspace/pasapalabra037',wait=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{const results={started:new Date().toISOString(),method:'Chrome sin interfaz, SwiftShader; programas reproducidos desde 0 hasta ended a 16x, sin saltos de posición. No es una prueba en Redmi A2.',programmes:[],samples:[],errors:[]};const b=await p.launch({executablePath:'/opt/ungoogled-chromium/chrome',headless:true,protocolTimeout:180000,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--autoplay-policy=no-user-gesture-required','--disable-dev-shm-usage']});const page=await b.newPage();await page.setViewport({width:1280,height:720,deviceScaleFactor:1});page.on('pageerror',e=>{results.errors.push(String(e));console.log('PAGEERROR',String(e))});page.on('requestfailed',r=>{const u=r.url();if(u.includes('037'))console.log('REQUEST_FAILED',u,r.failure())});await page.goto('http://127.0.0.1:8737/index.html#dbg',{waitUntil:'load',timeout:120000});await page.waitForFunction(()=>window.PP037&&P.host,{timeout:120000});
+const save=()=>fs.writeFileSync(root+'/tests037-full.json',JSON.stringify(results,null,2));
+for(const id of ['c06yoItjk3s','p_cg9AGn4_E','my8KxEx_i0c']){
+ console.log('BEGIN',id);const wall=Date.now();await page.evaluate(id=>{PP037.play(id);PP037.active.video.playbackRate=16;PP037.active.video.muted=true;},id);await page.waitForFunction(()=>PP037.active.video.readyState>=3,{timeout:60000});let prev=-1,lastMove=Date.now(),stalls=0,maxGap=0,finished=false,shots=0,lastWall=Date.now();const hist=[];
+ while(Date.now()-wall<1200000){
+  const q=await page.evaluate(()=>{const a=PP037.active,v=a.video;return{t:v.currentTime,d:v.duration,ended:v.ended,paused:v.paused,ready:v.readyState,err:v.error?{code:v.error.code,message:v.error.message}:null,comments:PP037.stats.comments.filter(x=>x.id===a.item.id).length,voiceErrors:PP037.stats.errors.filter(e=>e.startsWith('voz:')).length,frames:v.getVideoPlaybackQuality?{total:v.getVideoPlaybackQuality().totalVideoFrames,dropped:v.getVideoPlaybackQuality().droppedVideoFrames}:null};});
+  const nw=Date.now();maxGap=Math.max(maxGap,nw-lastWall);lastWall=nw;if(q.err)throw new Error(id+JSON.stringify(q.err));if(q.t>prev+.1){prev=q.t;lastMove=nw;}if(nw-lastMove>15000&&!q.ended){stalls++;throw new Error('Sin avance durante 15 s: '+id+' '+JSON.stringify(q));}
+  if(shots<5&&q.t>=([18,.25*q.d,.5*q.d,.75*q.d,q.d-13][shots])){await page.screenshot({path:root+'/capturas/programa-'+id+'-'+shots+'.png'});shots++;}
+  hist.push({t:q.t,wall:(nw-wall)/1000,ready:q.ready});if(hist.length%15===0)console.log('PROGRESS',id,Math.round(q.t),Math.round(q.d),q.comments);
+  if(q.ended){results.programmes.push({id,wallSeconds:(nw-wall)/1000,rate:16,withoutSeeks:true,stalls,maxPollGapMs:maxGap,...q,history:hist});finished=true;break;}
+  await wait(1000);
+ }
+ if(!finished)throw new Error('Tiempo máximo excedido '+id);save();console.log('ENDED',id);await page.evaluate(()=>{PP037.closeVideo();});
+}
+console.log('PROGRAMMES_DONE');results.finished=new Date().toISOString();save();await b.close();})().catch(e=>{console.error(e);fs.writeFileSync(root+'/full037-error.txt',String(e));process.exitCode=1});

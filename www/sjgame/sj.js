@@ -18,7 +18,7 @@ function bote(){return LS.get('bote',6000)}
 /* ---------- audio ---------- */
 var muted=false;
 function snd(n,vol){if(muted)return null;var a=SND[n];if(!a)return null;try{var b=a.cloneNode();b.volume=vol==null?1:vol;b.play().catch(function(){});return b}catch(e){return null}}
-function music(n,loop){if(musName===n&&MUS&&!MUS.paused)return;stopMusic();if(!n)return;musName=n;MUS=new Audio('snd/'+n+'.ogg');MUS.loop=loop!==false;MUS.volume=.7;MUS.play().catch(function(){})}
+window.__sjRemus=function(){if(musName==='PasaP'){musName=null;music('PasaP')}};function music(n,loop){if(musName===n&&MUS&&!MUS.paused)return;stopMusic();if(!n)return;musName=n;MUS=new Audio((window.SJET&&SJET.mus(n))||('snd/'+n+'.ogg'));MUS.loop=loop!==false;MUS.volume=.7;MUS.play().catch(function(){})}
 function stopMusic(){if(MUS){MUS.pause();MUS=null}musName=''}
 
 /* ---------- drawing ---------- */
@@ -39,7 +39,7 @@ function inR(p,x,y,w,h){return p.x>=x&&p.x<x+w&&p.y>=y&&p.y<y+h}
 
 /* ---------- scene system ---------- */
 var S=null,T=0,mouse={x:-1,y:-1},fade=0;
-function go(sc){if(S&&S.leave)S.leave();S=sc;S.t=0;fade=1;kbShow(!!S.typing);if(S.enter)S.enter()}
+function go(sc){try{SJET.scene(sc&&sc.B&&sc.draw&&String(sc.draw).indexOf('Presen1Bkg')>=0)}catch(e){}if(S&&S.leave)S.leave();S=sc;S.t=0;fade=1;kbShow(!!S.typing);if(S.enter)S.enter()}
 function after(t,fn){return {t:t,fn:fn}}
 
 /* ---------- touch keyboard (DOM) ---------- */
@@ -65,7 +65,7 @@ function quitToHost(){stopMusic();try{parent.postMessage({sj13:'salir'},'*')}cat
 
 /* ---------- button helper ---------- */
 function Btn(sheet,n,h,x,y,cb,voice){return {sheet:sheet,n:n,h:h,x:x,y:y,cb:cb,voice:voice,on:false}}
-function drawBtns(B){B.forEach(function(b){if(b.hidden)return;var over=inR(mouse,b.x,b.y,sw(b.sheet,b.n),sh(b.sheet,b.n));if(over&&!b.on&&b.voice)snd(b.voice);b.on=over;spr(b.sheet,over?b.h:b.n,b.x,b.y)})}
+function drawBtns(B){B.forEach(function(b){if(b.hidden)return;var over=inR(mouse,b.x,b.y,sw(b.sheet,b.n),sh(b.sheet,b.n));if(over&&!b.on&&b.voice)snd(b.voice);b.on=over;if(!(window.SJET&&b.sheet==='Presen1Spr'&&SJET.btn(X,b,sw(b.sheet,b.n),sh(b.sheet,b.n),over)))spr(b.sheet,over?b.h:b.n,b.x,b.y)})}
 function clickBtns(B,p){for(var i=0;i<B.length;i++){var b=B[i];if(!b.hidden&&inR(p,b.x,b.y,sw(b.sheet,b.n),sh(b.sheet,b.n))){snd('Click');b.cb();return true}}return false}
 
 /* ---------- boot: License -> Warning -> credits -> menu ---------- */
@@ -82,7 +82,7 @@ function Menu(){var B=[],L=[['1Jugador',function(){go(Select(1))}],['2Jugadores'
  var P=[[138,180],[105,220],[90,260],[88,300],[100,340],[130,380],[210,420]];
  L.forEach(function(l,i){B.push(Btn('Presen1Spr',12+2*i,13+2*i,P[i][0],P[i][1],l[1],l[0]))});
  return {B:B,enter:function(){music('PasaP')},
- draw:function(){img('Presen1Bkg',0,0);for(var k=0;k<11;k++){var tt=this.t*6-k;if(tt<=0)continue;var y=15-Math.max(0,(1-tt))*60;spr('Presen1Spr',k,TITLE_X(k),y,Math.min(1,tt))}
+ draw:function(){img('Presen1Bkg',0,0);if(window.SJET&&SJET.bg(X,this.t)){drawBtns(B);return;}for(var k=0;k<11;k++){var tt=this.t*6-k;if(tt<=0)continue;var y=15-Math.max(0,(1-tt))*60;spr('Presen1Spr',k,TITLE_X(k),y,Math.min(1,tt))}
   spr('Presen1Spr',11,564,400);drawBtns(B)},
  update:function(){var k=Math.floor(this.t*6);if(k!==this.lk&&k<11){this.lk=k;if(k%3===0)snd('Clang',.4)}},
  click:function(p){clickBtns(B,p)},key:function(k){if(k==='Escape')L[6][1]();if(k==='1')L[0][1]();if(k==='2')L[1][1]()}}}
@@ -141,11 +141,11 @@ var CAMS=['Left','Right','Center','Left2','Right2','Center2'];
 function newGame(G){var progs=Object.keys(D.programas);G.prog=D.programas[progs[Math.floor(Math.random()*progs.length)]];G.pts=[0,0];G.secs=[0,0];G.hearts=[2,2];G.bote=bote();G.rosco=[null,null];G.game=1;G.team=0;go(Intro(G))}
 var GNAMES=['','De la "A" a la "Z"','Palabra incompleta','Famosos','Piramide','Palabra imposible','El rosco'];
 function Intro(G){return {enter:function(){snd('Banner');music('Music'+(G.game%5),true)},draw:function(){img('TableBkg',0,0);img('MinBanner'+(G.team+1),60,40,.85);
-  txt('FontPremium','Prueba '+G.game,320,58,'c');txt('FontNormal',GNAMES[G.game]+(G.teams.length>1?'  -  Equipo '+(G.team?'Rojo':'Azul'):''),320,100,'c')},
+  txt('FontPremium','Prueba '+G.game,320,58,'c');txt('FontNormal',SJET.name(G.game)+(G.teams.length>1?'  -  Equipo '+(G.team?'Rojo':'Azul'):''),320,100,'c')},
  update:function(){if(this.t>3)begin()},click:function(){begin()},key:function(k){if(k==='Enter')begin()}};
- function begin(){if(S.done)return;S.done=1;go([null,Game1,Game2,Game3,Game4,Game5,Game6][G.game](G))}}
+ function begin(){if(S.done)return;S.done=1;go([null,Game1,Game2,Game3,Game4,Game5,Game6][SJET.ord()[G.game-1]](G))}}
 function budget(){return [120,90,60][opt.dif]}
-function nextPart(G){if(G.teams.length>1&&G.team===0){G.team=1;go(Intro(G));return}G.team=0;if(G.game<6){G.game++;go(Intro(G))}else go(Final(G))}
+function nextPart(G){if(G.teams.length>1&&G.team===0){G.team=1;go(Intro(G));return}G.team=0;if(G.game<SJET.ord().length){G.game++;go(Intro(G))}else go(Final(G))}
 function timeOver(G,cb){snd('TimeOver');go(Msg(['Se acabo tu tiempo'],2.6,cb))}
 function Msg(lines,dur,cb){return {draw:function(){img('premiumBkg',0,0);img('IBanner',20,60,.85);lines.forEach(function(l,i){txt('FontNormal',l,320,150-lines.length*14+i*30,'c')})},update:function(){if(this.t>dur)this.go()},go:function(){if(this.d)return;this.d=1;cb()},click:function(){this.go()},key:function(k){if(k==='Enter')this.go()}}}
 

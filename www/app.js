@@ -436,6 +436,7 @@ function showMenu(screen='main'){RUN++;MODE.menu=true;MODE.split=false;clearG();
   <div class="orow"><label>🔊 Efectos</label><input type="range" min="0" max="1" step=".1" value="${OPT.sfx}" data-o="sfx"></div>
   <div class="orow"><label>🎬 PLATÓ</label>${sel('plato')}</div>
   <div class="orow"><label>🧩 ETAPA (pruebas)</label>${sel('etapa')}</div>
+  <div class="orow"><label>🧍 Personajes</label><button class="tbtn ${(OPT.pers|0)==0?'on':''}" data-k="pers" data-y="0">Monigotes</button><button class="tbtn ${(OPT.pers|0)==1?'on':''}" data-k="pers" data-y="1">Realistas</button></div>
   <div class="mtext">Al elegir un plató se elige también su etapa. La etapa se puede cambiar por separado: por ejemplo, pruebas de 2019 en el plató de 2007.</div>
   ${btn('y','⟵','Volver','','main')}</div></div>`;
   menu.querySelectorAll('input[type=range]').forEach(i=>i.oninput=()=>{OPT[i.dataset.o]=+i.value;saveOpt();if(musA)musA.volume=OPT.mus;});
@@ -468,7 +469,7 @@ function loop(now){requestAnimationFrame(loop);if(window.DVD9){last=now;return;}
  P.sphere.rotation.y+=dt*.35;P.sphere.rotation.x=Math.sin(now/4000)*.15;
  if(MODE.menu){mT+=dt;const a=mT*.06;cam.position.set(Math.sin(a+.8)*14,5.2+Math.sin(mT*.2)*.6,Math.cos(a+.8)*14);cam.fov=44;cam.updateProjectionMatrix();cam.lookAt(0,1,-2);}else updCam(dt);
  R.setScissorTest(false);R.setViewport(0,0,W,H);R.clear();
- if(MODE.split){R.setScissorTest(true);const hw=W/2;[[0,SHOTS.orange],[hw,SHOTS.blue]].forEach(([x,sh])=>{R.setViewport(x,0,hw,H);R.setScissor(x,0,hw,H);cam2.aspect=hw/H;updCam(0,cam2,{...sh,f:34,l:sh.l.clone().add(V3(0,.05,0))});R.render(S,cam2);});R.setScissorTest(false);R.setViewport(0,0,W,H);}
+ if(MODE.split){R.setScissorTest(true);const hw=W/2;(window.SPLIT_SH?SPLIT_SH():[[0,SHOTS.orange],[1,SHOTS.blue]]).forEach(([x,sh])=>{x=x*hw;R.setViewport(x,0,hw,H);R.setScissor(x,0,hw,H);cam2.aspect=hw/H;updCam(0,cam2,window.SPLIT_SH?sh:{...sh,f:34,l:sh.l.clone().add(V3(0,.05,0))});R.render(S,cam2);});R.setScissorTest(false);R.setViewport(0,0,W,H);}
  else R.render(S,cam);
  R.clearDepth();placeMosca();R.render(GS,gcam);}
 // ---------- arranque ----------

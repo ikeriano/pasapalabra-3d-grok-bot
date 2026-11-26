@@ -12,7 +12,7 @@
 // ======================================================================
 window.V13={SLOP:10,MAXMS:1200,draw:false,log:[]};
 (()=>{let g=null,synth=false,lastTap=0;
- const raw=t=>t&&t.closest&&(t.closest('input:not([type=button]):not([type=submit]),textarea,select,[contenteditable=true],.sgrid,#sjframe13')||(V13.draw&&t.id==='c'));
+ const raw=t=>t&&t.closest&&(t.closest('input:not([type=button]):not([type=submit]),textarea,select,[contenteditable=true],.sgrid,#sjframe13,.p37,#chatToggle37')||(V13.draw&&t.id==='c'));
  const fire=(type,s,e)=>{const o={bubbles:true,cancelable:true,composed:true,clientX:e.clientX,clientY:e.clientY,screenX:e.screenX,screenY:e.screenY,pointerId:s.id,pointerType:s.pt,isPrimary:true,button:0,buttons:type==='pointerdown'?1:0};
   synth=true;try{(s.t.isConnected?s.t:document.elementFromPoint(e.clientX,e.clientY)||document.body).dispatchEvent(new PointerEvent(type,o));}finally{synth=false;}};
  addEventListener('pointerdown',e=>{if(synth||!e.isTrusted)return;if(raw(e.target)){g=null;return;}

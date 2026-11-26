@@ -129,5 +129,5 @@ async function cabFam(rid){const R=room(),g=R.g;S.background=bgGrad('#3fb4d8','#
   else if(i==6){show(6);s7.rotation.z=-u*.5;s7.children[0].rotation.z=u*2;sh.p.set(-3+Math.min(1,u*2)*3,Y0-1+Math.min(1,u*2),5+u*3);sh.l.set(0,Y0,0);sh.f=55;}
   else{if(g.visible){g.visible=false;S.background=R.sb;}const a=1.2-u*1.3;sh.p.set(Math.sin(a)*r0*1.2,W.p.y*1.7-u*3,Math.cos(a)*r0*1.2);sh.l.set(0,.8,0);sh.f=55-u*8;}
  },x=>x);}finally{R.free();au.pause();}chk(rid);}
-window.CAB22={cabA3,cabFam};
+window.CAB22={cabA3,cabFam,glyph,word,room,confetti,bgGrad};
 })();

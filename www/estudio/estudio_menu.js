@@ -1,0 +1,9 @@
+/* Estudio de TV + Making of · 🆕 INVENTADO — entradas en el menú del juego (genérico, por texto de botones) */
+(function(){var B=(window.ESTUDIO_BASE||'estudio/'),SHOW=(window.ESTUDIO_SHOW||'ahoracaigo');
+function go(q){location.href=B+'index.html?'+q+'&show='+SHOW;}
+function mk(id,t,s,q,ref){if(document.getElementById(id))return;var b=document.createElement('button');b.id=id;b.className=ref.className||'mbtn';b.innerHTML='<span class="fp"></span><span>'+t+' <b style="font-size:.7em;background:#ffd400;color:#222;border-radius:6px;padding:1px 5px">🆕 INVENTADO</b><small>'+s+'</small></span>';b.onclick=function(e){e.stopPropagation();go(q)};ref.after(b);return b;}
+function find(txt){var L=document.querySelectorAll('#menu button');for(var i=0;i<L.length;i++){var sp=L[i].querySelector('span:not(.fp)')||L[i];var t=(sp.childNodes[0]&&sp.childNodes[0].textContent||'').trim();if(t===txt)return L[i];}return null;}
+function pon(){var p=find('Paseo');if(p){mk('est_paseo','🏢 Paseo por el estudio de TV','Recepción, maquillaje, control… y un plató para cada programa','sala=exterior',p);}
+ var f=find('Fuera de cámaras');if(f){var a=mk('est_fuera','🏢 Fuera de cámaras en el edificio','Cafetería, camerinos y más','modo=fuera',f);}
+ var h=find('La historia de ¡Ahora Caigo!')||document.querySelector('#menu button.hist');if(h&&!document.getElementById('est_making')){var x=mk('est_tomas','😂 Tomas falsas del estudio','Lapsus y risas detrás de las cámaras','modo=tomasfalsas',h);var y=mk('est_entr','🏋️ Entrenamientos en el estudio','Practicar sin perder','modo=entrenamiento',h);var z=mk('est_entresijos','🔍 Entresijos','Los secretos: preguntas, casting, decorado, control y regidor','modo=entresijos',h);mk('est_making','🎬 Making of','Así se hace el programa, contado como la historia','modo=making',h);}}
+new MutationObserver(pon).observe(document.documentElement,{childList:true,subtree:true});pon();})();
